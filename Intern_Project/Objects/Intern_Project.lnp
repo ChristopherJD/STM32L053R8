@@ -7,6 +7,7 @@
 ".\objects\retarget.o"
 ".\objects\serial.o"
 ".\objects\timing.o"
+".\objects\lps25hb.o"
 ".\objects\adc_test.o"
 ".\objects\gpio_test.o"
 ".\objects\startup_stm32l053xx.o"

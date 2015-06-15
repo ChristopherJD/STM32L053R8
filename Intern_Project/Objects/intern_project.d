@@ -15,3 +15,4 @@
 .\objects\intern_project.o: ADC_Test.h
 .\objects\intern_project.o: I2C.h
 .\objects\intern_project.o: HTS221.h
+.\objects\intern_project.o: LPS25HB.h

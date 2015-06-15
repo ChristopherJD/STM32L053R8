@@ -9,4 +9,3 @@
 .\objects\hts221.o: I2C.h
 .\objects\hts221.o: HTS221.h
 .\objects\hts221.o: Serial.h
-.\objects\hts221.o: Timing.h

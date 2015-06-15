@@ -453,6 +453,11 @@
               <FileType>1</FileType>
               <FilePath>.\Timing.c</FilePath>
             </File>
+            <File>
+              <FileName>LPS25HB.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\LPS25HB.c</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>

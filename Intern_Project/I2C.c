@@ -1,24 +1,7 @@
 #include "stm32l053xx.h"                  // Device header
 #include "I2C.h"
-#include "Timing.h"
-
-//#define  Temp_Hum_Address  0x0000005F 		//Slave Address	for temp humidity sensor
 
 uint32_t I2C1_RX_Data = 0;
-
-/**
-  \fn          void I2C1_IRQHandler(void)
-  \brief       The Global handler for I2C1, RX is the only enabled interrupt
-*/
-
-//void I2C1_IRQHandler(void){
-//	
-//	//Handle RX
-//	if((I2C1->ISR & I2C_ISR_RXNE) == I2C_ISR_RXNE){
-//		//Data = recieve register, will clear RXNE flag once read
-//		I2C1_RX_Data = I2C1->RXDR;
-//	}
-//}
 
 /**
   \fn          void I2C_Init(void)

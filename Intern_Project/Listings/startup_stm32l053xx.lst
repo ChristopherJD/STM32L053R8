@@ -412,12 +412,12 @@ ARM Macro Assembler    Page 7
               00000000 
 Command Line: --debug --xref --diag_suppress=9931 --cpu=Cortex-M0+ --apcs=inter
 work --depend=.\objects\startup_stm32l053xx.d -o.\objects\startup_stm32l053xx.o
- -IC:\Users\Digi-Key\Desktop\EEWiki\EEWiki\Code_Examples\Intern_Project\RTE -IC
-:\Keil_v5\ARM\PACK\ARM\CMSIS\4.3.0\CMSIS\Include -IC:\Keil_v5\ARM\PACK\Keil\STM
-32L0xx_DFP\1.3.0\Device\Include --predefine="__EVAL SETA 1" --predefine="__UVIS
-ION_VERSION SETA 514" --predefine="_RTE_ SETA 1" --predefine="STM32L053xx SETA 
-1" --list=.\listings\startup_stm32l053xx.lst RTE\Device\STM32L053R8\startup_stm
-32l053xx.s
+ -IC:\Users\Digi-Key\Documents\GitHub\STM32L053R8\Intern_Project\RTE -IC:\Keil_
+v5\ARM\PACK\ARM\CMSIS\4.3.0\CMSIS\Include -IC:\Keil_v5\ARM\PACK\Keil\STM32L0xx_
+DFP\1.3.0\Device\Include --predefine="__EVAL SETA 1" --predefine="__UVISION_VER
+SION SETA 514" --predefine="_RTE_ SETA 1" --predefine="STM32L053xx SETA 1" --li
+st=.\listings\startup_stm32l053xx.lst RTE\Device\STM32L053R8\startup_stm32l053x
+x.s
 
 
 
