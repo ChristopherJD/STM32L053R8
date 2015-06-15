@@ -1,0 +1,17 @@
+--cpu Cortex-M0+
+".\objects\intern_project.o"
+".\objects\adc.o"
+".\objects\gpio.o"
+".\objects\hts221.o"
+".\objects\i2c.o"
+".\objects\retarget.o"
+".\objects\serial.o"
+".\objects\timing.o"
+".\objects\adc_test.o"
+".\objects\gpio_test.o"
+".\objects\startup_stm32l053xx.o"
+".\objects\system_stm32l0xx.o"
+--strict --scatter ".\Objects\Intern_Project.sct"
+--summary_stderr --info summarysizes --map --xref --callgraph --symbols
+--info sizes --info totals --info unused --info veneers
+--list ".\Listings\Intern_Project.map" -o .\Objects\Intern_Project.axf
