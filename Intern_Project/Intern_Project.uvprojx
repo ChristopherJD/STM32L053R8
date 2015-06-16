@@ -458,6 +458,11 @@
               <FileType>1</FileType>
               <FilePath>.\LPS25HB.c</FilePath>
             </File>
+            <File>
+              <FileName>LIS3MDL.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\LIS3MDL.c</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>

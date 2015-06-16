@@ -6,10 +6,10 @@
 
 /*---------------------------------Slave Address---------------------------------*/
 #define LPS25HB_ADDRESS 0x5D		//Note that SA0 = 1 so address is 1011101 and not 1011100
-
+/*---------------------------------Device ID----------------------------------------------*/
+#define LPS25HB_DEVICE_ID				0xBD	//Device ID, the value in the WHO_AM_I 	Register
 /*---------------------------------Register Locations----------------------------*/
 #define LPS25HB_WHO_AM_I				0x0F	//Who am I register location
-#define LPS25HB_DEVICE_ID				0xBD	//Device ID, the value in the WHO_AM_I 	Register
 #define LPS25HB_STATUS_REG			0x27	//Tells whether the Pressure Data is ready or is being overrun
 #define LPS25HB_PRESS_OUT_XL		0x28	//(LSB) Pressure output value
 #define LPS25HB_PRESS_OUT_L			0x29  //(mid part) Pressure output value

@@ -6,11 +6,11 @@
 
 /*------------------------------------Slave Address-------------------------------------------*/
 #define HTS221_ADDRESS  	0x0000005F 		//Slave Address	for temp humidity sensor (WITHOUT R/W)
-
+/*------------------------------------Device ID-----------------------------------------------*/
+#define	HTS221_DEVICE_ID					0xBC					//The ID of the device (different from slave address)
 /*------------------------------------HTS221 Registers----------------------------------------*/
 #define HTS221_AV_CONF  					0x10					//Accuracy configuration Register
 #define HTS221_WHO_AM_I						0x0F					//Who am I register on HTS221
-#define	HTS221_DEVICE_ID					0xBC					//The ID of the device (different from slave address)
 #define HTS221_TEMP_OUT_L					0x2A					//Temperature Data (LSB)
 #define HTS221_TEMP_OUT_H					0x2B					//Temperature Data (MSB)
 #define HTS221_CTRL_REG1					0x20					//PD(Power Down),BDU(Block Data Output)

@@ -23,8 +23,9 @@
 #include "ADC.h"												// ADC initialization
 #include "ADC_Test.h"										// ADC testing function
 #include "I2C.h"												// I2C initialization
-#include "HTS221.h"											// HTS221 Drivers
-#include "LPS25HB.h"										// LPS25HB Drivers
+#include "HTS221.h"											// Temperature and humidity Drivers
+#include "LPS25HB.h"										// Pressure sensor Drivers
+#include "LIS3MDL.h"										// Magnetometer drivers
 
 /*------------------------Definitions-----------------------------------------*/
 
@@ -37,6 +38,7 @@
 	//Found Devices Variables
 	uint8_t HTS221_Found = 0;
 	uint8_t LPS25HB_Found = 0;
+	uint8_t LIS3MDL_Found = 0;
 /*----------------------------------------------------------------------------
  * main: blink LED 
  *----------------------------------------------------------------------------*/
@@ -76,14 +78,22 @@ int main (void) {
 	else printf("#####  LPS25HB Not Connected  #####\r\n");
 	LPS25HB_Configuration();		//Prints the configuration
 	
+	//Magnetometer Initialize
+	LIS3MDL_Found = LPS25HB_Init();
+	if(LIS3MDL_Found){
+		printf("#####  LIS3MDL Found  #####\r\n");
+	}
+	else printf("#####  LIS3MDL Not Connected  #####\r\n");
+	
 	//Loop Forever
   while (1) {
 //		Temperature = HTS221_Temp_Read();
 //		Humidity = HTS221_Humidity_Read();
+//		Pressure = LPS25HB_Pressure_Read();
 //		printf("Temperature: %f\r\n",Temperature);
 //		printf("Humidity: %f\r\n",Humidity);
-		Pressure = LPS25HB_Pressure_Read();
-		printf("Pressure: %f hPa\r\n",Pressure);
+//		printf("Pressure: %f hPa\r\n",Pressure);
+		
 		Delay(250);
   }
 
