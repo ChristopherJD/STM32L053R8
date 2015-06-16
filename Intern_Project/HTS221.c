@@ -231,9 +231,13 @@ void HTS221_Configuration(void){
 /**
   \fn					void HTS221_Init(void)
   \brief			Initialize the HTS221 and check device signature
+	\returns		uint8_t Device_Found - Determines if the device was detected
 */
 
-void HTS221_Init(void){
+uint8_t HTS221_Init(void){
+	
+	//Global Variables
+	uint8_t Device_Found = 0;
 	
 	/*---------------------------------Check the Device ID--------------------------------------------*/
 	
@@ -242,22 +246,19 @@ void HTS221_Init(void){
 	
 	//Check if device signature is correct
 	if (I2C1->RXDR == HTS221_DEVICE_ID){
-		printf("!!HTS221 Found!!\r\n");
+		Device_Found = 1;
 	}
-	else{
-		printf("Device Not Found, ID: %x\r\n",I2C1->RXDR);
-		HTS221_Init();		//If device is incorrect try again
-	}
+	else Device_Found = 0;
 	
 	/*-------------------------------Setup HTS221_AV_CONF Register------------------------------------*/
-	
-	//Set to Default Configuration
-	I2C_Write_Reg(HTS221_ADDRESS,HTS221_AV_CONF,AV_CONF_Init);
-	
-	//Activate and Block Data Update, this will ensure that both the higher and lower bits are read
-	I2C_Write_Reg(HTS221_ADDRESS,HTS221_CTRL_REG1,(HTS221_CTRL_REG1_PD | HTS221_CTRL_REG1_BDU));
-	
+	if(Device_Found){
+		//Set to Default Configuration
+		I2C_Write_Reg(HTS221_ADDRESS,HTS221_AV_CONF,AV_CONF_Init);
+		
+		//Activate and Block Data Update, this will ensure that both the higher and lower bits are read
+		I2C_Write_Reg(HTS221_ADDRESS,HTS221_CTRL_REG1,(HTS221_CTRL_REG1_PD | HTS221_CTRL_REG1_BDU));
+	}
 	/*------------------------------------------------------------------------------------------------*/
 	
-	HTS221_Configuration();
+	return(Device_Found);
 }

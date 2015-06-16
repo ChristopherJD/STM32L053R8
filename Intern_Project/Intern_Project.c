@@ -15,6 +15,7 @@
  /*-----------------------Include Statements----------------------------------*/
 #include <stdio.h>
 #include "stm32l0xx.h"                  // Device header
+#include "stm32l053xx.h"
 #include "Serial.h"											// Serial Communication
 #include "GPIO.h"												// Drivers for GPIO
 #include "Timing.h"											// Drivers for clock
@@ -28,8 +29,14 @@
 /*------------------------Definitions-----------------------------------------*/
 
 /*------------------------Global Variables------------------------------------*/
+	//Sensor output variables
 	float Temperature = 0;
 	float Humidity = 0;
+	float Pressure = 0;
+	
+	//Found Devices Variables
+	uint8_t HTS221_Found = 0;
+	uint8_t LPS25HB_Found = 0;
 /*----------------------------------------------------------------------------
  * main: blink LED 
  *----------------------------------------------------------------------------*/
@@ -54,17 +61,29 @@ int main (void) {
 	I2C_Init();
 	
 	//Temperature Sensor Initialize
-	HTS221_Init();
+	HTS221_Found = HTS221_Init();		//Initializes the device if found
+	if(HTS221_Found){
+		printf("#####  HTS221 Found  #####\r\n");
+	}
+	else printf("#####  HTS221 Not Connected  #####\r\n");
+	HTS221_Configuration();		//Prints the configuration
 	
 	//Pressure Sensor Initialize
-	//LPS25HB_Init();
-
+	LPS25HB_Found = LPS25HB_Init();
+	if(LPS25HB_Found){
+		printf("#####  LPS25HB Found  #####\r\n");
+	}
+	else printf("#####  LPS25HB Not Connected  #####\r\n");
+	LPS25HB_Configuration();		//Prints the configuration
+	
 	//Loop Forever
   while (1) {
-		Temperature = HTS221_Temp_Read();
-		Humidity = HTS221_Humidity_Read();
-		printf("Temperature: %f\r\n",Temperature);
-		printf("Humidity: %f\r\n",Humidity);
+//		Temperature = HTS221_Temp_Read();
+//		Humidity = HTS221_Humidity_Read();
+//		printf("Temperature: %f\r\n",Temperature);
+//		printf("Humidity: %f\r\n",Humidity);
+		Pressure = LPS25HB_Pressure_Read();
+		printf("Pressure: %f hPa\r\n",Pressure);
 		Delay(250);
   }
 

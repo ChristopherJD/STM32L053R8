@@ -24,8 +24,8 @@ void I2C_Init(void){
 	RCC->IOPENR |=  (1UL << 1);							// Enable GPIOB clock
 	
 	//interrupt init
-	NVIC_EnableIRQ(I2C1_IRQn);
-	NVIC_SetPriority(I2C1_IRQn,0);
+//	NVIC_EnableIRQ(I2C1_IRQn);
+//	NVIC_SetPriority(I2C1_IRQn,0);
 	
 	//GPIO Setup
 	I2C1->CR1 |= (1<<8);		//Digital Noise filter with supression of 1 I2Cclk
@@ -35,69 +35,6 @@ void I2C_Init(void){
 	//Configuration for I2C
 	I2C1->TIMINGR = (uint32_t)0x00503D5A;			//Standard Mode @100kHz with I2CCLK = 16MHz, rise time = 100ns, fall time = 10ns
 	I2C1->CR1 |= I2C_CR1_PE;		//Enable I2C1 peripheral and the RX interrupt
-}
-
-/**
-  \fn					void I2C_Write(uint32_t Data)
-  \brief			Starts a I2C write sequence
-							Configuration
-							*		AUTOEND: a STOP condition is automatically sent when NBYTES data are transferred.
-							*		1 byte to be recieved
-							*		Slave address bits 7:1, written with the 7 bit slave address mode
-	\param			uint32_t Device: The slave address of the device you would like to write to
-	\param			uint32_t Data: The data that you would like write (most likely a register value)
-*/
-
-void I2C_Write(uint32_t Device,uint32_t Data){
-	
-	I2C1->CR2 ^= (0 ^ I2C1->CR2) & I2C_CR2_RD_WRN;		//Clear WRN to enable writing
-	
-	//Check to see if the bus is busy
-	while((I2C1->ISR & I2C_ISR_BUSY) == I2C_ISR_BUSY);
-	while((I2C1->ISR & I2C_ISR_TXE) == 0);
-	
-	/*
-	AUTOEND: a STOP condition is automatically sent when NBYTES data are transferred.
-	WRN: Request a write transfer
-	(1<<16): Means NBYTES is equal to 1. 1 byte to be recieved
-	(I2C1_SLAVE_ADDRESS<<1): Slave address bit 7:1, written with the 7 bit slave address
-	*/
-	I2C1->CR2 |= I2C_CR2_AUTOEND | (1UL<<16) | (Device<<1);
-	
-	I2C1->CR2 |= I2C_CR2_START;		//Start communication
-	
-	//Check Tx empty before writing to it
-	if((I2C1->ISR & I2C_ISR_TXE) == (I2C_ISR_TXE)){
-		I2C1->TXDR = Data;
-	}
-}
-
-/**
-  \fn					uint32_t I2C_Read(void)
-  \brief			Starts a I2C read sequence (More than likely followed by I2C_Write())
-							Configuration
-							*		AUTOEND: a STOP condition is automatically sent when NBYTES data are transferred.
-							*		WRN: Request a read transfer
-							*		1 byte to be recieved
-							*		Slave address bits 7:1, written with the 7 bit slave address mode
-	\returns		uint32_t I2C1_RX_Data: The data read
-*/
-
-uint32_t I2C_Read(uint32_t Device){
-	//Check to see if the bus is busy
-	while((I2C1->ISR & I2C_ISR_BUSY) == I2C_ISR_BUSY);
-	
-	/*
-	AUTOEND: a STOP condition is automatically sent when NBYTES data are transferred.
-	WRN: Request a read transfer
-	(1<<16): Means NBYTES is equal to 1. 1 byte to be recieved
-	(I2C1_SLAVE_ADDRESS<<1): Slave address bit 7:1, written with the 7 bit slave address
-	*/
-	I2C1->CR2 |= I2C_CR2_AUTOEND | (1UL<<16) | I2C_CR2_RD_WRN | (Device<<1);
-	
-	I2C1->CR2 |= I2C_CR2_START;		//Start communication
-	
-	return(I2C1_RX_Data);
 }
 
 /**

@@ -4,7 +4,7 @@
 #define HTS221_H
 
 extern void HTS221_Configuration(void);
-extern void HTS221_Init(void);
+extern uint8_t HTS221_Init(void);
 extern float HTS221_Temp_Read(void);
 extern float HTS221_Humidity_Read(void);
 

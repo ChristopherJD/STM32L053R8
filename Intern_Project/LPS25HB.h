@@ -3,6 +3,8 @@
 #ifndef LPS25HB_H
 #define LPS25HB_H
 
-extern void LPS25HB_Init(void);
+extern uint8_t LPS25HB_Init(void);
+extern void LPS25HB_Configuration(void);
+extern float LPS25HB_Pressure_Read(void);
 
 #endif
