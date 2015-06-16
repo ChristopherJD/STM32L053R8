@@ -79,11 +79,12 @@ int main (void) {
 	LPS25HB_Configuration();		//Prints the configuration
 	
 	//Magnetometer Initialize
-	LIS3MDL_Found = LPS25HB_Init();
+	LIS3MDL_Found = LIS3MDL_Init();
 	if(LIS3MDL_Found){
 		printf("#####  LIS3MDL Found  #####\r\n");
 	}
 	else printf("#####  LIS3MDL Not Connected  #####\r\n");
+	LIS3MDL_Configuration();
 	
 	//Loop Forever
   while (1) {
