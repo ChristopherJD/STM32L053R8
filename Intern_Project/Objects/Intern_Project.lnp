@@ -10,6 +10,7 @@
 ".\objects\lps25hb.o"
 ".\objects\lis3mdl.o"
 ".\objects\lsm6ds0.o"
+".\objects\isk01a1.o"
 ".\objects\adc_test.o"
 ".\objects\gpio_test.o"
 ".\objects\startup_stm32l053xx.o"

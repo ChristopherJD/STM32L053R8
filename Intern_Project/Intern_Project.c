@@ -26,6 +26,8 @@
 #include "HTS221.h"											// Temperature and humidity Drivers
 #include "LPS25HB.h"										// Pressure sensor Drivers
 #include "LIS3MDL.h"										// Magnetometer drivers
+#include "LSM6DS0.h"										// Accelerometer and gyroscope
+#include "ISK01A1.h"										// Mems peripheral board drivers
 
 /*------------------------Definitions-----------------------------------------*/
 
@@ -37,11 +39,8 @@
 	float X_Coordinate = 0;
 	float Y_Coordinate = 0;
 	float Z_Coordinate = 0;
+	float Compass_Heading = 0;
 	
-	//Found Devices Variables
-	uint8_t HTS221_Found = 0;
-	uint8_t LPS25HB_Found = 0;
-	uint8_t LIS3MDL_Found = 0;
 /*----------------------------------------------------------------------------
  * main: blink LED 
  *----------------------------------------------------------------------------*/
@@ -65,29 +64,9 @@ int main (void) {
 	//I2C Initialization
 	I2C_Init();
 	
-	//Temperature Sensor Initialize
-	HTS221_Found = HTS221_Init();		//Initializes the device if found
-	if(HTS221_Found){
-		printf("#####  HTS221 Found  #####\r\n");
-	}
-	else printf("#####  HTS221 Not Connected  #####\r\n");
-	HTS221_Configuration();		//Prints the configuration
-	
-	//Pressure Sensor Initialize
-	LPS25HB_Found = LPS25HB_Init();
-	if(LPS25HB_Found){
-		printf("#####  LPS25HB Found  #####\r\n");
-	}
-	else printf("#####  LPS25HB Not Connected  #####\r\n");
-	LPS25HB_Configuration();		//Prints the configuration
-	
-	//Magnetometer Initialize
-	LIS3MDL_Found = LIS3MDL_Init();
-	if(LIS3MDL_Found){
-		printf("#####  LIS3MDL Found  #####\r\n");
-	}
-	else printf("#####  LIS3MDL Not Connected  #####\r\n");
-	LIS3MDL_Configuration();
+	//Mems board Initialization
+	ISK01A1_Init();
+	ISK01A1_Configuration();
 	
 	//Loop Forever
   while (1) {
@@ -97,14 +76,16 @@ int main (void) {
 //		printf("Temperature: %f %cF\r\n",Temperature,248);
 //		printf("Humidity: %f rH\r\n",Humidity);
 //		printf("Pressure: %f hPa\r\n",Pressure);
-		X_Coordinate = LIS2MDL_X_Read();
-		printf("X coordinate: %f mG\r\n",X_Coordinate);
-		
-		Y_Coordinate = LIS2MDL_Y_Read();
-		printf("Y coordinate: %f mG\r\n",Y_Coordinate);
-		
-		Z_Coordinate = LIS2MDL_Z_Read();
-		printf("Z coordinate: %f mG\r\n",Z_Coordinate);
+//		X_Coordinate = LIS3MDL_X_Read();
+//		printf("X coordinate: %f mG\r\n",X_Coordinate);
+//		
+//		Y_Coordinate = LIS3MDL_Y_Read();
+//		printf("Y coordinate: %f mG\r\n",Y_Coordinate);
+//		
+//		Z_Coordinate = LIS3MDL_Z_Read();
+//		printf("Z coordinate: %f mG\r\n",Z_Coordinate);
+		Compass_Heading = LIS3MDL_Compass_Heading();
+		printf("Compass Heading: %f %c\r\n",Compass_Heading,248);
 		Delay(250);
   }
 

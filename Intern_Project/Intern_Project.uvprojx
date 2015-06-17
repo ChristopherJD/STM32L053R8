@@ -468,6 +468,11 @@
               <FileType>1</FileType>
               <FilePath>.\LSM6DS0.c</FilePath>
             </File>
+            <File>
+              <FileName>ISK01A1.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\ISK01A1.c</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>

@@ -9,3 +9,4 @@
 .\objects\lis3mdl.o: I2C.h
 .\objects\lis3mdl.o: Serial.h
 .\objects\lis3mdl.o: LIS3MDL.h
+.\objects\lis3mdl.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\math.h

@@ -17,3 +17,5 @@
 .\objects\intern_project.o: HTS221.h
 .\objects\intern_project.o: LPS25HB.h
 .\objects\intern_project.o: LIS3MDL.h
+.\objects\intern_project.o: LSM6DS0.h
+.\objects\intern_project.o: ISK01A1.h

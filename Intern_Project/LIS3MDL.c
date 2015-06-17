@@ -3,6 +3,7 @@
 #include "I2C.h"													// I2C Support
 #include "Serial.h"
 #include "LIS3MDL.h"
+#include <math.h>													//Math support
 
 /*------------------------------------Slave Address--------------------------------------*/
 #define LIS3MDL_ADDRESS			0x1E		//Slave Address without the r/w
@@ -39,6 +40,8 @@
 #define LIS3MDL_CTRL_REG1_DO2			0x10	//Data outptu rate
 #define LIS3MDL_CTRL_REG2_FS0			0x20	//Full scale setting
 #define LIS3MDL_CTRL_REG2_FS1			0x40	//Full scale setting
+/*-------------------------------------Math Constants------------------------------------*/
+#define PI 3.14159265										//Needed for compass
 /*-------------------------------------Global Variabls-----------------------------------*/
 uint8_t OUT_X_L = 0;
 uint8_t OUT_X_H = 0;
@@ -107,7 +110,7 @@ void LIS3MDL_Configuration(void){
 	printf("---------------------------------------------------------\r\n");
 }
 
-float LIS2MDL_X_Read(void){
+float LIS3MDL_X_Read(void){
 	
 	uint8_t LIS3MDL_STATUS = 0;
 	int16_t Raw_X = 0;
@@ -139,7 +142,7 @@ float LIS2MDL_X_Read(void){
 	return(OUT_X);
 }
 
-float LIS2MDL_Y_Read(void){
+float LIS3MDL_Y_Read(void){
 	
 	uint8_t LIS3MDL_STATUS = 0;
 	int16_t Raw_Y = 0;
@@ -167,7 +170,7 @@ float LIS2MDL_Y_Read(void){
 	return(OUT_Y);
 }
 
-float LIS2MDL_Z_Read(void){
+float LIS3MDL_Z_Read(void){
 	
 	uint8_t LIS3MDL_STATUS = 0;
 	int16_t Raw_Z = 0;
@@ -194,4 +197,22 @@ float LIS2MDL_Z_Read(void){
 	*/
 	OUT_Z = (float)Raw_Z * 0.146f;		// when using +/- 4 gauss
 	return(OUT_Z);
+}
+
+float LIS3MDL_Compass_Heading(void){
+	
+	float Direction = 0;
+	float Hx = 0;
+	float Hy = 0;
+	
+	Hx = fabsf(LIS3MDL_X_Read());
+	Hy = fabsf(LIS3MDL_Y_Read());
+	//Hz = fabsf(LIS3MDL_Z_Read());
+	
+	if((OUT_X > 0) & (OUT_Y > 0)) Direction = atan(Hx/Hy); 
+	if((OUT_X > 0) & (OUT_Y < 0)) Direction = 90.0f + atan(Hy/Hx);
+	if((OUT_X < 0) & (OUT_Y < 0)) Direction = 90.0f + atan(Hy/Hx);
+	if((OUT_X < 0) & (OUT_Y > 0)) Direction = atan(Hx/Hy);  	
+	
+	return(Direction);
 }
