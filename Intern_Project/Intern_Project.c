@@ -34,6 +34,9 @@
 	float Temperature = 0;
 	float Humidity = 0;
 	float Pressure = 0;
+	float X_Coordinate = 0;
+	float Y_Coordinate = 0;
+	float Z_Coordinate = 0;
 	
 	//Found Devices Variables
 	uint8_t HTS221_Found = 0;
@@ -91,10 +94,17 @@ int main (void) {
 //		Temperature = HTS221_Temp_Read();
 //		Humidity = HTS221_Humidity_Read();
 //		Pressure = LPS25HB_Pressure_Read();
-//		printf("Temperature: %f\r\n",Temperature);
-//		printf("Humidity: %f\r\n",Humidity);
+//		printf("Temperature: %f %cF\r\n",Temperature,248);
+//		printf("Humidity: %f rH\r\n",Humidity);
 //		printf("Pressure: %f hPa\r\n",Pressure);
+		X_Coordinate = LIS2MDL_X_Read();
+		printf("X coordinate: %f mG\r\n",X_Coordinate);
 		
+		Y_Coordinate = LIS2MDL_Y_Read();
+		printf("Y coordinate: %f mG\r\n",Y_Coordinate);
+		
+		Z_Coordinate = LIS2MDL_Z_Read();
+		printf("Z coordinate: %f mG\r\n",Z_Coordinate);
 		Delay(250);
   }
 

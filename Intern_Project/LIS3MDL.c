@@ -16,6 +16,7 @@
 #define LIS3MDL_OUT_Z_H			0x2D		//Z coordinates Upper 8 bits
 #define LIS3MDL_STATUS_REG	0x27		//Status register contains XYZ data available and overrun
 #define LIS3MDL_CTRL_REG1		0x20		//Determine XY power consumption vs performance
+#define LIS3MDL_CTRL_REG2		0x21		//Contains Full scale configuration
 #define LTS3MDL_CTRL_REG3		0x22		//Contains operating mode (similar to PD)
 #define LTS3MDL_CTRL_REG4		0x23		//Determine Z power consumption vs performance
 #define LTS3MDL_CTRL_REG5		0x24		//Contains BDU
@@ -36,6 +37,8 @@
 #define LIS3MDL_CTRL_REG1_DO0			0x4		//Data output rate
 #define LIS3MDL_CTRL_REG1_DO1			0x8		//Data output rate
 #define LIS3MDL_CTRL_REG1_DO2			0x10	//Data outptu rate
+#define LIS3MDL_CTRL_REG2_FS0			0x20	//Full scale setting
+#define LIS3MDL_CTRL_REG2_FS1			0x40	//Full scale setting
 /*-------------------------------------Global Variabls-----------------------------------*/
 uint8_t OUT_X_L = 0;
 uint8_t OUT_X_H = 0;
@@ -43,6 +46,9 @@ uint8_t OUT_Y_L = 0;
 uint8_t OUT_Y_H = 0;
 uint8_t OUT_Z_L = 0;
 uint8_t OUT_Z_H = 0;
+float OUT_X = 0;
+float OUT_Y = 0;
+float OUT_Z = 0;
 
 uint8_t LIS3MDL_Init(void){
 	uint8_t Device_Found = 0;
@@ -63,14 +69,14 @@ uint8_t LIS3MDL_Init(void){
 		//Performance Vs. Power consumption XY (medium), and set data rate to 10Hz
 		I2C_Write_Reg(LIS3MDL_ADDRESS,LIS3MDL_CTRL_REG1,(LIS3MDL_CTRL_REG1_OM0 | LIS3MDL_CTRL_REG1_DO2));
 		
+		//Full scale = +/- 4 gauss (Default value) - just in case
+		I2C_Write_Reg(LIS3MDL_ADDRESS,LIS3MDL_CTRL_REG2,0x0);
+		
 		//Performance Vs. Power consumption Z (medium)
 		I2C_Write_Reg(LIS3MDL_ADDRESS,LTS3MDL_CTRL_REG4,LIS3MDL_CTRL_REG4_OMZ0);
 		
 		//Enable BDU so you ensure MSB and LSB have been read
 		I2C_Write_Reg(LIS3MDL_ADDRESS,LTS3MDL_CTRL_REG5,LIS3MDL_CTRL_REG5_BDU);
-		
-		//Set device to single conversion mode
-		I2C_Write_Reg(LIS3MDL_ADDRESS,LTS3MDL_CTRL_REG3,0x0);
 	}
 	
 	return(Device_Found);
@@ -93,9 +99,99 @@ void LIS3MDL_Configuration(void){
 	//Enable BDU so you ensure MSB and LSB have been read
 	I2C_Read_Reg(LIS3MDL_ADDRESS,LTS3MDL_CTRL_REG5);
 	printf("BDU Enabled: %x\r\n",I2C1->RXDR);
+	
+	//Enable BDU so you ensure MSB and LSB have been read
+	I2C_Read_Reg(LIS3MDL_ADDRESS,LIS3MDL_CTRL_REG2);
+	printf("Full scale mode: %x\r\n",I2C1->RXDR);
+	
 	printf("---------------------------------------------------------\r\n");
 }
 
-float LIS2MDL_XYZ_Read(void){
+float LIS2MDL_X_Read(void){
 	
+	uint8_t LIS3MDL_STATUS = 0;
+	int16_t Raw_X = 0;
+	
+	//Set device to continuous conversion mode
+	I2C_Write_Reg(LIS3MDL_ADDRESS,LTS3MDL_CTRL_REG3,LIS3MDL_CTRL_REG3_MD0);
+	
+	//Wait for X coordinate data to be ready
+	do{
+		I2C_Read_Reg(LIS3MDL_ADDRESS,LIS3MDL_STATUS_REG);
+		LIS3MDL_STATUS = I2C1->RXDR;
+	}while((LIS3MDL_STATUS & LIS3MDL_STATUS_REG_XDA) == 0);
+	
+	//Read XYZ positions
+	I2C_Read_Reg(LIS3MDL_ADDRESS,LIS3MDL_OUT_X_L);
+	OUT_X_L = I2C1->RXDR;
+	
+	I2C_Read_Reg(LIS3MDL_ADDRESS,LIS3MDL_OUT_X_H);
+	OUT_X_H = I2C1->RXDR;
+	
+	//Process XYZ coordinates
+	Raw_X = ((OUT_X_H << 8) | OUT_X_L);
+	
+		/*
+	1/6842 = ~0.146 mG/LSB according to datasheet
+	*/
+	OUT_X = (float)Raw_X * 0.146f;		// when using +/- 4 gauss
+
+	return(OUT_X);
+}
+
+float LIS2MDL_Y_Read(void){
+	
+	uint8_t LIS3MDL_STATUS = 0;
+	int16_t Raw_Y = 0;
+	
+	//Set device to continuous conversion mode
+	I2C_Write_Reg(LIS3MDL_ADDRESS,LTS3MDL_CTRL_REG3,LIS3MDL_CTRL_REG3_MD0);
+	
+	//Wait for X coordinate data to be ready
+	do{
+		I2C_Read_Reg(LIS3MDL_ADDRESS,LIS3MDL_STATUS_REG);
+		LIS3MDL_STATUS = I2C1->RXDR;
+	}while((LIS3MDL_STATUS & LIS3MDL_STATUS_REG_YDA) == 0);
+	
+	I2C_Read_Reg(LIS3MDL_ADDRESS,LIS3MDL_OUT_Y_L);
+	OUT_Y_L = I2C1->RXDR;
+	
+	I2C_Read_Reg(LIS3MDL_ADDRESS,LIS3MDL_OUT_Y_H);
+	OUT_Y_H = I2C1->RXDR;
+	
+	/*
+	1/6842 = ~0.146 mG/LSB according to datasheet
+	*/
+	Raw_Y = ((OUT_Y_H << 8) | OUT_Y_L);
+	OUT_Y = (float)Raw_Y * 0.146f;		// when using +/- 4 gauss
+	return(OUT_Y);
+}
+
+float LIS2MDL_Z_Read(void){
+	
+	uint8_t LIS3MDL_STATUS = 0;
+	int16_t Raw_Z = 0;
+	
+	//Set device to continuous conversion mode
+	I2C_Write_Reg(LIS3MDL_ADDRESS,LTS3MDL_CTRL_REG3,LIS3MDL_CTRL_REG3_MD0);
+	
+	//Wait for X coordinate data to be ready
+	do{
+		I2C_Read_Reg(LIS3MDL_ADDRESS,LIS3MDL_STATUS_REG);
+		LIS3MDL_STATUS = I2C1->RXDR;
+	}while((LIS3MDL_STATUS & LIS3MDL_STATUS_REG_ZDA) == 0);
+	
+	I2C_Read_Reg(LIS3MDL_ADDRESS,LIS3MDL_OUT_Z_L);
+	OUT_Z_L = I2C1->RXDR;
+	
+	I2C_Read_Reg(LIS3MDL_ADDRESS,LIS3MDL_OUT_Z_H);
+	OUT_Z_H = I2C1->RXDR;
+	
+	Raw_Z = ((OUT_Z_H << 8) | OUT_Z_L);
+	
+	/*
+	1/6842 = ~0.146 mG/LSB according to datasheet
+	*/
+	OUT_Z = (float)Raw_Z * 0.146f;		// when using +/- 4 gauss
+	return(OUT_Z);
 }
