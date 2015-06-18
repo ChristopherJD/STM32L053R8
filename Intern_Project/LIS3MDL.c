@@ -205,14 +205,16 @@ float LIS3MDL_Compass_Heading(void){
 	float Hx = 0;
 	float Hy = 0;
 	
-	Hx = fabsf(LIS3MDL_X_Read());
-	Hy = fabsf(LIS3MDL_Y_Read());
-	//Hz = fabsf(LIS3MDL_Z_Read());
+	Hx = LIS3MDL_X_Read();
+	Hy = LIS3MDL_Y_Read();
 	
-	if((OUT_X > 0) & (OUT_Y > 0)) Direction = atan(Hx/Hy); 
-	if((OUT_X > 0) & (OUT_Y < 0)) Direction = 90.0f + atan(Hy/Hx);
-	if((OUT_X < 0) & (OUT_Y < 0)) Direction = 90.0f + atan(Hy/Hx);
-	if((OUT_X < 0) & (OUT_Y > 0)) Direction = atan(Hx/Hy);  	
+	if((OUT_X > 0) & (OUT_Y > 0)) Direction = fabsf(atan(Hx/Hy))*(180.0f/PI)+270.0f; 
+	if((OUT_X > 0) & (OUT_Y < 0)) Direction = fabsf(atan(Hy/Hx))*(180.0f/PI);
+	if((OUT_X < 0) & (OUT_Y < 0)) Direction = fabsf(atan(Hx/Hy))*(180.0f/PI)+90.0f;
+	if((OUT_X < 0) & (OUT_Y > 0)) Direction = fabs(atan(Hy/Hx))*(180.0f/PI)+180.0f;
+	if((OUT_X == 0) & (OUT_Y != 0)) Direction = 360.0f;
+	
+//	Direction = atan2(OUT_Y,OUT_X);
 	
 	return(Direction);
 }

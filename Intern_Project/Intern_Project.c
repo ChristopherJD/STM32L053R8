@@ -40,6 +40,10 @@
 	float Y_Coordinate = 0;
 	float Z_Coordinate = 0;
 	float Compass_Heading = 0;
+	float Acceleration_X = 0;
+	float Acceleration_Y = 0;
+	float Acceleration_Z = 0;
+	float Roll = 0;
 	
 /*----------------------------------------------------------------------------
  * main: blink LED 
@@ -84,8 +88,17 @@ int main (void) {
 //		
 //		Z_Coordinate = LIS3MDL_Z_Read();
 //		printf("Z coordinate: %f mG\r\n",Z_Coordinate);
-		Compass_Heading = LIS3MDL_Compass_Heading();
-		printf("Compass Heading: %f %c\r\n",Compass_Heading,248);
+//		Compass_Heading = LIS3MDL_Compass_Heading();
+//		printf("Compass Heading: %f %c\r\n",Compass_Heading,248);
+		Acceleration_X = LSM6DS0_X_Acceleration_Read();
+		printf("XL_X: %f mg\r\n",Acceleration_X);
+		
+		Acceleration_Y = LSM6DS0_Y_Acceleration_Read();
+		printf("XL_Y: %f mg\r\n",Acceleration_Y);
+		
+		Acceleration_Z = LSM6DS0_Z_Acceleration_Read();
+		printf("XL_Z: %f mg\r\n",Acceleration_Z);
+		
 		Delay(250);
   }
 

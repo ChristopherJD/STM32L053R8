@@ -61,4 +61,5 @@ void ISK01A1_Configuration(void){
 	HTS221_Configuration();		//Prints the configuration
 	LPS25HB_Configuration();	//Prints the configuration
 	LIS3MDL_Configuration();	//Prints the configuration
+	LSM6DS0_Configuration();	//Prints the configuration
 }

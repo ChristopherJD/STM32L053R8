@@ -51,6 +51,8 @@ uint8_t LSM6DS0_Init(void){
 	/*-------------------------------Setup HTS221_AV_CONF Register------------------------------------*/
 	if(Device_Found){
 		
+		//Enable Block Data Update until MSB and LSB read
+		I2C_Write_Reg(LSM6DS0_ADDRESS,LSM6DS0_CTRL_REG8,LSM6DS0_CTRL_REG8_BDU);
 		//Activate both the gyro and the accelerometer at the same ODR of 238 Hz
 		I2C_Write_Reg(LSM6DS0_ADDRESS,LSM6DS0_CTRL_REG1_G,LSM6DS0_CTRL_REG1_G_ODR_G2);
 	}
@@ -58,6 +60,124 @@ uint8_t LSM6DS0_Init(void){
 	
 	return(Device_Found);
 }
+
 void LSM6DS0_Configuration(void){
 	
+	printf("----------------Configuration Settings-------------------\r\n");	
+	
+	I2C_Read_Reg(LSM6DS0_ADDRESS,LSM6DS0_CTRL_REG8);
+	printf("CTRL_Reg8: %x\r\n",I2C1->RXDR);
+	
+	I2C_Read_Reg(LSM6DS0_ADDRESS,LSM6DS0_CTRL_REG1_G);
+	printf("CTRL_Reg1_G: %x\r\n",I2C1->RXDR);
+	
+	printf("---------------------------------------------------------\r\n");
+}
+
+float LSM6DS0_X_Acceleration_Read(void){
+	
+	uint8_t LSM6DS0_STATUS = 0;
+	uint8_t Out_X_XL_L = 0;
+	uint8_t Out_X_XL_H = 0;
+	int16_t Raw_X = 0;
+	float Acceleration_X = 0;
+	
+	//Wait for acceleration data to be ready
+	do{
+		I2C_Read_Reg(LSM6DS0_ADDRESS,LSM6DS0_STATUS_REG);
+		LSM6DS0_STATUS = I2C1->RXDR;
+	}while((LSM6DS0_STATUS & LSM6DS0_STATUS_REG_XLDA) == 0);
+	
+	I2C_Read_Reg(LSM6DS0_ADDRESS,LSM6DS0_OUT_X_XL_L);
+	Out_X_XL_L = I2C1->RXDR;
+	
+	I2C_Read_Reg(LSM6DS0_ADDRESS,LSM6DS0_OUT_X_XL_H);
+	Out_X_XL_H = I2C1->RXDR;
+	
+	Raw_X = ((Out_X_XL_H << 8) | Out_X_XL_L);
+	
+	Acceleration_X = (float)Raw_X*0.061f;
+	
+	return(Acceleration_X);
+}
+
+float LSM6DS0_Y_Acceleration_Read(void){
+	
+	uint8_t LSM6DS0_STATUS = 0;
+	uint8_t Out_Y_XL_L = 0;
+	uint8_t Out_Y_XL_H = 0;
+	int16_t Raw_Y = 0;
+	float Acceleration_Y = 0;
+	
+	//Wait for acceleration data to be ready
+	do{
+		I2C_Read_Reg(LSM6DS0_ADDRESS,LSM6DS0_STATUS_REG);
+		LSM6DS0_STATUS = I2C1->RXDR;
+	}while((LSM6DS0_STATUS & LSM6DS0_STATUS_REG_XLDA) == 0);
+	
+	I2C_Read_Reg(LSM6DS0_ADDRESS,LSM6DS0_OUT_Y_XL_L);
+	Out_Y_XL_L = I2C1->RXDR;
+	
+	I2C_Read_Reg(LSM6DS0_ADDRESS,LSM6DS0_OUT_Y_XL_H);
+	Out_Y_XL_H = I2C1->RXDR;
+	
+	Raw_Y = ((Out_Y_XL_H << 8) | Out_Y_XL_L);
+	
+	Acceleration_Y = (float)Raw_Y*0.061f;
+	
+	return(Acceleration_Y);
+}
+
+float LSM6DS0_Z_Acceleration_Read(void){
+	
+	uint8_t LSM6DS0_STATUS = 0;
+	uint8_t Out_Z_XL_L = 0;
+	uint8_t Out_Z_XL_H = 0;
+	int16_t Raw_Z = 0;
+	float Acceleration_Z = 0;
+	
+	//Wait for acceleration data to be ready
+	do{
+		I2C_Read_Reg(LSM6DS0_ADDRESS,LSM6DS0_STATUS_REG);
+		LSM6DS0_STATUS = I2C1->RXDR;
+	}while((LSM6DS0_STATUS & LSM6DS0_STATUS_REG_XLDA) == 0);
+	
+	I2C_Read_Reg(LSM6DS0_ADDRESS,LSM6DS0_OUT_Z_XL_L);
+	Out_Z_XL_L = I2C1->RXDR;
+	
+	I2C_Read_Reg(LSM6DS0_ADDRESS,LSM6DS0_OUT_Z_XL_H);
+	Out_Z_XL_H = I2C1->RXDR;
+	
+	Raw_Z = ((Out_Z_XL_H << 8) | Out_Z_XL_L);
+	
+	Acceleration_Z = (float)Raw_Z*0.061f;
+	
+	return(Acceleration_Z);
+}
+
+float LSM6DS0_Gyroscope_Roll_Read(void){
+	
+	uint8_t LSM6DS0_STATUS = 0;
+	uint8_t Roll_L = 0;
+	uint8_t Roll_H = 0;
+	int16_t Raw_Roll = 0;
+	float Roll = 0;
+	
+	//Wait for acceleration data to be ready
+	do{
+		I2C_Read_Reg(LSM6DS0_ADDRESS,LSM6DS0_STATUS_REG);
+		LSM6DS0_STATUS = I2C1->RXDR;
+	}while((LSM6DS0_STATUS & LSM6DS0_STATUS_REG_XLDA) == 0);
+	
+	I2C_Read_Reg(LSM6DS0_ADDRESS,LSM6DS0_OUT_X_G_L);
+	Roll_L = I2C1->RXDR;
+	
+	I2C_Read_Reg(LSM6DS0_ADDRESS,LSM6DS0_OUT_X_G_H);
+	Roll_H = I2C1->RXDR;
+	
+	Raw_Roll = ((Roll_H << 8) | Roll_L);
+	
+	Roll = (float)Raw_Roll*0.061f;
+	
+	return(Roll);
 }

@@ -1,5 +1,5 @@
 Dependencies for Project 'Intern_Project', Target 'STM32l053 Nucleo Board': (DO NOT MODIFY !)
-F (.\Intern_Project.c)(0x5581DAC4)(-c --cpu Cortex-M0+ -D__EVAL -g -O0 --apcs=interwork --split_sections-I C:\Users\Digi-Key\Documents\GitHub\STM32L053R8\Intern_Project\RTE-I C:\Keil_v5\ARM\PACK\ARM\CMSIS\4.3.0\CMSIS\Include-I C:\Keil_v5\ARM\PACK\Keil\STM32L0xx_DFP\1.3.0\Device\Include-D__UVISION_VERSION="514" -D_RTE_ -DSTM32L053xx-o .\objects\intern_project.o --omf_browse .\objects\intern_project.crf --depend .\objects\intern_project.d)
+F (.\Intern_Project.c)(0x5582F75D)(-c --cpu Cortex-M0+ -D__EVAL -g -O0 --apcs=interwork --split_sections-I C:\Users\Digi-Key\Documents\GitHub\STM32L053R8\Intern_Project\RTE-I C:\Keil_v5\ARM\PACK\ARM\CMSIS\4.3.0\CMSIS\Include-I C:\Keil_v5\ARM\PACK\Keil\STM32L0xx_DFP\1.3.0\Device\Include-D__UVISION_VERSION="514" -D_RTE_ -DSTM32L053xx-o .\objects\intern_project.o --omf_browse .\objects\intern_project.crf --depend .\objects\intern_project.d)
 I (C:\Keil_v5\ARM\ARMCC\include\stdio.h)(0x5476B7E0)
 I (C:\Keil_v5\ARM\PACK\Keil\STM32L0xx_DFP\1.3.0\Device\Include\stm32l0xx.h)(0x53502282)
 I (C:\Keil_v5\ARM\PACK\Keil\STM32L0xx_DFP\1.3.0\Device\Include\stm32l053xx.h)(0x53502282)
@@ -18,7 +18,7 @@ I (I2C.h)(0x5579EA20)
 I (HTS221.h)(0x55802831)
 I (LPS25HB.h)(0x55803D73)
 I (LIS3MDL.h)(0x5581D9D5)
-I (LSM6DS0.h)(0x55809454)
+I (LSM6DS0.h)(0x5582F714)
 I (ISK01A1.h)(0x5581BA4F)
 F (.\ADC.c)(0x5573613A)(-c --cpu Cortex-M0+ -D__EVAL -g -O0 --apcs=interwork --split_sections-I C:\Users\Digi-Key\Documents\GitHub\STM32L053R8\Intern_Project\RTE-I C:\Keil_v5\ARM\PACK\ARM\CMSIS\4.3.0\CMSIS\Include-I C:\Keil_v5\ARM\PACK\Keil\STM32L0xx_DFP\1.3.0\Device\Include-D__UVISION_VERSION="514" -D_RTE_ -DSTM32L053xx-o .\objects\adc.o --omf_browse .\objects\adc.crf --depend .\objects\adc.d)
 I (C:\Keil_v5\ARM\PACK\Keil\STM32L0xx_DFP\1.3.0\Device\Include\stm32l0xx.h)(0x53502282)
@@ -93,7 +93,7 @@ I (C:\Keil_v5\ARM\ARMCC\include\stdio.h)(0x5476B7E0)
 I (I2C.h)(0x5579EA20)
 I (Serial.h)(0x53A1EE6E)
 I (LPS25HB.h)(0x55803D73)
-F (.\LIS3MDL.c)(0x5581EEFC)(-c --cpu Cortex-M0+ -D__EVAL -g -O0 --apcs=interwork --split_sections-I C:\Users\Digi-Key\Documents\GitHub\STM32L053R8\Intern_Project\RTE-I C:\Keil_v5\ARM\PACK\ARM\CMSIS\4.3.0\CMSIS\Include-I C:\Keil_v5\ARM\PACK\Keil\STM32L0xx_DFP\1.3.0\Device\Include-D__UVISION_VERSION="514" -D_RTE_ -DSTM32L053xx-o .\objects\lis3mdl.o --omf_browse .\objects\lis3mdl.crf --depend .\objects\lis3mdl.d)
+F (.\LIS3MDL.c)(0x5582D389)(-c --cpu Cortex-M0+ -D__EVAL -g -O0 --apcs=interwork --split_sections-I C:\Users\Digi-Key\Documents\GitHub\STM32L053R8\Intern_Project\RTE-I C:\Keil_v5\ARM\PACK\ARM\CMSIS\4.3.0\CMSIS\Include-I C:\Keil_v5\ARM\PACK\Keil\STM32L0xx_DFP\1.3.0\Device\Include-D__UVISION_VERSION="514" -D_RTE_ -DSTM32L053xx-o .\objects\lis3mdl.o --omf_browse .\objects\lis3mdl.crf --depend .\objects\lis3mdl.d)
 I (C:\Keil_v5\ARM\PACK\Keil\STM32L0xx_DFP\1.3.0\Device\Include\stm32l053xx.h)(0x53502282)
 I (C:\Keil_v5\ARM\PACK\ARM\CMSIS\4.3.0\CMSIS\Include\core_cm0plus.h)(0x5509F2D4)
 I (C:\Keil_v5\ARM\ARMCC\include\stdint.h)(0x5476B7E0)
@@ -105,7 +105,7 @@ I (I2C.h)(0x5579EA20)
 I (Serial.h)(0x53A1EE6E)
 I (LIS3MDL.h)(0x5581D9D5)
 I (C:\Keil_v5\ARM\ARMCC\include\math.h)(0x5476B7DE)
-F (.\LSM6DS0.c)(0x5581D5B8)(-c --cpu Cortex-M0+ -D__EVAL -g -O0 --apcs=interwork --split_sections-I C:\Users\Digi-Key\Documents\GitHub\STM32L053R8\Intern_Project\RTE-I C:\Keil_v5\ARM\PACK\ARM\CMSIS\4.3.0\CMSIS\Include-I C:\Keil_v5\ARM\PACK\Keil\STM32L0xx_DFP\1.3.0\Device\Include-D__UVISION_VERSION="514" -D_RTE_ -DSTM32L053xx-o .\objects\lsm6ds0.o --omf_browse .\objects\lsm6ds0.crf --depend .\objects\lsm6ds0.d)
+F (.\LSM6DS0.c)(0x5582F714)(-c --cpu Cortex-M0+ -D__EVAL -g -O0 --apcs=interwork --split_sections-I C:\Users\Digi-Key\Documents\GitHub\STM32L053R8\Intern_Project\RTE-I C:\Keil_v5\ARM\PACK\ARM\CMSIS\4.3.0\CMSIS\Include-I C:\Keil_v5\ARM\PACK\Keil\STM32L0xx_DFP\1.3.0\Device\Include-D__UVISION_VERSION="514" -D_RTE_ -DSTM32L053xx-o .\objects\lsm6ds0.o --omf_browse .\objects\lsm6ds0.crf --depend .\objects\lsm6ds0.d)
 I (C:\Keil_v5\ARM\PACK\Keil\STM32L0xx_DFP\1.3.0\Device\Include\stm32l053xx.h)(0x53502282)
 I (C:\Keil_v5\ARM\PACK\ARM\CMSIS\4.3.0\CMSIS\Include\core_cm0plus.h)(0x5509F2D4)
 I (C:\Keil_v5\ARM\ARMCC\include\stdint.h)(0x5476B7E0)
@@ -115,8 +115,8 @@ I (C:\Keil_v5\ARM\PACK\Keil\STM32L0xx_DFP\1.3.0\Device\Include\system_stm32l0xx.
 I (C:\Keil_v5\ARM\ARMCC\include\stdio.h)(0x5476B7E0)
 I (I2C.h)(0x5579EA20)
 I (Serial.h)(0x53A1EE6E)
-I (LSM6DS0.h)(0x55809454)
-F (.\ISK01A1.c)(0x5581BBB7)(-c --cpu Cortex-M0+ -D__EVAL -g -O0 --apcs=interwork --split_sections-I C:\Users\Digi-Key\Documents\GitHub\STM32L053R8\Intern_Project\RTE-I C:\Keil_v5\ARM\PACK\ARM\CMSIS\4.3.0\CMSIS\Include-I C:\Keil_v5\ARM\PACK\Keil\STM32L0xx_DFP\1.3.0\Device\Include-D__UVISION_VERSION="514" -D_RTE_ -DSTM32L053xx-o .\objects\isk01a1.o --omf_browse .\objects\isk01a1.crf --depend .\objects\isk01a1.d)
+I (LSM6DS0.h)(0x5582F714)
+F (.\ISK01A1.c)(0x5582E9E8)(-c --cpu Cortex-M0+ -D__EVAL -g -O0 --apcs=interwork --split_sections-I C:\Users\Digi-Key\Documents\GitHub\STM32L053R8\Intern_Project\RTE-I C:\Keil_v5\ARM\PACK\ARM\CMSIS\4.3.0\CMSIS\Include-I C:\Keil_v5\ARM\PACK\Keil\STM32L0xx_DFP\1.3.0\Device\Include-D__UVISION_VERSION="514" -D_RTE_ -DSTM32L053xx-o .\objects\isk01a1.o --omf_browse .\objects\isk01a1.crf --depend .\objects\isk01a1.d)
 I (C:\Keil_v5\ARM\ARMCC\include\stdio.h)(0x5476B7E0)
 I (C:\Keil_v5\ARM\PACK\Keil\STM32L0xx_DFP\1.3.0\Device\Include\stm32l0xx.h)(0x53502282)
 I (C:\Keil_v5\ARM\PACK\Keil\STM32L0xx_DFP\1.3.0\Device\Include\stm32l053xx.h)(0x53502282)
@@ -130,7 +130,7 @@ I (Timing.h)(0x55726CAB)
 I (HTS221.h)(0x55802831)
 I (LPS25HB.h)(0x55803D73)
 I (LIS3MDL.h)(0x5581D9D5)
-I (LSM6DS0.h)(0x55809454)
+I (LSM6DS0.h)(0x5582F714)
 F (.\ADC_Test.c)(0x5570B7CA)(-c --cpu Cortex-M0+ -D__EVAL -g -O0 --apcs=interwork --split_sections-I C:\Users\Digi-Key\Documents\GitHub\STM32L053R8\Intern_Project\RTE-I C:\Keil_v5\ARM\PACK\ARM\CMSIS\4.3.0\CMSIS\Include-I C:\Keil_v5\ARM\PACK\Keil\STM32L0xx_DFP\1.3.0\Device\Include-D__UVISION_VERSION="514" -D_RTE_ -DSTM32L053xx-o .\objects\adc_test.o --omf_browse .\objects\adc_test.crf --depend .\objects\adc_test.d)
 I (C:\Keil_v5\ARM\ARMCC\include\stdio.h)(0x5476B7E0)
 I (ADC.h)(0x5573617D)
