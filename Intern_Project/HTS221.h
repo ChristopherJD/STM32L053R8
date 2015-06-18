@@ -1,3 +1,12 @@
+/*----------------------------------------------------------------------------
+ * Name:    hTS221.h
+ * Purpose: Retrieve Temperature and Humidity data
+ * Date: 		6/18/15
+ * Author:	Christopher Jordan - Denny
+ *----------------------------------------------------------------------------
+ * Note(s): See C file for more information
+ *----------------------------------------------------------------------------*/
+
 #include "stm32l053xx.h"
 
 #ifndef HTS221_H

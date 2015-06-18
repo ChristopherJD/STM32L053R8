@@ -1,3 +1,12 @@
+/*----------------------------------------------------------------------------
+ * Name:    LIS3MDL.h
+ * Purpose: Retrieve magnetometer data
+ * Date: 		6/18/15
+ * Author:	Christopher Jordan - Denny
+ *----------------------------------------------------------------------------
+ * Note(s): See C file for more information
+ *----------------------------------------------------------------------------*/
+
 #include "stm32l053xx.h"
 
 #ifndef LIS3MDL_H
@@ -8,6 +17,5 @@ extern void LIS3MDL_Configuration(void);
 extern float LIS3MDL_X_Read(void);
 extern float LIS3MDL_Y_Read(void);
 extern float LIS3MDL_Z_Read(void);
-extern float LIS3MDL_Compass_Heading(void);
 
 #endif

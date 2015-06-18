@@ -1,12 +1,21 @@
-#include "stm32l053xx.h"                  // Device header
-#include <stdio.h>
-#include "I2C.h"													// I2C Support
-#include "Serial.h"
-#include "LPS25HB.h"
+/*----------------------------------------------------------------------------
+ * Name:    LPS25HB.c
+ * Purpose: Retrieve Pressure data
+ * Date: 		6/18/15
+ * Author:	Christopher Jordan - Denny
+ *----------------------------------------------------------------------------
+ * Note(s): Communicates using I2C
+ *----------------------------------------------------------------------------*/
 
+/*---------------------------------Include Statements-------------------------*/
+#include "stm32l053xx.h"                  // Specific device header
+#include <stdio.h>												// Standard input and output
+#include "I2C.h"													// I2C Drivers
+#include "Serial.h"												// Usart Drivers
+#include "LPS25HB.h"
 /*---------------------------------Slave Address---------------------------------*/
 #define LPS25HB_ADDRESS 0x5D		//Note that SA0 = 1 so address is 1011101 and not 1011100
-/*---------------------------------Device ID----------------------------------------------*/
+/*---------------------------------Device ID-------------------------------------*/
 #define LPS25HB_DEVICE_ID				0xBD	//Device ID, the value in the WHO_AM_I 	Register
 /*---------------------------------Register Locations----------------------------*/
 #define LPS25HB_WHO_AM_I				0x0F	//Who am I register location
@@ -24,17 +33,13 @@
 #define LPS25HB_RES_CONF_AVGP0				0x1		//Pressure resolution Configuration
 #define LPS25HB_RES_CONF_AVGP1				0x2		//Pressure resolution Configuration
 #define LPS25HB_STATUS_REG_PDA				0x2		//Pressure data available
-/*---------------------------------Global Variables--------------------------------*/
-//Initial Pressure readings
-uint8_t PRESS_OUT_XL = 0;
-uint8_t PRESS_OUT_L = 0;
-uint8_t PRESS_OUT_H = 0;
+/*---------------------------------Functions--------------------------------------*/
 
-//Pressure Variables
-float LPS25HB_Pressure = 0;
-
-// Determines if Temperature or Humidity Data is ready
-uint8_t LPS25HB_STATUS = 0;
+/**
+  \fn					uint8_t LPS25HB_Init(void))
+  \brief			Initializes the LPS25HB Pressure sensor
+	\returns 		uint8_t Device_Found:  1 - Device found, 0 - Device not found
+*/
 
 uint8_t LPS25HB_Init(void){
 	
@@ -62,6 +67,11 @@ uint8_t LPS25HB_Init(void){
 	return(Device_Found);
 }
 
+/**
+  \fn					void LPS25HB_Configuration(void)
+  \brief			Prints important Configuration registers
+*/
+
 void LPS25HB_Configuration(void){
 	
 	printf("----------------Configuration Settings-------------------\r\n");	
@@ -75,9 +85,21 @@ void LPS25HB_Configuration(void){
 	printf("---------------------------------------------------------\r\n");
 }
 
+/**
+  \fn					void LPS25HB_Configuration(void)
+  \brief			Prints important Configuration registers
+	\returns		float LPS25HB_Pressure: pressure measured in hPa
+*/
+
 float LPS25HB_Pressure_Read(void){
 	
+	//Local Variables
+	uint8_t PRESS_OUT_XL = 0;
+	uint8_t PRESS_OUT_L = 0;
+	uint8_t PRESS_OUT_H = 0;
+	float Pressure = 0;
 	int32_t Raw_Pressure = 0;
+	uint8_t LPS25HB_STATUS = 0;
 	
 	//Start a temperature conversion
 	I2C_Write_Reg(LPS25HB_ADDRESS,LPS25HB_CTRL_REG2,LPS25HB_CTRL_REG2_ONE_SHOT);
@@ -111,8 +133,9 @@ float LPS25HB_Pressure_Read(void){
 	if (Raw_Pressure & 0x00800000){
 			Raw_Pressure |= 0xFF000000;
 	}
-		
-	LPS25HB_Pressure = (float)Raw_Pressure/4096.0f;
 	
-	return(LPS25HB_Pressure);
+	//Calculate Pressure in hPa
+	Pressure = (float)Raw_Pressure/4096.0f;
+	
+	return(Pressure);
 }

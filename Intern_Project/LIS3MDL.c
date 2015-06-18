@@ -1,10 +1,18 @@
-#include "stm32l053xx.h"                  // Device header
-#include <stdio.h>
-#include "I2C.h"													// I2C Support
-#include "Serial.h"
-#include "LIS3MDL.h"
-#include <math.h>													//Math support
+/*----------------------------------------------------------------------------
+ * Name:    LIS3MDL.c
+ * Purpose: Retrieve magnetometer data
+ * Date: 		6/18/15
+ * Author:	Christopher Jordan - Denny
+ *----------------------------------------------------------------------------
+ * Note(s): Sensor communicates using I2C.Reads magnetrometer data
+ *----------------------------------------------------------------------------*/
 
+/*------------------------------------Include Statements--------------------------------*/
+#include "stm32l053xx.h"                  // Specific device header
+#include <stdio.h>												// Standard input output
+#include "I2C.h"													// I2C Support
+#include "Serial.h"												// USART Drivers
+#include "LIS3MDL.h"
 /*------------------------------------Slave Address--------------------------------------*/
 #define LIS3MDL_ADDRESS			0x1E		//Slave Address without the r/w
 /*------------------------------------LIS3MDL Registers----------------------------------*/
@@ -40,20 +48,17 @@
 #define LIS3MDL_CTRL_REG1_DO2			0x10	//Data outptu rate
 #define LIS3MDL_CTRL_REG2_FS0			0x20	//Full scale setting
 #define LIS3MDL_CTRL_REG2_FS1			0x40	//Full scale setting
-/*-------------------------------------Math Constants------------------------------------*/
-#define PI 3.14159265										//Needed for compass
-/*-------------------------------------Global Variabls-----------------------------------*/
-uint8_t OUT_X_L = 0;
-uint8_t OUT_X_H = 0;
-uint8_t OUT_Y_L = 0;
-uint8_t OUT_Y_H = 0;
-uint8_t OUT_Z_L = 0;
-uint8_t OUT_Z_H = 0;
-float OUT_X = 0;
-float OUT_Y = 0;
-float OUT_Z = 0;
+/*-------------------------------------Functions----------------------------------------*/
+
+/**
+  \fn					uint8_t LIS3MDL_Init(void)
+  \brief			Initialize LIS3MDL magnetometer
+	\returns		uint8_t Device_Found: 1 - Device found, 0 - Device not found	
+*/
 
 uint8_t LIS3MDL_Init(void){
+	
+	//Local Variables
 	uint8_t Device_Found = 0;
 	
 	//Read data from register and check signature	
@@ -85,6 +90,11 @@ uint8_t LIS3MDL_Init(void){
 	return(Device_Found);
 }
 
+/**
+  \fn					void LIS3MDL_Configuration(void)
+  \brief			prints important LIS3MDL configuration registers
+*/
+
 void LIS3MDL_Configuration(void){
 	printf("----------------Configuration Settings-------------------\r\n");	
 	//Single Conversion mode
@@ -110,9 +120,19 @@ void LIS3MDL_Configuration(void){
 	printf("---------------------------------------------------------\r\n");
 }
 
+/**
+  \fn					float LIS3MDL_X_Read(void)
+  \brief			Reads the magnetic field from the X axis
+	\returns 		float OUT_X: the magnetic field in mG
+*/
+
 float LIS3MDL_X_Read(void){
 	
+	//Local variables
 	uint8_t LIS3MDL_STATUS = 0;
+	uint8_t OUT_X_L = 0;
+	uint8_t OUT_X_H = 0;
+	float OUT_X = 0;
 	int16_t Raw_X = 0;
 	
 	//Set device to continuous conversion mode
@@ -124,27 +144,37 @@ float LIS3MDL_X_Read(void){
 		LIS3MDL_STATUS = I2C1->RXDR;
 	}while((LIS3MDL_STATUS & LIS3MDL_STATUS_REG_XDA) == 0);
 	
-	//Read XYZ positions
+	//Read X Axis magnetic field
 	I2C_Read_Reg(LIS3MDL_ADDRESS,LIS3MDL_OUT_X_L);
 	OUT_X_L = I2C1->RXDR;
 	
 	I2C_Read_Reg(LIS3MDL_ADDRESS,LIS3MDL_OUT_X_H);
 	OUT_X_H = I2C1->RXDR;
 	
-	//Process XYZ coordinates
+	//Process X coordinates
 	Raw_X = ((OUT_X_H << 8) | OUT_X_L);
 	
-		/*
-	1/6842 = ~0.146 mG/LSB according to datasheet
-	*/
+	/*
+	 *1/6842 = ~0.146 mG/LSB according to datasheet
+	 */
 	OUT_X = (float)Raw_X * 0.146f;		// when using +/- 4 gauss
 
 	return(OUT_X);
 }
 
+/**
+  \fn					float LIS3MDL_Y_Read(void)
+  \brief			Reads the magnetic field from the Y axis
+	\returns 		float OUT_Y: the magnetic field in mG
+*/
+
 float LIS3MDL_Y_Read(void){
 	
+	//Local Variables
 	uint8_t LIS3MDL_STATUS = 0;
+	uint8_t OUT_Y_L = 0;
+	uint8_t OUT_Y_H = 0;
+	float OUT_Y = 0;
 	int16_t Raw_Y = 0;
 	
 	//Set device to continuous conversion mode
@@ -156,6 +186,7 @@ float LIS3MDL_Y_Read(void){
 		LIS3MDL_STATUS = I2C1->RXDR;
 	}while((LIS3MDL_STATUS & LIS3MDL_STATUS_REG_YDA) == 0);
 	
+	//Read Y Axis magnetic field
 	I2C_Read_Reg(LIS3MDL_ADDRESS,LIS3MDL_OUT_Y_L);
 	OUT_Y_L = I2C1->RXDR;
 	
@@ -170,9 +201,19 @@ float LIS3MDL_Y_Read(void){
 	return(OUT_Y);
 }
 
+/**
+  \fn					float LIS3MDL_Z_Read(void)
+  \brief			Reads the magnetic field from the Z axis
+	\returns 		float OUT_Z: the magnetic field in mG
+*/
+
 float LIS3MDL_Z_Read(void){
 	
+	//Local Variables
 	uint8_t LIS3MDL_STATUS = 0;
+	uint8_t OUT_Z_L = 0;
+	uint8_t OUT_Z_H = 0;
+	float OUT_Z = 0;
 	int16_t Raw_Z = 0;
 	
 	//Set device to continuous conversion mode
@@ -184,6 +225,7 @@ float LIS3MDL_Z_Read(void){
 		LIS3MDL_STATUS = I2C1->RXDR;
 	}while((LIS3MDL_STATUS & LIS3MDL_STATUS_REG_ZDA) == 0);
 	
+	//Read Z Axis magnetic field
 	I2C_Read_Reg(LIS3MDL_ADDRESS,LIS3MDL_OUT_Z_L);
 	OUT_Z_L = I2C1->RXDR;
 	
@@ -197,24 +239,4 @@ float LIS3MDL_Z_Read(void){
 	*/
 	OUT_Z = (float)Raw_Z * 0.146f;		// when using +/- 4 gauss
 	return(OUT_Z);
-}
-
-float LIS3MDL_Compass_Heading(void){
-	
-	float Direction = 0;
-	float Hx = 0;
-	float Hy = 0;
-	
-	Hx = LIS3MDL_X_Read();
-	Hy = LIS3MDL_Y_Read();
-	
-	if((OUT_X > 0) & (OUT_Y > 0)) Direction = fabsf(atan(Hx/Hy))*(180.0f/PI)+270.0f; 
-	if((OUT_X > 0) & (OUT_Y < 0)) Direction = fabsf(atan(Hy/Hx))*(180.0f/PI);
-	if((OUT_X < 0) & (OUT_Y < 0)) Direction = fabsf(atan(Hx/Hy))*(180.0f/PI)+90.0f;
-	if((OUT_X < 0) & (OUT_Y > 0)) Direction = fabs(atan(Hy/Hx))*(180.0f/PI)+180.0f;
-	if((OUT_X == 0) & (OUT_Y != 0)) Direction = 360.0f;
-	
-//	Direction = atan2(OUT_Y,OUT_X);
-	
-	return(Direction);
 }

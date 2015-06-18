@@ -1,9 +1,17 @@
+/*----------------------------------------------------------------------------
+ * Name:    hTS221.c
+ * Purpose: Retrieve Temperature and Humidity data
+ * Date: 		6/18/15
+ * Author:	Christopher Jordan - Denny
+ *----------------------------------------------------------------------------
+ * Note(s): Communicates using I2C
+ *----------------------------------------------------------------------------*/
+/*------------------------------------Include Statments-----------------------*/
 #include "stm32l053xx.h"                  // Device header
 #include <stdio.h>
 #include "I2C.h"													// I2C Support
 #include "HTS221.h"
 #include "Serial.h"
-
 /*------------------------------------Slave Address-------------------------------------------*/
 #define HTS221_ADDRESS  	0x0000005F 		//Slave Address	for temp humidity sensor (WITHOUT R/W)
 /*------------------------------------Device ID-----------------------------------------------*/
@@ -38,60 +46,57 @@
 #define HTS221_CTRL_REG1_PD					0x00000080						//Power Down, 0 = Power down mode, 1 = active mode
 #define HTS221_CTRL_REG1_BDU				0x00000004						//Block Data Output, 0 continuous update, 1 wait until LSB and MSB Read
 
-/*-------------------------------------Globals------------------------------------------------*/
-uint32_t AV_CONF_Init = 0x1B;		// 16 Temp (AVGT) and 32 Hum (AVGT)
-uint8_t STATUS_REG = 0;					// Determines if Temperature or Humidity Data is ready
+/*-------------------------------------Functions----------------------------------------------*/
 
-/*-------------------------------------Temperature Variables----------------------------------*/
-//T0_degC and T1_degC
-uint16_t T0_degC_x8 = 0;
-uint16_t T1_degC_x8 = 0;
-uint16_t Msb_T0_degC = 0;
-uint16_t Msb_T1_degC = 0;
-uint16_t Msb_TO_T1_degC = 0;
-float T0_DegC = 0;
-float T1_DegC = 0;
+/**
+  \fn					void HTS221_Init(void)
+  \brief			Initialize the HTS221 and check device signature
+	\returns		uint8_t Device_Found - Determines if the device was detected
+*/
 
-//T_OUT
-uint16_t T_OUT_L = 0;
-uint16_t T_OUT_H = 0;
-float T_OUT = 0;
+uint8_t HTS221_Init(void){
+	
+	//Local variables
+	uint8_t Device_Found = 0;
+	uint32_t AV_CONF_Init = 0x1B;		/*16 Temp (AVGT) and 32 Hum (AVGT)*/
+	
+	/*---------------------------------Check the Device ID--------------------------------------------*/
+	
+	//Read data from register and check signature	
+	I2C_Read_Reg(HTS221_ADDRESS,HTS221_WHO_AM_I);
+	
+	//Check if device signature is correct
+	if (I2C1->RXDR == HTS221_DEVICE_ID){
+		Device_Found = 1;
+	}
+	else Device_Found = 0;
+	
+	/*-------------------------------Setup HTS221_AV_CONF Register------------------------------------*/
+	if(Device_Found){
+		//Set to Default Configuration
+		I2C_Write_Reg(HTS221_ADDRESS,HTS221_AV_CONF,AV_CONF_Init);
+		
+		//Activate and Block Data Update, this will ensure that both the higher and lower bits are read
+		I2C_Write_Reg(HTS221_ADDRESS,HTS221_CTRL_REG1,(HTS221_CTRL_REG1_PD | HTS221_CTRL_REG1_BDU));
+	}
+	/*------------------------------------------------------------------------------------------------*/
+	
+	return(Device_Found);
+}
 
-//T0_OUT and T1_OUT
-int16_t T0_OUT_L = 0;
-int16_t T0_OUT_H = 0;
-int16_t T1_OUT_L = 0;
-int16_t T1_OUT_H = 0;
-float T0_OUT = 0;
-float T1_OUT = 0;
-
-//Temperature Variables
-float Temperature_In_C = 0;
-float Temperature_In_F = 0;
-/*--------------------------------------Humidity Variables------------------------------------*/
-
-//H0_rH and H1_rH
-uint8_t H0_rH_x2 = 0;
-float H0_rH = 0;
-uint8_t H1_rH_x2 = 0;
-float H1_rH = 0;
-
-//H_OUT
-float H_OUT = 0;
-uint16_t H_OUT_L = 0;
-uint16_t H_OUT_H = 0;
-
-//H0_TO_OUT and H1_TO_OUT
-float H0_T0_OUT = 0;
-float H1_T0_OUT = 0;
-uint16_t H0_T0_OUT_L = 0;
-uint16_t H0_T0_OUT_H = 0;
-uint16_t H1_T0_OUT_L = 0;
-uint16_t H1_T0_OUT_H = 0;
-
-//Humidity Variables
-float Humidity_rH = 0;
-/*--------------------------------------------------------------------------------------------*/
+void HTS221_Configuration(void){
+	
+	printf("----------------Configuration Settings-------------------\r\n");	
+	//HTS221_AV_CONF Settings
+	I2C_Read_Reg(HTS221_ADDRESS,HTS221_AV_CONF);
+	printf("HTS221_AV_CONF: %x\r\n",I2C1->RXDR);
+	
+	//HTS221_CTRL_REG1 Settings
+	I2C_Read_Reg(HTS221_ADDRESS,HTS221_CTRL_REG1);
+	printf("HTS221_CTRL_REG1: %x\r\n",I2C1->RXDR);
+	
+	printf("---------------------------------------------------------\r\n");
+}
 
 /**
   \fn					HTS221_Temp_Read(void)
@@ -100,6 +105,34 @@ float Humidity_rH = 0;
 */
 
 float HTS221_Temp_Read(void){
+	
+	/*------------------------------Local Variables---------------------------------*/
+	uint8_t STATUS_REG = 0;
+	
+	//T0_degC and T1_degC
+	uint16_t T0_degC_x8 = 0;
+	uint16_t T1_degC_x8 = 0;
+	uint16_t Msb_TO_T1_degC = 0;
+	float T0_DegC = 0;
+	float T1_DegC = 0;
+	
+	//T_OUT
+	uint16_t T_OUT_L = 0;
+	uint16_t T_OUT_H = 0;
+	float T_OUT = 0;
+	
+	//T0_OUT and T1_OUT
+	int16_t T0_OUT_L = 0;
+	int16_t T0_OUT_H = 0;
+	int16_t T1_OUT_L = 0;
+	int16_t T1_OUT_H = 0;
+	float T0_OUT = 0;
+	float T1_OUT = 0;
+	
+	//Temperature Variables
+	float Temperature_In_C = 0;
+	float Temperature_In_F = 0;
+	/*------------------------------------------------------------------------------*/
 	
 	//Start a temperature conversion
 	I2C_Write_Reg(HTS221_ADDRESS,HTS221_CTRL_REG2,HTS221_CTRL_REG2_ONE_SHOT);
@@ -160,6 +193,32 @@ float HTS221_Temp_Read(void){
 
 float HTS221_Humidity_Read(void){
 	
+	/*-----------------------------Local Variables----------------------------------------*/
+	uint8_t STATUS_REG = 0;
+	
+	//H0_rH and H1_rH
+	uint8_t H0_rH_x2 = 0;
+	float H0_rH = 0;
+	uint8_t H1_rH_x2 = 0;
+	float H1_rH = 0;
+
+	//H_OUT
+	float H_OUT = 0;
+	uint16_t H_OUT_L = 0;
+	uint16_t H_OUT_H = 0;
+
+	//H0_TO_OUT and H1_TO_OUT
+	float H0_T0_OUT = 0;
+	float H1_T0_OUT = 0;
+	uint16_t H0_T0_OUT_L = 0;
+	uint16_t H0_T0_OUT_H = 0;
+	uint16_t H1_T0_OUT_L = 0;
+	uint16_t H1_T0_OUT_H = 0;
+
+	//Humidity Variables
+	float Humidity_rH = 0;
+	/*------------------------------------------------------------------------------------*/
+	
 	//Start a humidity conversion
 	I2C_Write_Reg(HTS221_ADDRESS,HTS221_CTRL_REG2,HTS221_CTRL_REG2_ONE_SHOT);
 	
@@ -205,60 +264,4 @@ float HTS221_Humidity_Read(void){
 	Humidity_rH = ( float )(((( H_OUT - H0_T0_OUT ) * ( H1_rH - H0_rH )) / ( H1_T0_OUT - H0_T0_OUT )) + H0_rH );
 	
 	return(Humidity_rH);
-}
-
-/**
-  \fn					void HTS221_Configuration(void)
-  \brief			Displays a few of the Configuration Registers,
-							AV_Conf - Change Accuracy register
-							CTRL_Reg1 - Power up and Block Data update
-*/
-
-void HTS221_Configuration(void){
-	
-	printf("----------------Configuration Settings-------------------\r\n");	
-	//HTS221_AV_CONF Settings
-	I2C_Read_Reg(HTS221_ADDRESS,HTS221_AV_CONF);
-	printf("HTS221_AV_CONF: %x\r\n",I2C1->RXDR);
-	
-	//HTS221_CTRL_REG1 Settings
-	I2C_Read_Reg(HTS221_ADDRESS,HTS221_CTRL_REG1);
-	printf("HTS221_CTRL_REG1: %x\r\n",I2C1->RXDR);
-	
-	printf("---------------------------------------------------------\r\n");
-}
-
-/**
-  \fn					void HTS221_Init(void)
-  \brief			Initialize the HTS221 and check device signature
-	\returns		uint8_t Device_Found - Determines if the device was detected
-*/
-
-uint8_t HTS221_Init(void){
-	
-	//Global Variables
-	uint8_t Device_Found = 0;
-	
-	/*---------------------------------Check the Device ID--------------------------------------------*/
-	
-	//Read data from register and check signature	
-	I2C_Read_Reg(HTS221_ADDRESS,HTS221_WHO_AM_I);
-	
-	//Check if device signature is correct
-	if (I2C1->RXDR == HTS221_DEVICE_ID){
-		Device_Found = 1;
-	}
-	else Device_Found = 0;
-	
-	/*-------------------------------Setup HTS221_AV_CONF Register------------------------------------*/
-	if(Device_Found){
-		//Set to Default Configuration
-		I2C_Write_Reg(HTS221_ADDRESS,HTS221_AV_CONF,AV_CONF_Init);
-		
-		//Activate and Block Data Update, this will ensure that both the higher and lower bits are read
-		I2C_Write_Reg(HTS221_ADDRESS,HTS221_CTRL_REG1,(HTS221_CTRL_REG1_PD | HTS221_CTRL_REG1_BDU));
-	}
-	/*------------------------------------------------------------------------------------------------*/
-	
-	return(Device_Found);
 }

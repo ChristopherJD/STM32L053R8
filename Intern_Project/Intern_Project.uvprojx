@@ -476,21 +476,6 @@
           </Files>
         </Group>
         <Group>
-          <GroupName>New Group</GroupName>
-          <Files>
-            <File>
-              <FileName>ADC_Test.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>.\ADC_Test.c</FilePath>
-            </File>
-            <File>
-              <FileName>Gpio_Test.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>.\Gpio_Test.c</FilePath>
-            </File>
-          </Files>
-        </Group>
-        <Group>
           <GroupName>::CMSIS</GroupName>
         </Group>
         <Group>
