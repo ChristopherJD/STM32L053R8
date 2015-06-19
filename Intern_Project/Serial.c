@@ -1,40 +1,15 @@
-/*----------------------------------------------------------------------------
- * Name:    Serial.c
- * Purpose: Low Level Serial Routines
- * Note(s): possible defines select the used communication interface:
- *                        - USART2 interface  (default)
- *----------------------------------------------------------------------------
- * This file is part of the uVision/ARM development tools.
- * This software may only be used under the terms of a valid, current,
- * end user licence from KEIL for a compatible version of KEIL software
- * development tools. Nothing else gives you the right to use this software.
- *
- * This software is supplied "AS IS" without warranties of any kind.
- *
- * Copyright (c) 2014 Keil - An ARM Company. All rights reserved.
- *----------------------------------------------------------------------------*/
 
 #include "stm32l0xx.h"                  // Device header
 #include "Serial.h"
 
-/*----------------------------------------------------------------------------
- Define  USART
- *----------------------------------------------------------------------------*/
 #define USARTx  USART2
 
-
-/*----------------------------------------------------------------------------
- Define  Baudrate setting (BRR) for USART
- *----------------------------------------------------------------------------*/
 #define __DIV(__PCLK, __BAUD)       ((__PCLK*25)/(4*__BAUD))
 #define __DIVMANT(__PCLK, __BAUD)   (__DIV(__PCLK, __BAUD)/100)
 #define __DIVFRAQ(__PCLK, __BAUD)   (((__DIV(__PCLK, __BAUD) - (__DIVMANT(__PCLK, __BAUD) * 100)) * 16 + 50) / 100)
 #define __USART_BRR(__PCLK, __BAUD) ((__DIVMANT(__PCLK, __BAUD) << 4)|(__DIVFRAQ(__PCLK, __BAUD) & 0x0F))
 
 
-/*----------------------------------------------------------------------------
-  Initialize UART pins, Baudrate
- *----------------------------------------------------------------------------*/
 void SER_Initialize (void) {
 
   RCC->IOPENR   |=   ( 1ul <<  0);         /* Enable GPIOA clock              */
@@ -56,14 +31,15 @@ void SER_Initialize (void) {
                     (   1ul <<  0) );      /* enable USART                    */
 }
 
+char SER_PutChar (char ch) {
 
-/*----------------------------------------------------------------------------
-  Write character to Serial Port
- *----------------------------------------------------------------------------*/
-int SER_PutChar (int ch) {
-
-  while (!(USARTx->ISR & 0x0080));
-  USARTx->TDR = (ch & 0xFF);
+	//Wait for buffer to be empty
+  while ((USARTx->ISR & USART_ISR_TXE) == 0){
+			//Nop
+	}
+	
+	//Send character
+  USARTx->TDR = (ch);
 
   return (ch);
 }
@@ -73,7 +49,7 @@ int SER_PutChar (int ch) {
  *----------------------------------------------------------------------------*/
 int SER_GetChar (void) {
 
-  if (USARTx->ISR & 0x0020)
+  if (USARTx->ISR & USART_ISR_RXNE)
     return (USARTx->RDR);
 
   return (-1);

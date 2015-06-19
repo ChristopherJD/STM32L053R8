@@ -79,7 +79,6 @@ uint8_t HTS221_Init(void){
 		//Activate and Block Data Update, this will ensure that both the higher and lower bits are read
 		I2C_Write_Reg(HTS221_ADDRESS,HTS221_CTRL_REG1,(HTS221_CTRL_REG1_PD | HTS221_CTRL_REG1_BDU));
 	}
-	/*------------------------------------------------------------------------------------------------*/
 	
 	return(Device_Found);
 }

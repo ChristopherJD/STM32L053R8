@@ -473,6 +473,11 @@
               <FileType>1</FileType>
               <FilePath>.\ISK01A1.c</FilePath>
             </File>
+            <File>
+              <FileName>USART1.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\USART1.c</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>

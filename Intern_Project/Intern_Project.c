@@ -10,7 +10,8 @@
  /*-----------------------Include Statements----------------------------------*/
 #include <stdio.h>											// Standard Input Output
 #include "stm32l053xx.h"								// Specific Device Header
-#include "Serial.h"											// Usart Communication
+#include "Serial.h"											// Usart2 Communication
+#include "USART1.h"											// Usart1 Communication
 #include "GPIO.h"												// GPIO Drivers
 #include "Timing.h"											// Clock Drivers
 #include "ADC.h"												// ADC Drivers
@@ -35,6 +36,7 @@ int main (void){
 	
 	// Serial Communications Initializations
   SER_Initialize();
+	USART1_Init();
 	
 	//ADC Initializations
 	ADC_Init();
@@ -48,7 +50,10 @@ int main (void){
 	//Loop Forever
   while (1) {
 		
-		printf("Acc_Y: %f\r\n",ISK01A1_Get_Pitch());
+		//printf("Acc_Y: %f\r\n",ISK01A1_Get_Temperature());
+		//printf("%i",USART1_GetChar());
+		SER_PutChar(0x55);
+		SER_GetChar();
 		Delay(250);
   }
 
