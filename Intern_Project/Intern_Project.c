@@ -45,15 +45,19 @@ int main (void){
 	I2C_Init();
 	
 	//Mems board Initialization
-	ISK01A1_Init();
+	//ISK01A1_Init();
+	
+	//USART1_Read();
 	
 	//Loop Forever
   while (1) {
-		
 		//printf("Acc_Y: %f\r\n",ISK01A1_Get_Temperature());
 		//printf("%i",USART1_GetChar());
-		SER_PutChar(0x55);
-		SER_GetChar();
+		//SER_PutChar(0xD5);
+		
+		USART1_PutChar('a');
+		printf("%c",USART1_GetChar());
+		
 		Delay(250);
   }
 

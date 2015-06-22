@@ -16,6 +16,7 @@
 #include <stdio.h>
 #include <rt_misc.h>
 #include "Serial.h"
+#include "USART1.h"
 
 #pragma import(__use_no_semihosting_swi)
 
