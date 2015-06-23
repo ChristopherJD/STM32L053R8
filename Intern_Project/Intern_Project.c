@@ -17,6 +17,7 @@
 #include "ADC.h"												// ADC Drivers
 #include "I2C.h"												// I2C Drivers
 #include "ISK01A1.h"										// ISK01A1 expansion board Drivers (gryo,temp,accel etc...)
+#include "string.h"
 	
 /**
   \fn          int main (void)
@@ -55,10 +56,12 @@ int main (void){
 		//printf("%i",USART1_GetChar());
 		//SER_PutChar(0xD5);
 		
-		USART1_PutChar('a');
-		printf("%c",USART1_GetChar());
-		
-		Delay(250);
+		//USART1_PutChar('a');
+		//while(USART1_GetChar() != '$');
+		//printf("%c",USART1_GetChar());
+		USART1_PutChar('\n');
+		USART1_Read();
+		//Delay(250);
   }
 
 }
