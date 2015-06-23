@@ -18,6 +18,8 @@
 /*---------------------------------Define Statments---------------------------*/
 #define USART1EN		0x4000		//USART1 Clock enable bit
 #define IOPAEN			0x1				//Enable port A clock
+#define TRUE				0x1				//Truth value is 1
+#define FALSE				0x0				//False value is 0
 
 //Baud rate calculation
 #define __DIV(__PCLK, __BAUD)       ((__PCLK*25)/(4*__BAUD))
@@ -26,24 +28,36 @@
 #define __USART_BRR(__PCLK, __BAUD) ((__DIVMANT(__PCLK, __BAUD) << 4)|(__DIVFRAQ(__PCLK, __BAUD) & 0x0F))
 
 //Globals
-int CharIndex = 0;
-const int NMEA_LENGTH = 256;		/* The max length of one NMEA line */
-char Line[NMEA_LENGTH] = "0";
-uint8_t Line_End = 0;
+volatile int 				CharIndex = 0;												/* Character index of the char array */
+const int 					NMEA_LENGTH = 256;										/* The max length of one NMEA line */
+char 								Rx_Data[NMEA_LENGTH] = "0";						/* Rx Sring */
+volatile uint8_t 		Transmission_In_Progress = FALSE;			/* Are we in between a $ and \n */
+char 								Data0[256];														/* Storage for GPS Data */
 
 void USART1_IRQHandler(void){
 	
 	if(USART1->ISR & USART_ISR_RXNE){
-    Line[CharIndex] = USART1->RDR;
 		
-		if(CharIndex <= NMEA_LENGTH){
-			CharIndex++;
-		}else CharIndex = 0;
+		/* Reads and CLEARS RXNE Flag */
+    Rx_Data[CharIndex] = USART1->RDR;
+		
+		/* If Rx_Data = $, then we are in transmission */
+		if(Rx_Data[CharIndex] == '$'){
+			Transmission_In_Progress = TRUE;
+		}
+		
+		/* If we are transmitting then save to Data0 once complete */
+		if(Transmission_In_Progress == TRUE){
+			if(Rx_Data[CharIndex] == '\n'){
+				//Rx_Data[CharIndex + 1] = '\0';
+				strcpy(Data0,Rx_Data);
+				Transmission_In_Progress = FALSE;
+			}
+			else{
+				CharIndex++;
+			}
+		}
 	}
-//	if(USART1->RDR == '\r'){
-//		Line_End = 1;
-//		//CharIndex = 0;
-//	}
 }
 
 void USART1_Init(){
@@ -103,18 +117,18 @@ char USART1_PutChar(char ch) {
 
 void USART1_Read(void){
 	
-	//Wait for line end to occur
-//	while(Line_End == 0){
-//		//Nop
-//	}
-	
-	//Copy string to temp
-	printf("%s",Line);
+	//Keeps printing Line, must fix this
+	printf("%s",Data0);
 	
 }
 
-void USART1_Send(char c){
+void USART1_Send(char c[]){
 	
-	USART1_PutChar(c);
+	int String_Length = strlen(c);
+	int Counter = 0;
 	
+	while(Counter < String_Length){
+		USART1_PutChar(c[Counter]);
+		Counter++;
+	}
 }
