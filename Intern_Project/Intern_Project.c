@@ -51,7 +51,7 @@ int main (void){
 	USART1_Read();
 	//Loop Forever
   while (1) {
-		
+
   }
 
 }

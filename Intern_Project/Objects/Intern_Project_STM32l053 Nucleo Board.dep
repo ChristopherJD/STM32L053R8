@@ -1,5 +1,5 @@
 Dependencies for Project 'Intern_Project', Target 'STM32l053 Nucleo Board': (DO NOT MODIFY !)
-F (.\Intern_Project.c)(0x558AC5D2)(-c --cpu Cortex-M0+ -D__EVAL -g -O0 --apcs=interwork --split_sections-I C:\Users\Digi-Key\Documents\GitHub\STM32L053R8\Intern_Project\RTE-I C:\Keil_v5\ARM\PACK\ARM\CMSIS\4.3.0\CMSIS\Include-I C:\Keil_v5\ARM\PACK\Keil\STM32L0xx_DFP\1.3.0\Device\Include-D__UVISION_VERSION="514" -D_RTE_ -DSTM32L053xx-o .\objects\intern_project.o --omf_browse .\objects\intern_project.crf --depend .\objects\intern_project.d)
+F (.\Intern_Project.c)(0x558ACEC4)(-c --cpu Cortex-M0+ -D__EVAL -g -O0 --apcs=interwork --split_sections-I C:\Users\Digi-Key\Documents\GitHub\STM32L053R8\Intern_Project\RTE-I C:\Keil_v5\ARM\PACK\ARM\CMSIS\4.3.0\CMSIS\Include-I C:\Keil_v5\ARM\PACK\Keil\STM32L0xx_DFP\1.3.0\Device\Include-D__UVISION_VERSION="514" -D_RTE_ -DSTM32L053xx-o .\objects\intern_project.o --omf_browse .\objects\intern_project.crf --depend .\objects\intern_project.d)
 I (C:\Keil_v5\ARM\ARMCC\include\stdio.h)(0x5476B7E0)
 I (C:\Keil_v5\ARM\PACK\Keil\STM32L0xx_DFP\1.3.0\Device\Include\stm32l053xx.h)(0x53502282)
 I (C:\Keil_v5\ARM\PACK\ARM\CMSIS\4.3.0\CMSIS\Include\core_cm0plus.h)(0x5509F2D4)
@@ -125,7 +125,7 @@ I (LPS25HB.h)(0x55832F8F)
 I (LIS3MDL.h)(0x55832F8F)
 I (LSM6DS0.h)(0x55832CC3)
 I (ISK01A1.h)(0x55832CC3)
-F (.\USART1.c)(0x558AC5C8)(-c --cpu Cortex-M0+ -D__EVAL -g -O0 --apcs=interwork --split_sections-I C:\Users\Digi-Key\Documents\GitHub\STM32L053R8\Intern_Project\RTE-I C:\Keil_v5\ARM\PACK\ARM\CMSIS\4.3.0\CMSIS\Include-I C:\Keil_v5\ARM\PACK\Keil\STM32L0xx_DFP\1.3.0\Device\Include-D__UVISION_VERSION="514" -D_RTE_ -DSTM32L053xx-o .\objects\usart1.o --omf_browse .\objects\usart1.crf --depend .\objects\usart1.d)
+F (.\USART1.c)(0x558AE1B9)(-c --cpu Cortex-M0+ -D__EVAL -g -O0 --apcs=interwork --split_sections-I C:\Users\Digi-Key\Documents\GitHub\STM32L053R8\Intern_Project\RTE-I C:\Keil_v5\ARM\PACK\ARM\CMSIS\4.3.0\CMSIS\Include-I C:\Keil_v5\ARM\PACK\Keil\STM32L0xx_DFP\1.3.0\Device\Include-D__UVISION_VERSION="514" -D_RTE_ -DSTM32L053xx-o .\objects\usart1.o --omf_browse .\objects\usart1.crf --depend .\objects\usart1.d)
 I (C:\Keil_v5\ARM\PACK\Keil\STM32L0xx_DFP\1.3.0\Device\Include\stm32l053xx.h)(0x53502282)
 I (C:\Keil_v5\ARM\PACK\ARM\CMSIS\4.3.0\CMSIS\Include\core_cm0plus.h)(0x5509F2D4)
 I (C:\Keil_v5\ARM\ARMCC\include\stdint.h)(0x5476B7E0)

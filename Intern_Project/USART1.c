@@ -39,15 +39,27 @@ volatile int 				CharIndex = 0;												/* Character index of the char array 
 const int 					NMEA_LENGTH = 1000;										/* The max length of one NMEA line */
 char 								Rx_Data[NMEA_LENGTH] = "0";						/* Rx Sring */
 volatile uint8_t 		Transmission_In_Progress = FALSE;			/* Are we in between a $ and \n */
-char 								Message1[128];														/* Storage for GPS Data */
-char 								Message2[128];														/* Storage for GPS Data */
-char 								Message3[128];														/* Storage for GPS Data */
-char 								Message4[128];														/* Storage for GPS Data */
-char 								Message5[128];														/* Storage for GPS Data */
-char 								Message6[128];														/* Storage for GPS Data */
-char 								Message7[128];														/* Storage for GPS Data */
-char 								Message8[128];														/* Storage for GPS Data */
-uint8_t							Data_Pointer = 0;
+char 								GGA_Message[128];														/* Storage for GPS Data */
+char 								GSA_Message[128];														/* Storage for GPS Data */
+char 								GSV_Message[128];														/* Storage for GPS Data */
+char 								RMC_Message[128];														/* Storage for GPS Data */
+char 								VTG_Message[128];														/* Storage for GPS Data */
+
+//Structures
+struct RMC_Data
+{
+	char Message_ID[6];						/* RMC Protocol header */
+	char UTC_Time[10];						/* hhmmss.sss */
+	char Status[1];								/* A = data valid, V = data NOT valid */
+	char Latitude[9];							/* ddmm.mmmm */
+	char N_S_Indicator[1];				/* N = North, S = South */
+	char Longitude[10];						/* dddmm.mmmm */
+	char E_W_Indicator[1];				/* E = East, W = West */
+	char Speed_Over_Ground[4];		/* In Knots */
+	char Course_Over_Ground[6];		/* Degrees */
+	char Date[6];									/* ddmmyy */
+	char Mode[1];									/* A = autonomous mode, D = Differential mode, E = Estimated mode */
+};
 
 void USART1_IRQHandler(void){
 	
@@ -61,42 +73,23 @@ void USART1_IRQHandler(void){
 			Transmission_In_Progress = TRUE;
 		}
 		
-		/* If we are transmitting then save to Data0 once complete */
+		/* If we are transmitting then save to proper message once complete */
 		if(Transmission_In_Progress == TRUE){
 			if(Rx_Data[CharIndex] == '\n'){
-				switch(Data_Pointer){
-					case 0:
-						strcpy(Message1,Rx_Data);
-						Data_Pointer = 1;
-						break;
-					case 1:
-						strcpy(Message2,Rx_Data);
-						Data_Pointer = 2;
-						break;
-					case 2:
-						strcpy(Message3,Rx_Data);
-						Data_Pointer = 3;
-						break;
-					case 3:
-						strcpy(Message4,Rx_Data);
-						Data_Pointer = 4;
-						break;
-					case 4:
-						strcpy(Message5,Rx_Data);
-						Data_Pointer = 5;
-						break;
-					case 5:
-						strcpy(Message6,Rx_Data);
-						Data_Pointer = 6;
-						break;
-					case 6:
-						strcpy(Message7,Rx_Data);
-						Data_Pointer = 7;
-						break;
-					case 7:
-						strcpy(Message8,Rx_Data);
-						Data_Pointer = 0;
-						break;
+				if(strncmp(GGA,Rx_Data,(sizeof(GGA)-1)) == 0){
+					strcpy(GGA_Message,Rx_Data);
+				}
+				if(strncmp(GSA,Rx_Data,(sizeof(GSA)-1)) == 0){
+					strcpy(GSA_Message,Rx_Data);
+				}
+				if(strncmp(GSV,Rx_Data,(sizeof(GSV)-1)) == 0){
+					strcpy(GSV_Message,Rx_Data);
+				}
+				if(strncmp(RMC,Rx_Data,(sizeof(RMC)-1)) == 0){
+					strcpy(RMC_Message,Rx_Data);
+				}
+				if(strncmp(VTG,Rx_Data,(sizeof(VTG)-1)) == 0){
+					strcpy(VTG_Message,Rx_Data);
 				}
 				Transmission_In_Progress = FALSE;
 				CharIndex = 0;
@@ -166,17 +159,38 @@ char USART1_PutChar(char ch) {
 
 void USART1_Read(void){
 	
-	//Keeps printing Line, must fix this
-	printf("%s",Message1);
-	printf("%s",Message2);
-	printf("%s",Message3);
-	printf("%s",Message4);
-	printf("%s",Message5);
-	printf("%s",Message6);
-	printf("%s",Message7);
-	printf("%s",Message8);
+	//Local Variables
+	char RMC_Message_Copy[128];
+	const char delimeter[2] = ",";
+	char *token;
+	struct RMC_Data RMC;
 	
+	//Copy original GSV to a copy in order to not destroy message
+	strcpy(RMC_Message_Copy,RMC_Message);
 	
+	//Print original message
+	printf("%s",RMC_Message);
+	
+	//Seperated Message
+	
+	token = strtok(RMC_Message_Copy, delimeter);
+	strcpy(RMC.Message_ID,token);
+	
+	token = strtok(NULL, delimeter);
+	strcpy(RMC.UTC_Time,token);
+	
+	token = strtok(NULL, delimeter);
+	strcpy(RMC.Status,token);
+	
+	token = strtok(NULL, delimeter);
+	strcpy(RMC.Latitude,token);
+	
+	token = strtok(NULL, delimeter);
+	strcpy(RMC.N_S_Indicator,token);
+	
+	printf("RMC_Message: %s\r\n",RMC.Message_ID);
+	printf("UTC_Time: %s\r\n",RMC.UTC_Time);
+	printf("Status: %s\r\n",RMC.Status);
 }
 
 void USART1_Send(char c[]){
