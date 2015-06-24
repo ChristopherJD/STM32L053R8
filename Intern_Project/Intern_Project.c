@@ -48,7 +48,8 @@ int main (void){
 	//Mems board Initialization
 	//ISK01A1_Init();
 	Delay(5000);
-	USART1_Read();
+	FGPMMOPA6H_RMC_Data();
+	FGPMMOPA6H_Get_RMC_UTC_Time();
 	//Loop Forever
   while (1) {
 

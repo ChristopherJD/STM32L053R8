@@ -48,18 +48,18 @@ char 								VTG_Message[128];														/* Storage for GPS Data */
 //Structures
 struct RMC_Data
 {
-	char Message_ID[6];						/* RMC Protocol header */
-	char UTC_Time[10];						/* hhmmss.sss */
-	char Status[1];								/* A = data valid, V = data NOT valid */
-	char Latitude[9];							/* ddmm.mmmm */
-	char N_S_Indicator[1];				/* N = North, S = South */
-	char Longitude[10];						/* dddmm.mmmm */
-	char E_W_Indicator[1];				/* E = East, W = West */
-	char Speed_Over_Ground[4];		/* In Knots */
-	char Course_Over_Ground[6];		/* Degrees */
-	char Date[6];									/* ddmmyy */
-	char Mode[1];									/* A = autonomous mode, D = Differential mode, E = Estimated mode */
-};
+	char Message_ID[7];						/* RMC Protocol header */
+	char UTC_Time[11];						/* hhmmss.sss */
+	char Status[2];								/* A = data valid, V = data NOT valid */
+	char Latitude[10];							/* ddmm.mmmm */
+	char N_S_Indicator[2];				/* N = North, S = South */
+	char Longitude[11];						/* dddmm.mmmm */
+	char E_W_Indicator[2];				/* E = East, W = West */
+	char Speed_Over_Ground[5];		/* In Knots */
+	char Course_Over_Ground[7];		/* Degrees */
+	char Date[7];									/* ddmmyy */
+	char Mode[5];									/* A = autonomous mode, D = Differential mode, E = Estimated mode */
+}RMC_Data;
 
 void USART1_IRQHandler(void){
 	
@@ -157,41 +157,9 @@ char USART1_PutChar(char ch) {
   return (ch);
 }
 
-void USART1_Read(void){
-	
-	//Local Variables
-	char RMC_Message_Copy[128];
-	const char delimeter[2] = ",";
-	char *token;
-	struct RMC_Data RMC;
-	
-	//Copy original GSV to a copy in order to not destroy message
-	strcpy(RMC_Message_Copy,RMC_Message);
-	
-	//Print original message
-	printf("%s",RMC_Message);
-	
-	//Seperated Message
-	
-	token = strtok(RMC_Message_Copy, delimeter);
-	strcpy(RMC.Message_ID,token);
-	
-	token = strtok(NULL, delimeter);
-	strcpy(RMC.UTC_Time,token);
-	
-	token = strtok(NULL, delimeter);
-	strcpy(RMC.Status,token);
-	
-	token = strtok(NULL, delimeter);
-	strcpy(RMC.Latitude,token);
-	
-	token = strtok(NULL, delimeter);
-	strcpy(RMC.N_S_Indicator,token);
-	
-	printf("RMC_Message: %s\r\n",RMC.Message_ID);
-	printf("UTC_Time: %s\r\n",RMC.UTC_Time);
-	printf("Status: %s\r\n",RMC.Status);
-}
+//void USART1_Read(void){
+//	 
+//}
 
 void USART1_Send(char c[]){
 	
@@ -202,4 +170,63 @@ void USART1_Send(char c[]){
 		USART1_PutChar(c[Counter]);
 		Counter++;
 	}
+}
+
+void FGPMMOPA6H_RMC_Data(void){
+	
+	//Local Variables
+	char RMC_Message_Copy[128];
+	const char delimeter[2] = ",";
+	char *token;
+	int i = 0;
+	char temp[11][12];			/* [11][12]: 11 strings, of length 12 */
+	
+	//Copy original GSV to a copy in order to not destroy message
+	strcpy(RMC_Message_Copy,RMC_Message);
+	
+	//Seperated Message
+	/* get the first token */
+   token = strtok(RMC_Message, delimeter);
+   
+   /* walk through other tokens */
+   while( token != NULL ) 
+   {
+		 strcpy(temp[i],token);
+		 i++;
+     token = strtok(NULL, delimeter);
+   }
+	 
+	strcpy(RMC_Data.Message_ID,temp[0]);
+	strcpy(RMC_Data.UTC_Time,temp[1]);
+	strcpy(RMC_Data.Status,temp[2]);
+	strcpy(RMC_Data.Latitude,temp[3]);
+	strcpy(RMC_Data.N_S_Indicator,temp[4]);
+	strcpy(RMC_Data.Longitude,temp[5]);
+	strcpy(RMC_Data.E_W_Indicator,temp[6]);
+	strcpy(RMC_Data.Speed_Over_Ground,temp[7]);
+	strcpy(RMC_Data.Course_Over_Ground,temp[8]);
+	strcpy(RMC_Data.Date,temp[9]);
+	strcpy(RMC_Data.Mode,temp[10]);
+	
+	printf("RMC_Message: %s\r\n",RMC_Data.Message_ID);
+	printf("UTC_Time: %s\r\n",RMC_Data.UTC_Time);
+	printf("Status: %s\r\n",RMC_Data.Status);
+	printf("Latitude: %s\r\n",RMC_Data.Latitude);
+	printf("N/S: %s\r\n",RMC_Data.N_S_Indicator);
+	printf("Longitude: %s\r\n",RMC_Data.Longitude);
+	printf("E/W: %s\r\n",RMC_Data.E_W_Indicator);
+	printf("Speed: %s\r\n",RMC_Data.Speed_Over_Ground);
+	printf("Course: %s\r\n",RMC_Data.Course_Over_Ground);
+	printf("Date: %s\r\n",RMC_Data.Date);
+	printf("Mode: %s\r\n",RMC_Data.Mode);
+}
+
+void FGPMMOPA6H_Get_RMC_UTC_Time(void){
+	char hh[3];
+	char mm[3];
+	char ss[3];
+	char sss[4];
+	
+	strncpy(hh,RMC_Data.UTC_Time,2);
+	printf("Hour: %x",(&RMC_Data.UTC_Time));
 }
