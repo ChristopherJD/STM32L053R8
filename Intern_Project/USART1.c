@@ -27,12 +27,27 @@
 #define __DIVFRAQ(__PCLK, __BAUD)   (((__DIV(__PCLK, __BAUD) - (__DIVMANT(__PCLK, __BAUD) * 100)) * 16 + 50) / 100)
 #define __USART_BRR(__PCLK, __BAUD) ((__DIVMANT(__PCLK, __BAUD) << 4)|(__DIVFRAQ(__PCLK, __BAUD) & 0x0F))
 
+//GPS Sentences
+static const char GGA[] = "$GPGGA";
+static const char GSA[] = "$GPGSA";
+static const char GSV[] = "$GPGSV";
+static const char RMC[] = "$GPRMC";
+static const char VTG[] = "$GPVTG";
+
 //Globals
 volatile int 				CharIndex = 0;												/* Character index of the char array */
-const int 					NMEA_LENGTH = 256;										/* The max length of one NMEA line */
+const int 					NMEA_LENGTH = 1000;										/* The max length of one NMEA line */
 char 								Rx_Data[NMEA_LENGTH] = "0";						/* Rx Sring */
 volatile uint8_t 		Transmission_In_Progress = FALSE;			/* Are we in between a $ and \n */
-char 								Data0[256];														/* Storage for GPS Data */
+char 								Message1[128];														/* Storage for GPS Data */
+char 								Message2[128];														/* Storage for GPS Data */
+char 								Message3[128];														/* Storage for GPS Data */
+char 								Message4[128];														/* Storage for GPS Data */
+char 								Message5[128];														/* Storage for GPS Data */
+char 								Message6[128];														/* Storage for GPS Data */
+char 								Message7[128];														/* Storage for GPS Data */
+char 								Message8[128];														/* Storage for GPS Data */
+uint8_t							Data_Pointer = 0;
 
 void USART1_IRQHandler(void){
 	
@@ -49,9 +64,43 @@ void USART1_IRQHandler(void){
 		/* If we are transmitting then save to Data0 once complete */
 		if(Transmission_In_Progress == TRUE){
 			if(Rx_Data[CharIndex] == '\n'){
-				//Rx_Data[CharIndex + 1] = '\0';
-				strcpy(Data0,Rx_Data);
+				switch(Data_Pointer){
+					case 0:
+						strcpy(Message1,Rx_Data);
+						Data_Pointer = 1;
+						break;
+					case 1:
+						strcpy(Message2,Rx_Data);
+						Data_Pointer = 2;
+						break;
+					case 2:
+						strcpy(Message3,Rx_Data);
+						Data_Pointer = 3;
+						break;
+					case 3:
+						strcpy(Message4,Rx_Data);
+						Data_Pointer = 4;
+						break;
+					case 4:
+						strcpy(Message5,Rx_Data);
+						Data_Pointer = 5;
+						break;
+					case 5:
+						strcpy(Message6,Rx_Data);
+						Data_Pointer = 6;
+						break;
+					case 6:
+						strcpy(Message7,Rx_Data);
+						Data_Pointer = 7;
+						break;
+					case 7:
+						strcpy(Message8,Rx_Data);
+						Data_Pointer = 0;
+						break;
+				}
 				Transmission_In_Progress = FALSE;
+				CharIndex = 0;
+				memset(Rx_Data,0,sizeof(Rx_Data));
 			}
 			else{
 				CharIndex++;
@@ -118,7 +167,15 @@ char USART1_PutChar(char ch) {
 void USART1_Read(void){
 	
 	//Keeps printing Line, must fix this
-	printf("%s",Data0);
+	printf("%s",Message1);
+	printf("%s",Message2);
+	printf("%s",Message3);
+	printf("%s",Message4);
+	printf("%s",Message5);
+	printf("%s",Message6);
+	printf("%s",Message7);
+	printf("%s",Message8);
+	
 	
 }
 

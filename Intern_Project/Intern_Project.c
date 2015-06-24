@@ -47,14 +47,11 @@ int main (void){
 	
 	//Mems board Initialization
 	//ISK01A1_Init();
-	
-	USART1_Send("Hell$o\r\n");
-	//USART1_Read();
-	
+	Delay(5000);
+	USART1_Read();
 	//Loop Forever
   while (1) {
-		USART1_Read();
-		Delay(1000);
+		
   }
 
 }
