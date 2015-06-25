@@ -37,7 +37,7 @@ int main (void){
 	
 	// Serial Communications Initializations
   SER_Initialize();
-	USART1_Init();
+	USART1_Init();		/* For the GPS */
 	
 	//ADC Initializations
 	ADC_Init();
@@ -47,15 +47,21 @@ int main (void){
 	
 	//Mems board Initialization
 	//ISK01A1_Init();
-	Delay(5000);
-	FGPMMOPA6H_RMC_Data();
+	FGPMMOPA6H_Init();
+	Delay(6000);
+	printf("M1: %s",GGA_Message);
+	printf("M2: %s",GSA_Message);
+	printf("M3: %s",GSV_Message);
+	printf("M4: %s",RMC_Message);
+	FGPMMOPA6H_Parse_RMC_Data();
 	FGPMMOPA6H_Get_RMC_TRF_Time();
 	printf("Latitude: %s\r\n",FGPMMOPA6H_Get_Latitude());
 	printf("Longitude: %s\r\n",FGPMMOPA6H_Get_Longitude());
 	printf("Speed: %f MPH",FGPMMOPA6H_Get_Ground_Speed());
+	
 	//Loop Forever
   while (1) {
-
+		
   }
 
 }

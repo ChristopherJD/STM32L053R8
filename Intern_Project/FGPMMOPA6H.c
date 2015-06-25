@@ -18,10 +18,35 @@
 #include <string.h>
 #include <stdlib.h>
 /*---------------------------------Define Statments------------------------------------------------------------------*/
-#define USART1EN		0x4000		//USART1 Clock enable bit
-#define IOPAEN			0x1				//Enable port A clock
 #define TRUE				0x1				//Truth value is 1
 #define FALSE				0x0				//False value is 0
+
+// different commands to set the update rate from once a second (1 Hz) to 10 times a second (10Hz)
+// Note that these only control the rate at which the position is echoed, to actually speed up the
+// position fix you must also send one of the position fix rate commands below too.
+#define PMTK_SET_NMEA_UPDATE_100_MILLIHERTZ  "$PMTK220,10000*2F\r\n" // Once every 10 seconds, 100 millihertz.
+#define PMTK_SET_NMEA_UPDATE_200_MILLIHERTZ  "$PMTK220,5000*1B\r\n"  // Once every 5 seconds, 200 millihertz.
+#define PMTK_SET_NMEA_UPDATE_1HZ  "$PMTK220,1000*1F\r\n"
+#define PMTK_SET_NMEA_UPDATE_5HZ  "$PMTK220,200*2C\r\n"
+#define PMTK_SET_NMEA_UPDATE_10HZ "$PMTK220,100*2F\r\n"
+// Position fix update rate commands.
+#define PMTK_API_SET_FIX_CTL_100_MILLIHERTZ  "$PMTK300,10000,0,0,0,0*2C\r\n" // Once every 10 seconds, 100 millihertz.
+#define PMTK_API_SET_FIX_CTL_200_MILLIHERTZ  "$PMTK300,5000,0,0,0,0*18\r\n"  // Once every 5 seconds, 200 millihertz.
+#define PMTK_API_SET_FIX_CTL_1HZ  "$PMTK300,1000,0,0,0,0*1C\r\n"
+#define PMTK_API_SET_FIX_CTL_5HZ  "$PMTK300,200,0,0,0,0*2F\r\n"
+// Can't fix position faster than 5 times a second!
+
+#define PMTK_SET_BAUD_57600 "$PMTK251,57600*2C\r\n"
+#define PMTK_SET_BAUD_9600 "$PMTK251,9600*17\r\n"
+
+// turn on only the second sentence (GPRMC)
+#define PMTK_SET_NMEA_OUTPUT_RMCONLY "$PMTK314,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0*29\r\n"
+// turn on GPRMC and GGA
+#define PMTK_SET_NMEA_OUTPUT_RMCGGA "$PMTK314,0,1,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0*28\r\n"
+// turn on ALL THE DATA
+#define PMTK_SET_NMEA_OUTPUT_ALLDATA "$PMTK314,1,1,1,1,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0*28\r\n"
+// turn off output
+#define PMTK_SET_NMEA_OUTPUT_OFF "$PMTK314,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0*28\r\n"
 
 /*---------------------------------Baud Rate Calculations------------------------------------------------------------*/
 #define __DIV(__PCLK, __BAUD)       ((__PCLK*25)/(4*__BAUD))
@@ -127,8 +152,9 @@ void USART1_IRQHandler(void){
 */
 
 void USART1_Init(void){
-	RCC->IOPENR   |=   IOPAEN;			/* Enable GPIOA clock */
-	RCC->APB2ENR  |=   USART1EN;    /* Enable USART#1 clock */
+	
+	RCC->IOPENR   |=   RCC_IOPENR_GPIOAEN;			/* Enable GPIOA clock */
+	RCC->APB2ENR  |=   RCC_APB2ENR_USART1EN;    /* Enable USART#1 clock */
 	
 	//interrupt init
 	NVIC_EnableIRQ(USART1_IRQn);
@@ -146,27 +172,21 @@ void USART1_Init(void){
   GPIOA->MODER  |=  (( 2ul << 2* 9) | ( 2ul << 2* 10) );		/* Set to alternate function mode */
 	
 	USART1->BRR  = __USART_BRR(32000000ul, 9600ul);  /* 9600 baud @ 32MHz   */
-  USART1->CR3    = 0x0000;                 /* no flow control */
-  USART1->CR2    |= USART_CR2_SWAP;        /* Swap Tx and Rx */
-  USART1->CR1    = ((   1ul <<  2) |       /* enable RX  */
-                    (   1ul <<  3) |       /* enable TX  */
-                    (   0ul << 12) |       /* 8 data bits */
-                    (   0ul << 28) |       /* 8 data bits */
-                    (   1ul <<  0) |      /* enable USART */
+  USART1->CR3    = 0x0000;								/* no flow control */
+  USART1->CR2    |= USART_CR2_SWAP;				/* Swap Tx and Rx */
+  USART1->CR1    = ((USART_CR1_RE) |			/* enable RX  */
+                    (USART_CR1_TE) |			/* enable TX  */
+                    (   0ul << 12) |			/* 8 data bits */
+                    (   0ul << 28) |			/* 8 data bits */
+                    (USART_CR1_UE) |      /* enable USART */
 										(USART_CR1_RXNEIE));	/* Enable Interrupt */
 }
 
-/*----------------------------------------------------------------------------
-  Read character from Serial Port
- *----------------------------------------------------------------------------*/
-//int USART1_GetChar(void) {
-
-//  if (USART1->ISR & USART_ISR_RXNE){
-//    return (USART1->RDR);
-//	}
-//	else return (-1);
-//	
-//}
+void FGPMMOPA6H_Init(void){
+	USART1_Send(PMTK_API_SET_FIX_CTL_200_MILLIHERTZ);
+	USART1_Send(PMTK_SET_NMEA_UPDATE_200_MILLIHERTZ);
+	USART1_Send(PMTK_SET_NMEA_OUTPUT_RMCGGA);
+}
 
 char USART1_PutChar(char ch) {
 
@@ -181,10 +201,6 @@ char USART1_PutChar(char ch) {
   return (ch);
 }
 
-//void USART1_Read(void){
-//	 
-//}
-
 void USART1_Send(char c[]){
 	
 	int String_Length = strlen(c);
@@ -196,7 +212,7 @@ void USART1_Send(char c[]){
 	}
 }
 
-void FGPMMOPA6H_RMC_Data(void){
+void FGPMMOPA6H_Parse_RMC_Data(void){
 	
 	//Local Variables
 	char RMC_Message_Copy[128];
