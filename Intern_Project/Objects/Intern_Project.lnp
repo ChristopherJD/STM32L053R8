@@ -11,7 +11,7 @@
 ".\objects\lis3mdl.o"
 ".\objects\lsm6ds0.o"
 ".\objects\isk01a1.o"
-".\objects\usart1.o"
+".\objects\fgpmmopa6h.o"
 ".\objects\startup_stm32l053xx.o"
 ".\objects\system_stm32l0xx.o"
 --strict --scatter ".\Objects\Intern_Project.sct"

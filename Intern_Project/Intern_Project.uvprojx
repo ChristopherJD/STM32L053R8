@@ -474,9 +474,9 @@
               <FilePath>.\ISK01A1.c</FilePath>
             </File>
             <File>
-              <FileName>USART1.c</FileName>
+              <FileName>FGPMMOPA6H.c</FileName>
               <FileType>1</FileType>
-              <FilePath>.\USART1.c</FilePath>
+              <FilePath>.\FGPMMOPA6H.c</FilePath>
             </File>
           </Files>
         </Group>

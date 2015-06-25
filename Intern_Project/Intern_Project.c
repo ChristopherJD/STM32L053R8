@@ -11,7 +11,7 @@
 #include <stdio.h>											// Standard Input Output
 #include "stm32l053xx.h"								// Specific Device Header
 #include "Serial.h"											// Usart2 Communication
-#include "USART1.h"											// Usart1 Communication
+#include "FGPMMOPA6H.h"									// GPS Drivers
 #include "GPIO.h"												// GPIO Drivers
 #include "Timing.h"											// Clock Drivers
 #include "ADC.h"												// ADC Drivers
@@ -49,7 +49,10 @@ int main (void){
 	//ISK01A1_Init();
 	Delay(5000);
 	FGPMMOPA6H_RMC_Data();
-	FGPMMOPA6H_Get_RMC_UTC_Time();
+	FGPMMOPA6H_Get_RMC_TRF_Time();
+	printf("Latitude: %s\r\n",FGPMMOPA6H_Get_Latitude());
+	printf("Longitude: %s\r\n",FGPMMOPA6H_Get_Longitude());
+	printf("Speed: %f MPH",FGPMMOPA6H_Get_Ground_Speed());
 	//Loop Forever
   while (1) {
 
