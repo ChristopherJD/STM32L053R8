@@ -47,6 +47,7 @@
 /*------------------------------------------Include Statements------------------------------------*/
 #include "stm32l053xx.h"								// Specific Device Header
 #include <stdio.h>											// Standard Input Output
+#include <math.h>												// Standard math operations
 #include "Serial.h"											// Serial Communication
 #include "GPIO.h"
 #include "HTS221.h"											// Temperature and humidity Drivers
@@ -180,7 +181,7 @@ float ISK01A1_Get_Magnetic_X(void){
 	//Local Variables
 	float X_Magnetic_Field = 0;
 	
-	//Read Pressure
+	//Read Magnetic field
 	X_Magnetic_Field = LIS3MDL_X_Read();
 	
 	return(X_Magnetic_Field);
@@ -197,7 +198,7 @@ float ISK01A1_Get_Magnetic_Y(void){
 	//Local Variables
 	float Y_Magnetic_Field = 0;
 	
-	//Read Pressure
+	//Read Magnetic field
 	Y_Magnetic_Field = LIS3MDL_Y_Read();
 	
 	return(Y_Magnetic_Field);
@@ -214,7 +215,7 @@ float ISK01A1_Get_Magnetic_Z(void){
 	//Local Variables
 	float Z_Magnetic_Field = 0;
 	
-	//Read Pressure
+	//Read Magnetic field
 	Z_Magnetic_Field = LIS3MDL_Z_Read();
 	
 	return(Z_Magnetic_Field);
@@ -231,7 +232,7 @@ float ISK01A1_Get_Acceleration_X(void){
 	//Local Variables
 	float Acceleration_X = 0;
 	
-	//Read Pressure
+	//Read Acceleration
 	Acceleration_X = LSM6DS0_X_Acceleration_Read();
 	
 	return(Acceleration_X);
@@ -249,7 +250,7 @@ float ISK01A1_Get_Acceleration_Y(void){
 	//Local Variables
 	float Acceleration_Y = 0;
 	
-	//Read Pressure
+	//Read Acceleration
 	Acceleration_Y = LSM6DS0_Y_Acceleration_Read();
 	
 	return(Acceleration_Y);
@@ -267,7 +268,7 @@ float ISK01A1_Get_Acceleration_Z(void){
 	//Local Variables
 	float Acceleration_Z = 0;
 	
-	//Read Pressure
+	//Read Acceleration
 	Acceleration_Z = LSM6DS0_Z_Acceleration_Read();
 	
 	return(Acceleration_Z);
@@ -285,7 +286,7 @@ float ISK01A1_Get_Roll(void){
 	//Local Variables
 	float Roll = 0;
 	
-	//Read Pressure
+	//Read Roll
 	Roll = LSM6DS0_Gyroscope_Roll_Read();
 	
 	return(Roll);
@@ -302,7 +303,7 @@ float ISK01A1_Get_Pitch(void){
 	//Local Variables
 	float Pitch = 0;
 	
-	//Read Pressure
+	//Read Pitch
 	Pitch = LSM6DS0_Gyroscope_Pitch_Read();
 	
 	return(Pitch);
@@ -319,10 +320,30 @@ float ISK01A1_Get_Yaw(void){
 	//Local Variables
 	float Yaw = 0;
 	
-	//Read Pressure
+	//Read Yaw
 	Yaw = LSM6DS0_Gyroscope_Yaw_Read();
 	
 	return(Yaw);
 }
 
-
+float ISK01A1_Get_Altitude(void){
+	
+	/* Calculation should be good up to 11km */
+	/* Local Variables */
+	float Z = 0.0;												/* Altitude (Unknown) */
+	const float T0 = 288.15;							/* Temperatuer at zero altitude, ISA */
+	float P = 0.0;												/* Measured Pressure */
+	const float P0 = 101325.0;						/* Pressure at zero altitude, ISA */
+	const float g = 9.80655;							/* Acceleration due to gravity */
+	const float L = -0.0065;							/* Lapse Rate, ISA */
+	const float R = 287.053;							/* Gas constant for air */
+	const float Meters_to_Feet = 3.2808;	/* Convert meters to feet */
+	
+	/* Read Pressure */
+	P = LPS25HB_Pressure_Read()*100.0;			/* Convert hPa to Pa */
+	
+	/* Calculate Altitude in feet */
+	Z = (T0/L)*(pow((P/P0),((-L*R)/g))-1)*Meters_to_Feet;
+	
+	return(Z);
+}

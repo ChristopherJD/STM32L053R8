@@ -6,7 +6,9 @@
 .\objects\isk01a1.o: C:\Keil_v5\ARM\PACK\ARM\CMSIS\4.3.0\CMSIS\Include\core_cmFunc.h
 .\objects\isk01a1.o: C:\Keil_v5\ARM\PACK\Keil\STM32L0xx_DFP\1.3.0\Device\Include\system_stm32l0xx.h
 .\objects\isk01a1.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\stdio.h
+.\objects\isk01a1.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\math.h
 .\objects\isk01a1.o: Serial.h
+.\objects\isk01a1.o: GPIO.h
 .\objects\isk01a1.o: HTS221.h
 .\objects\isk01a1.o: LPS25HB.h
 .\objects\isk01a1.o: LIS3MDL.h

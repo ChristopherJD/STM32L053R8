@@ -26,5 +26,6 @@ extern float ISK01A1_Get_Acceleration_Z(void);
 extern float ISK01A1_Get_Roll(void);
 extern float ISK01A1_Get_Pitch(void);
 extern float ISK01A1_Get_Yaw(void);
+extern float ISK01A1_Get_Altitude(void);
 
 #endif

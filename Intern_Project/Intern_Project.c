@@ -53,6 +53,8 @@ int main (void){
 
 	//Loop Forever
   while (1) {
+		printf("Altitude: %f ft\r\n",ISK01A1_Get_Altitude());
+		printf("Acceleration %f mg\r\n",ISK01A1_Get_Acceleration_X());
 		FGPMMOPA6H_Get_GPS_Data();
   }
 

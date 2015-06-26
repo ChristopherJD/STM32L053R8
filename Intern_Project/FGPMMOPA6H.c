@@ -375,8 +375,8 @@ void FGPMMOPA6H_Get_GPS_Data(void){
 	
 	/* Wait for New data to come */
 	while(RMC.New_Data_Ready == 0){
-			//nop
-		}
+		//Nop
+	}
 	/* Parse the RMC data */
 	FGPMMOPA6H_Parse_RMC_Data();
 		
