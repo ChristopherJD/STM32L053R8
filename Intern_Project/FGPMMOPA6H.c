@@ -75,6 +75,7 @@ char 								VTG_Message[128];											/* Original VTG message */
 /*---------------------------------Structure Instantiate-------------------------------------------------------------*/
 RMC_Data RMC;
 GPS_Data GPS;
+GGA_Data GGA;
 /*---------------------------------Functions-------------------------------------------------------------------------*/
 
 /**
@@ -167,7 +168,7 @@ void USART1_Init(void){
 void FGPMMOPA6H_Init(void){
 	USART1_Send(PMTK_API_SET_FIX_CTL_200_MILLIHERTZ);		/* 5s Position echo time */
 	USART1_Send(PMTK_SET_NMEA_UPDATE_200_MILLIHERTZ);		/* 5s update time */
-	USART1_Send(PMTK_SET_NMEA_OUTPUT_RMCONLY);					/* Output only RMC Data */
+	USART1_Send(PMTK_SET_NMEA_OUTPUT_RMCGGA);					/* Output RMC Data and GGA */
 	printf("#####  GPS Initialized              #####\r\n");
 }
 
@@ -195,6 +196,53 @@ void USART1_Send(char c[]){
 	}
 }
 
+void FGPMMOPA6H_Parse_GGA(void){
+	
+	//Local Variables
+	char GGA_Message_Copy[128] = "";
+	const char delimeter[2] = ",";
+	char *token = "";
+	int i = 0;
+	char temp[15][12];		/* [15][12]: 15 strings, of length 12 */
+	
+	/* Copy original GGA message */
+	strcpy(GGA_Message_Copy,GGA_Message);
+	
+	//Seperate message
+	/* get the first token */
+	token = strtok(GGA_Message_Copy, delimeter);
+	
+	/* Walk through other tokens */
+	while( token != NULL ) 
+   {
+		 strcpy(temp[i],token);
+		 i++;
+     token = strtok(NULL, delimeter);
+   }
+	 
+	/* Copy the message into its individual components */
+	strcpy(GGA.Message_ID,temp[0]);
+	strcpy(GGA.UTC_Time,temp[1]);
+	strcpy(GGA.Latitude,temp[2]);
+	strcpy(GGA.N_S_Indicator,temp[3]);
+	strcpy(GGA.Longitude,temp[4]);
+	strcpy(GGA.E_W_Indicator,temp[5]);
+	strcpy(GGA.Position_Indicator,temp[6]);
+	strcpy(GGA.Satellites_Used,temp[7]);
+	strcpy(GGA.HDOP,temp[8]);
+	strcpy(GGA.MSL_Altitude,temp[9]);
+	strcpy(GGA.Units_Altitude,temp[10]);
+	strcpy(GGA.Geoidal_Seperation,temp[11]);
+	strcpy(GGA.Units_Geoidal_Seperation,temp[12]);
+	strcpy(GGA.Age_Of_Diff_Corr,temp[13]);
+	strcpy(GGA.Checksum,temp[14]);
+}
+
+/**
+  \fn          void FGPMMOPA6H_Parse_RMC_Data(void)
+  \brief       Parses the RMC Data						
+*/
+
 void FGPMMOPA6H_Parse_RMC_Data(void){
 	
 	//Local Variables
@@ -204,12 +252,12 @@ void FGPMMOPA6H_Parse_RMC_Data(void){
 	int i = 0;
 	char temp[11][12];			/* [11][12]: 11 strings, of length 12 */
 	
-	//Copy original GSV to a copy in order to not destroy message
+	//Copy original RMC to a copy in order to not destroy message
 	strcpy(RMC_Message_Copy,RMC_Message);
 	
 	//Seperated Message
 	/* get the first token */
-   token = strtok(RMC_Message, delimeter);
+   token = strtok(RMC_Message_Copy, delimeter);
    
    /* walk through other tokens */
    while( token != NULL ) 
@@ -371,14 +419,22 @@ char* FGPMMOPA6H_Get_RMC_Date(void){
 	return(GPS.Date);
 }
 
+char* FGPMMOPA6H_Get_GGA_Altitude(void){
+	
+	sprintf(GPS.Altitude,"%s",GGA.MSL_Altitude);
+	
+	return(GPS.Altitude);
+}
+
 void FGPMMOPA6H_Get_GPS_Data(void){
 	
 	/* Wait for New data to come */
 	while(RMC.New_Data_Ready == 0){
 		//Nop
 	}
-	/* Parse the RMC data */
+	/* Parse the RMC and GCC data */
 	FGPMMOPA6H_Parse_RMC_Data();
+	FGPMMOPA6H_Parse_GGA();
 		
 	/* Print in standard format */
 	printf("GPS Data is Valid: %i\r\n",FGPMMOPA6H_Get_RMC_Status());
@@ -387,6 +443,8 @@ void FGPMMOPA6H_Get_GPS_Data(void){
 	printf("Latitude: %s\r\n",FGPMMOPA6H_Get_RMC_Latitude());
 	printf("Longitude: %s\r\n",FGPMMOPA6H_Get_RMC_Longitude());
 	printf("Speed: %f MPH\r\n",FGPMMOPA6H_Get_RMC_Ground_Speed());
+	printf("Altitude: %s\r\n",FGPMMOPA6H_Get_GGA_Altitude());
+	printf("%s",GGA_Message);
 		
 	/* Data has been read, set new data ready to 0 */
 	RMC.New_Data_Ready = 0;

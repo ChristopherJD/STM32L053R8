@@ -13,7 +13,7 @@ extern char 						VTG_Message[128];											/* Original VTG message */
 /* Raw RMC data */
 typedef struct RMC_Data
 {
-	int New_Data_Ready;
+	int New_Data_Ready;						/* New Data Recieved */
 	char Message_ID[7];						/* RMC Protocol header */
 	char UTC_Time[11];						/* hhmmss.sss */
 	char Status[2];								/* A = data valid, V = data NOT valid */
@@ -27,10 +27,32 @@ typedef struct RMC_Data
 	char Mode[5];									/* A = autonomous mode, D = Differential mode, E = Estimated mode */
 }RMC_Data;
 
+/* Raw GGA data */
+typedef struct GGA_Data
+{
+	int New_Data_Ready;								/* New Data Recieved */
+	char Message_ID[7];								/* GGA Protocol header */
+	char UTC_Time[11];								/* hhmmss.sss */
+	char Latitude[10];								/* ddmm.mmmm */
+	char N_S_Indicator[2];						/* N = North, S = South */
+	char Longitude[11];								/* dddmm.mmmm */
+	char E_W_Indicator[2];						/* E = East, W = West */
+	char Position_Indicator[2];				/* 0 = Fix not available, 1 = GPS Fix, 2 = Differential GPS fix */
+	char Satellites_Used[3];					/* Range from 0 - 14 */
+	char HDOP[5];											/* Horizontal Dilution of Precision */
+	char MSL_Altitude[5];							/* Antenna Altitude above or below mean sea level */
+	char Units_Altitude[2];						/* Units of antenna altitude */
+	char Geoidal_Seperation[5];				/*  */
+	char Units_Geoidal_Seperation[2];	/* Units for geoidal seperation */
+	char Age_Of_Diff_Corr[5];					/* Null fields when DGPS is not used (seconds) */
+	char Checksum[3];									/* XOR checksum value */
+}GGA_Data;
+
 /* This is the data after it has been parsed properly formated */
 typedef struct GPS_Data
 {
 	int Valid_Data;
+	char Altitude[5];
 	char UTC_Time[15];
 	char Date[9];
 	char Latitude[15];
