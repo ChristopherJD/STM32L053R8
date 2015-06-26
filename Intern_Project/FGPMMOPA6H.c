@@ -13,10 +13,10 @@
 /*---------------------------------Include Statements----------------------------------------------------------------*/
 #include "stm32l053xx.h"			//Specific Device Header
 #include <stdio.h>
-#include "USART1.h"
-#include "Serial.h"
 #include <string.h>
 #include <stdlib.h>
+#include "FGPMMOPA6H.h"
+#include "Serial.h"
 /*---------------------------------Define Statments------------------------------------------------------------------*/
 #define TRUE				0x1				//Truth value is 1
 #define FALSE				0x0				//False value is 0
@@ -55,11 +55,11 @@
 #define __USART_BRR(__PCLK, __BAUD) ((__DIVMANT(__PCLK, __BAUD) << 4)|(__DIVFRAQ(__PCLK, __BAUD) & 0x0F))
 
 /*---------------------------------NMEA Output Sentences--------------------------------------------------------------*/
-static const char GGA[] = "$GPGGA";
-static const char GSA[] = "$GPGSA";
-static const char GSV[] = "$GPGSV";
-static const char RMC[] = "$GPRMC";
-static const char VTG[] = "$GPVTG";
+static const char GGA_Tag[] = "$GPGGA";
+static const char GSA_Tag[] = "$GPGSA";
+static const char GSV_Tag[] = "$GPGSV";
+static const char RMC_Tag[] = "$GPRMC";
+static const char VTG_Tag[] = "$GPVTG";
 
 /*---------------------------------Globals----------------------------------------------------------------------------*/
 volatile int 				CharIndex = 0;												/* Character index of the char array */
@@ -72,31 +72,9 @@ char 								GSV_Message[128];											/* Original GSV message */
 char 								RMC_Message[128];											/* Original RMC message */
 char 								VTG_Message[128];											/* Original VTG message */
 
-/*---------------------------------Structure Declarations-------------------------------------------------------------*/
-/* This is the raw RMC Data */
-struct RMC_Data
-{
-	char Message_ID[7];						/* RMC Protocol header */
-	char UTC_Time[11];						/* hhmmss.sss */
-	char Status[2];								/* A = data valid, V = data NOT valid */
-	char Latitude[10];						/* ddmm.mmmm */
-	char N_S_Indicator[2];				/* N = North, S = South */
-	char Longitude[11];						/* dddmm.mmmm */
-	char E_W_Indicator[2];				/* E = East, W = West */
-	char Speed_Over_Ground[5];		/* In Knots */
-	char Course_Over_Ground[7];		/* Degrees */
-	char Date[7];									/* ddmmyy */
-	char Mode[5];									/* A = autonomous mode, D = Differential mode, E = Estimated mode */
-}RMC_Data;
-
-/* This is the data after it has been parsed */
-struct GPS_Data
-{
-	char Latitude[15];
-	char Longitude[15];
-	float Ground_Speed;
-}GPS_Data;
-
+/*---------------------------------Structure Instantiate-------------------------------------------------------------*/
+RMC_Data RMC;
+GPS_Data GPS;
 /*---------------------------------Functions-------------------------------------------------------------------------*/
 
 /**
@@ -111,6 +89,9 @@ void USART1_IRQHandler(void){
 		/* Reads and CLEARS RXNE Flag */
     Rx_Data[CharIndex] = USART1->RDR;
 		
+		/* RMC Data not ready */
+		RMC.New_Data_Ready = FALSE;
+		
 		/* If Rx_Data = $, then we are in transmission */
 		if(Rx_Data[CharIndex] == '$'){
 			Transmission_In_Progress = TRUE;
@@ -119,19 +100,20 @@ void USART1_IRQHandler(void){
 		/* If we are transmitting then save to proper message once complete */
 		if(Transmission_In_Progress == TRUE){
 			if(Rx_Data[CharIndex] == '\n'){
-				if(strncmp(GGA,Rx_Data,(sizeof(GGA)-1)) == 0){
+				if(strncmp(GGA_Tag,Rx_Data,(sizeof(GGA_Tag)-1)) == 0){
 					strcpy(GGA_Message,Rx_Data);
 				}
-				if(strncmp(GSA,Rx_Data,(sizeof(GSA)-1)) == 0){
+				if(strncmp(GSA_Tag,Rx_Data,(sizeof(GSA_Tag)-1)) == 0){
 					strcpy(GSA_Message,Rx_Data);
 				}
-				if(strncmp(GSV,Rx_Data,(sizeof(GSV)-1)) == 0){
+				if(strncmp(GSV_Tag,Rx_Data,(sizeof(GSV_Tag)-1)) == 0){
 					strcpy(GSV_Message,Rx_Data);
 				}
-				if(strncmp(RMC,Rx_Data,(sizeof(RMC)-1)) == 0){
+				if(strncmp(RMC_Tag,Rx_Data,(sizeof(RMC_Tag)-1)) == 0){
 					strcpy(RMC_Message,Rx_Data);
+					RMC.New_Data_Ready = TRUE;
 				}
-				if(strncmp(VTG,Rx_Data,(sizeof(VTG)-1)) == 0){
+				if(strncmp(VTG_Tag,Rx_Data,(sizeof(VTG_Tag)-1)) == 0){
 					strcpy(VTG_Message,Rx_Data);
 				}
 				Transmission_In_Progress = FALSE;
@@ -163,7 +145,7 @@ void USART1_Init(void){
 	//Make PA8 an input with a pull up resistor
 	GPIOA->MODER &= ~(( 3ul << 2* 8) | ( 3ul << 2* 8) ); /* Set to input */
 	GPIOA->PUPDR &= ~(( 3ul << 2* 8) | ( 3ul << 2* 8) ); /* Set to 0 */
-	GPIOA->PUPDR |=  (( 2ul << 2* 8) | ( 2ul << 2* 8) ); /* Set to pull up */
+	GPIOA->PUPDR |=  (( 2ul << 2* 8) | ( 2ul << 2* 8) ); /* Set to pull down */
 	
 	//Configure PA9 to USART1_TX, PA10 to USART1_RX
   GPIOA->AFR[1] &= ~((15ul << 4* 1) | (15ul << 4* 2) );		/* Set to 0 */
@@ -183,9 +165,10 @@ void USART1_Init(void){
 }
 
 void FGPMMOPA6H_Init(void){
-	USART1_Send(PMTK_API_SET_FIX_CTL_200_MILLIHERTZ);
-	USART1_Send(PMTK_SET_NMEA_UPDATE_200_MILLIHERTZ);
-	USART1_Send(PMTK_SET_NMEA_OUTPUT_RMCGGA);
+	USART1_Send(PMTK_API_SET_FIX_CTL_200_MILLIHERTZ);		/* 5s Position echo time */
+	USART1_Send(PMTK_SET_NMEA_UPDATE_200_MILLIHERTZ);		/* 5s update time */
+	USART1_Send(PMTK_SET_NMEA_OUTPUT_RMCONLY);					/* Output only RMC Data */
+	printf("#####  GPS Initialized              #####\r\n");
 }
 
 char USART1_PutChar(char ch) {
@@ -215,9 +198,9 @@ void USART1_Send(char c[]){
 void FGPMMOPA6H_Parse_RMC_Data(void){
 	
 	//Local Variables
-	char RMC_Message_Copy[128];
+	char RMC_Message_Copy[128] = "";
 	const char delimeter[2] = ",";
-	char *token;
+	char *token = "";
 	int i = 0;
 	char temp[11][12];			/* [11][12]: 11 strings, of length 12 */
 	
@@ -236,29 +219,32 @@ void FGPMMOPA6H_Parse_RMC_Data(void){
      token = strtok(NULL, delimeter);
    }
 	 
-	strcpy(RMC_Data.Message_ID,temp[0]);
-	strcpy(RMC_Data.UTC_Time,temp[1]);
-	strcpy(RMC_Data.Status,temp[2]);
-	strcpy(RMC_Data.Latitude,temp[3]);
-	strcpy(RMC_Data.N_S_Indicator,temp[4]);
-	strcpy(RMC_Data.Longitude,temp[5]);
-	strcpy(RMC_Data.E_W_Indicator,temp[6]);
-	strcpy(RMC_Data.Speed_Over_Ground,temp[7]);
-	strcpy(RMC_Data.Course_Over_Ground,temp[8]);
-	strcpy(RMC_Data.Date,temp[9]);
-	strcpy(RMC_Data.Mode,temp[10]);
-	
-	printf("RMC_Message: %s\r\n",RMC_Data.Message_ID);
-	printf("UTC_Time: %s\r\n",RMC_Data.UTC_Time);
-	printf("Status: %s\r\n",RMC_Data.Status);
-	printf("Latitude: %s\r\n",RMC_Data.Latitude);
-	printf("N/S: %s\r\n",RMC_Data.N_S_Indicator);
-	printf("Longitude: %s\r\n",RMC_Data.Longitude);
-	printf("E/W: %s\r\n",RMC_Data.E_W_Indicator);
-	printf("Speed: %s\r\n",RMC_Data.Speed_Over_Ground);
-	printf("Course: %s\r\n",RMC_Data.Course_Over_Ground);
-	printf("Date: %s\r\n",RMC_Data.Date);
-	printf("Mode: %s\r\n",RMC_Data.Mode);
+	 //Copy the message into its individual components
+	strcpy(RMC.Message_ID,temp[0]);
+	strcpy(RMC.UTC_Time,temp[1]);
+	strcpy(RMC.Status,temp[2]);
+	strcpy(RMC.Latitude,temp[3]);
+	strcpy(RMC.N_S_Indicator,temp[4]);
+	strcpy(RMC.Longitude,temp[5]);
+	strcpy(RMC.E_W_Indicator,temp[6]);
+	strcpy(RMC.Speed_Over_Ground,temp[7]);
+	strcpy(RMC.Course_Over_Ground,temp[8]);
+	strcpy(RMC.Date,temp[9]);
+	strcpy(RMC.Mode,temp[10]);
+}
+
+void Print_RMC_Data(void){
+	printf("RMC_Message: %s\r\n",RMC.Message_ID);
+	printf("UTC_Time: %s\r\n",RMC.UTC_Time);
+	printf("Status: %s\r\n",RMC.Status);
+	printf("Latitude: %s\r\n",RMC.Latitude);
+	printf("N/S: %s\r\n",RMC.N_S_Indicator);
+	printf("Longitude: %s\r\n",RMC.Longitude);
+	printf("E/W: %s\r\n",RMC.E_W_Indicator);
+	printf("Speed: %s\r\n",RMC.Speed_Over_Ground);
+	printf("Course: %s\r\n",RMC.Course_Over_Ground);
+	printf("Date: %s\r\n",RMC.Date);
+	printf("Mode: %s\r\n",RMC.Mode);
 }
 
 /**
@@ -266,31 +252,27 @@ void FGPMMOPA6H_Parse_RMC_Data(void){
   \brief       Prints the Thief River falls time
 */
 
-void FGPMMOPA6H_Get_RMC_TRF_Time(void){
+char* FGPMMOPA6H_Get_RMC_UTC_Time(void){
 	
 	/* Local Variables */
-	char hh[3];
-	char mm[3];
-	char ss[3];
+	char hh[3] = "";
+	char mm[3] = "";
+	char ss[3] = "";
 	int Hours = 0;
-	int Minutes = 0;
-	int Seconds = 0;
 	
 	/* Parse original UTC time */
-	strncpy(hh,RMC_Data.UTC_Time,2);
-	strncpy(mm,(RMC_Data.UTC_Time+2),2);
-	strncpy(ss,(RMC_Data.UTC_Time+4),2);
+	strncpy(hh,RMC.UTC_Time,2);
+	strncpy(mm,(RMC.UTC_Time+2),2);
+	strncpy(ss,(RMC.UTC_Time+4),2);
 	
-	/* Convert Char[] into integer */
+	/* Convert to integer and calculate TRF time */
 	Hours = atoi(hh);
-	Minutes = atoi(mm);
-	Seconds = atoi(ss);
-	
-	/* Convert to Thief River Falls time */
 	Hours -= 5;
 	
-	/* Print the time */
-	printf("TRF Time: %i:%i:%i\r\n",Hours,Minutes,Seconds);
+	/* Put into time format */
+	sprintf(GPS.UTC_Time,"%i:%s:%s",Hours,mm,ss);
+	
+	return(GPS.UTC_Time);
 }
 
 /**
@@ -299,29 +281,22 @@ void FGPMMOPA6H_Get_RMC_TRF_Time(void){
 	\returns		GPS_Data.Latitude: The formatted Latitude data
 */
 
-char* FGPMMOPA6H_Get_Latitude(void){
+char* FGPMMOPA6H_Get_RMC_Latitude(void){
 	
 	/* Local Variables */
-	char dd[3];
-	char mm[3];
-	char mmm[6];
-	char Degree_Sign[2] = {248,'\0'};
-	char Minute_Sign[2] = "'";
+	char dd[3] = "";
+	char mm[3] = "";
+	char mmm[6] = "";
 	
 	/* Parse Original Latitude data */
-	strncpy(dd,RMC_Data.Latitude,2);
-	strncpy(mm,(RMC_Data.Latitude+2),2);
-	strncpy(mmm,(RMC_Data.Latitude+4),5);
+	strncpy(dd,RMC.Latitude,2);
+	strncpy(mm,(RMC.Latitude+2),2);
+	strncpy(mmm,(RMC.Latitude+4),5);
 	
 	/* Recreate String with degree sign */
-	strcpy(GPS_Data.Latitude,dd);
-	strcat(GPS_Data.Latitude,Degree_Sign);
-	strcat(GPS_Data.Latitude,mm);
-	strcat(GPS_Data.Latitude,mmm);
-	strcat(GPS_Data.Latitude,Minute_Sign);
-	strcat(GPS_Data.Latitude,RMC_Data.N_S_Indicator);
+	sprintf(GPS.Latitude,"%s%c%s%s'%s",dd,248,mm,mmm,RMC.N_S_Indicator);
 	
-	return(GPS_Data.Latitude);
+	return(GPS.Latitude);
 }
 
 /**
@@ -330,29 +305,22 @@ char* FGPMMOPA6H_Get_Latitude(void){
 	\returns		GPS_Data.Longitude: The formatted Longitude data
 */
 
-char* FGPMMOPA6H_Get_Longitude(void){
+char* FGPMMOPA6H_Get_RMC_Longitude(void){
 	
 	/* Local Variables */
-	char ddd[4];
-	char mm[3];
-	char mmm[6];
-	char Degree_Sign[2] = {248,'\0'};
-	char Minute_Sign[2] = "'";
+	char ddd[4] = "";
+	char mm[3] = "";
+	char mmm[6] = "";
 	
 	/* Parse Original Latitude data */
-	strncpy(ddd,RMC_Data.Longitude,3);
-	strncpy(mm,(RMC_Data.Longitude+3),2);
-	strncpy(mmm,(RMC_Data.Longitude+5),5);
+	strncpy(ddd,RMC.Longitude,3);
+	strncpy(mm,(RMC.Longitude+3),2);
+	strncpy(mmm,(RMC.Longitude+5),6);
 	
-	/* Recreate String with degree sign */
-	strcpy(GPS_Data.Longitude,ddd);							/* Strange error occuring here */
-	strcat(GPS_Data.Longitude,Degree_Sign);
-	strcat(GPS_Data.Longitude,mm);
-	strcat(GPS_Data.Longitude,mmm);
-	strcat(GPS_Data.Longitude,Minute_Sign);
-	strcat(GPS_Data.Longitude,RMC_Data.E_W_Indicator);
+	/* Recreate String with appropriate signs */
+	sprintf(GPS.Longitude,"%s%c%s%s'%s",ddd,248,mm,mmm,RMC.E_W_Indicator);
 	
-	return(GPS_Data.Longitude);
+	return(GPS.Longitude);
 }
 
 /**
@@ -361,18 +329,65 @@ char* FGPMMOPA6H_Get_Longitude(void){
 	\returns		GPS_Data.Latitude: The formatted Latitude data
 */
 
-float FGPMMOPA6H_Get_Ground_Speed(void){
+float FGPMMOPA6H_Get_RMC_Ground_Speed(void){
 	
 	/* Local Variables */
-	float MPH_Conversion = 1.15077945;
+	float MPH_Conversion = 1.15077945;	/* 1 Knot = 1.15..MPH */
 	
-	GPS_Data.Ground_Speed = 0.0;
+	GPS.Ground_Speed = 0.0;
 	
 	/* Get ground speed */
-	GPS_Data.Ground_Speed = atof(RMC_Data.Speed_Over_Ground);
+	GPS.Ground_Speed = atof(RMC.Speed_Over_Ground);
 	
 	/* Convert Knots to MPH */
-	GPS_Data.Ground_Speed *= MPH_Conversion;
+	GPS.Ground_Speed *= MPH_Conversion;
 	
-	return(GPS_Data.Ground_Speed);
+	return(GPS.Ground_Speed);
+}
+
+int FGPMMOPA6H_Get_RMC_Status(void){
+	
+	if((strcmp(RMC.Status,"A")) == 0){
+		GPS.Valid_Data = TRUE;
+	}
+	else GPS.Valid_Data = FALSE;
+	
+	return(GPS.Valid_Data);
+}
+
+char* FGPMMOPA6H_Get_RMC_Date(void){
+	char dd[3] = "";
+	char mm[3] = "";
+	char yy[3] = "";
+	
+	/* Parse Original Latitude data */
+	strncpy(dd,RMC.Date,2);
+	strncpy(mm,(RMC.Date+2),2);
+	strncpy(yy,(RMC.Date+4),2);
+	
+	/* Recreate String in appropriate format */
+	sprintf(GPS.Date,"%s/%s/%s",mm,dd,yy);
+	
+	return(GPS.Date);
+}
+
+void FGPMMOPA6H_Get_GPS_Data(void){
+	
+	/* Wait for New data to come */
+	while(RMC.New_Data_Ready == 0){
+			//nop
+		}
+	/* Parse the RMC data */
+	FGPMMOPA6H_Parse_RMC_Data();
+		
+	/* Print in standard format */
+	printf("GPS Data is Valid: %i\r\n",FGPMMOPA6H_Get_RMC_Status());
+	printf("Date: %s\r\n",FGPMMOPA6H_Get_RMC_Date());
+	printf("Time: %s\r\n",FGPMMOPA6H_Get_RMC_UTC_Time());
+	printf("Latitude: %s\r\n",FGPMMOPA6H_Get_RMC_Latitude());
+	printf("Longitude: %s\r\n",FGPMMOPA6H_Get_RMC_Longitude());
+	printf("Speed: %f MPH\r\n",FGPMMOPA6H_Get_RMC_Ground_Speed());
+		
+	/* Data has been read, set new data ready to 0 */
+	RMC.New_Data_Ready = 0;
 }

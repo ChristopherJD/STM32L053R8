@@ -18,7 +18,7 @@
 #include "I2C.h"												// I2C Drivers
 #include "ISK01A1.h"										// ISK01A1 expansion board Drivers (gryo,temp,accel etc...)
 #include "string.h"
-	
+
 /**
   \fn          int main (void)
   \brief       Initializes all peripherals and loops forever
@@ -46,22 +46,21 @@ int main (void){
 	I2C_Init();
 	
 	//Mems board Initialization
-	//ISK01A1_Init();
-	FGPMMOPA6H_Init();
-	Delay(6000);
-	printf("M1: %s",GGA_Message);
-	printf("M2: %s",GSA_Message);
-	printf("M3: %s",GSV_Message);
-	printf("M4: %s",RMC_Message);
-	FGPMMOPA6H_Parse_RMC_Data();
-	FGPMMOPA6H_Get_RMC_TRF_Time();
-	printf("Latitude: %s\r\n",FGPMMOPA6H_Get_Latitude());
-	printf("Longitude: %s\r\n",FGPMMOPA6H_Get_Longitude());
-	printf("Speed: %f MPH",FGPMMOPA6H_Get_Ground_Speed());
+	ISK01A1_Init();
 	
+	//GPS Initialization
+	FGPMMOPA6H_Init();
+//	Delay(6000);
+//	FGPMMOPA6H_Parse_RMC_Data();
+//	printf("GPS Data is Valid: %i\r\n",FGPMMOPA6H_Get_RMC_Status());
+//	printf("Date: %s\r\n",FGPMMOPA6H_Get_RMC_Date());
+//	printf("Time: %s\r\n",FGPMMOPA6H_Get_RMC_UTC_Time());
+//	printf("Latitude: %s\r\n",FGPMMOPA6H_Get_RMC_Latitude());
+//	printf("Longitude: %s\r\n",FGPMMOPA6H_Get_RMC_Longitude());
+//	printf("Speed: %f MPH\r\n",FGPMMOPA6H_Get_RMC_Ground_Speed());
 	//Loop Forever
   while (1) {
-		
+		FGPMMOPA6H_Get_GPS_Data();
   }
 
 }

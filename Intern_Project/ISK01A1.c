@@ -73,13 +73,13 @@ void ISK01A1_Init(void){
 	HTS221_Found = HTS221_Init();		//Initializes the device if found
 	
 	//Pressure Sensor Initialize
-	LPS25HB_Found = LPS25HB_Init();
+	LPS25HB_Found = LPS25HB_Init();	//Initializes the device if found
 	
 	//Magnetometer Initialize
-	LIS3MDL_Found = LIS3MDL_Init();
+	LIS3MDL_Found = LIS3MDL_Init();	//Initializes the device if found
 	
 	//Accelerometer and Gyroscope Initialize
-	LSM6DS0_Found = LSM6DS0_Init();
+	LSM6DS0_Found = LSM6DS0_Init();	//Initializes the device if found
 	
 	if(HTS221_Found & LPS25HB_Found & LIS3MDL_Found & LSM6DS0_Found){
 		printf("#####  ISK01A1 Devices Initialized  #####\r\n");
