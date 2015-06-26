@@ -48,6 +48,7 @@
 #include "stm32l053xx.h"								// Specific Device Header
 #include <stdio.h>											// Standard Input Output
 #include "Serial.h"											// Serial Communication
+#include "GPIO.h"
 #include "HTS221.h"											// Temperature and humidity Drivers
 #include "LPS25HB.h"										// Pressure sensor Drivers
 #include "LIS3MDL.h"										// Magnetometer drivers
@@ -323,3 +324,5 @@ float ISK01A1_Get_Yaw(void){
 	
 	return(Yaw);
 }
+
+

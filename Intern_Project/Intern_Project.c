@@ -50,14 +50,7 @@ int main (void){
 	
 	//GPS Initialization
 	FGPMMOPA6H_Init();
-//	Delay(6000);
-//	FGPMMOPA6H_Parse_RMC_Data();
-//	printf("GPS Data is Valid: %i\r\n",FGPMMOPA6H_Get_RMC_Status());
-//	printf("Date: %s\r\n",FGPMMOPA6H_Get_RMC_Date());
-//	printf("Time: %s\r\n",FGPMMOPA6H_Get_RMC_UTC_Time());
-//	printf("Latitude: %s\r\n",FGPMMOPA6H_Get_RMC_Latitude());
-//	printf("Longitude: %s\r\n",FGPMMOPA6H_Get_RMC_Longitude());
-//	printf("Speed: %f MPH\r\n",FGPMMOPA6H_Get_RMC_Ground_Speed());
+
 	//Loop Forever
   while (1) {
 		FGPMMOPA6H_Get_GPS_Data();
