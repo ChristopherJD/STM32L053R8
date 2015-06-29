@@ -12,7 +12,7 @@
 						----------------
 						*	Temperature: Measured in degrees Fahrenheit
 						*	Humidity: Measured in relative humidty (rH%)
-						*	Pressure: Measured in hectopascals (hPa) 1 hPa = 100 Pa
+						*	Pressure: Measured in hectopascals (mbar) 1 mbar = 100 Pa
 						*	Magnetic Field (XYZ): Measured in milliGauss (mG)
 						*	Linear Acceleration: Measured in milli-g-force (mg)
 						*	Angular Acceleration: Measured in milli-degrees/second (mdps)
@@ -20,6 +20,7 @@
 						Sensor Accuracy:
 						----------------
 						**Note all sensors generally operate between -40 to 80 degrees C
+						**1 mbar = 1 hPa
 						*	Temperature:
 							------------
 								*15-40 degrees C +/- 0.5 degrees C
@@ -30,8 +31,8 @@
 								*0-100 % rH +/- 6 %rH
 						*	Pressure:
 							---------
-								*20-60 degrees C +/- 0.2 hPa
-								*0-80 degrees C +/- 1	hPa
+								*20-60 degrees C +/- 0.2 mbar
+								*0-80 degrees C +/- 1	mbar
 						*	Magnetic Field (XYZ): 
 							---------------------
 								*Full-Scale +/- 4 is about 0.15 mG
@@ -55,7 +56,8 @@
 #include "LIS3MDL.h"										// Magnetometer drivers
 #include "LSM6DS0.h"										// Accelerometer and gyroscope
 #include "ISK01A1.h"
-
+/*------------------------------------------Structure Inits----------------------------------------*/
+Pressure_Data Pressure;
 /*------------------------------------------Functions----------------------------------------------*/
 
 /**
@@ -76,6 +78,7 @@ void ISK01A1_Init(void){
 	
 	//Pressure Sensor Initialize
 	LPS25HB_Found = LPS25HB_Init();	//Initializes the device if found
+	Pressure.Initial = ISK01A1_Get_Altitude();	//Get the Initial reading
 	
 	//Magnetometer Initialize
 	LIS3MDL_Found = LIS3MDL_Init();	//Initializes the device if found
@@ -156,7 +159,7 @@ float ISK01A1_Get_Humidity(void){
 
 /**
   \fn					float ISK01A1_Get_Pressure(void)
-  \brief			Retrieves the Pressure in hPa
+  \brief			Retrieves the Pressure in mbar
 	\returns		float Pressure: LPS25HB Pressure
 */
 
@@ -326,6 +329,12 @@ float ISK01A1_Get_Yaw(void){
 	return(Yaw);
 }
 
+/**
+  \fn					ISK01A1_Get_Altitude(void)
+  \brief			Calculates the altitude based on the pressure
+	\returns		float Z: Altitude calculation in feet
+*/
+
 float ISK01A1_Get_Altitude(void){
 	
 	/* Calculation should be good up to 11km */
@@ -340,10 +349,29 @@ float ISK01A1_Get_Altitude(void){
 	const float Meters_to_Feet = 3.2808;	/* Convert meters to feet */
 	
 	/* Read Pressure */
-	P = LPS25HB_Pressure_Read()*100.0;			/* Convert hPa to Pa */
+	P = LPS25HB_Pressure_Read()*100.0;			/* Convert mbar to Pa */
 	
 	/* Calculate Altitude in feet */
 	Z = (T0/L)*(pow((P/P0),((-L*R)/g))-1)*Meters_to_Feet;
 	
 	return(Z);
+}
+
+/**
+  \fn					float QuadCopter_Altitude(void)
+  \brief			Calculate the height of the quad copter based on initial reading
+	\returns		float Altitude Difference: Altitude of of quadcopter
+*/
+
+float QuadCopter_Altitude(void){
+	
+	/* Local Variables */
+	float Altitude_Difference = 0.0;
+	
+	/* Find the Current Pressure */
+	Pressure.Current = ISK01A1_Get_Altitude();
+	
+	Altitude_Difference = Pressure.Current - Pressure.Initial;
+	
+	return(Altitude_Difference);
 }

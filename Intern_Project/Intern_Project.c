@@ -30,7 +30,7 @@ int main (void){
 	SystemCoreClockInit();
   SystemCoreClockUpdate();
 	SysTick_Config(SystemCoreClock / 1000);									// SysTick 1 msec interrupts
-
+	
   // Port initializations
 	LED_Init();																							//LD2 Initialization
 	Button_Initialize();																		//User button init
@@ -55,6 +55,7 @@ int main (void){
   while (1) {
 		printf("Altitude: %f ft\r\n",ISK01A1_Get_Altitude());
 		printf("Acceleration %f mg\r\n",ISK01A1_Get_Acceleration_X());
+		printf("Quad Copter Alt: %f ft\r\n",QuadCopter_Altitude());
 		FGPMMOPA6H_Get_GPS_Data();
   }
 

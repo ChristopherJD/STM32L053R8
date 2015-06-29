@@ -12,6 +12,12 @@
 #ifndef ISK01A1_H
 #define ISK01A1_H
 
+typedef struct Pressure_Data
+{
+	float Initial;
+	float Current;
+}Pressure_Data;
+
 extern void ISK01A1_Init(void);
 extern void ISK01A1_Configuration(void);
 extern float ISK01A1_Get_Temperature(void);
@@ -27,5 +33,6 @@ extern float ISK01A1_Get_Roll(void);
 extern float ISK01A1_Get_Pitch(void);
 extern float ISK01A1_Get_Yaw(void);
 extern float ISK01A1_Get_Altitude(void);
+extern float QuadCopter_Altitude(void);
 
 #endif

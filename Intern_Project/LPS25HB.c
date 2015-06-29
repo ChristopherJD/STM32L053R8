@@ -88,7 +88,7 @@ void LPS25HB_Configuration(void){
 /**
   \fn					void LPS25HB_Configuration(void)
   \brief			Prints important Configuration registers
-	\returns		float LPS25HB_Pressure: pressure measured in hPa
+	\returns		float LPS25HB_Pressure: pressure measured in mbar
 */
 
 float LPS25HB_Pressure_Read(void){
@@ -134,7 +134,7 @@ float LPS25HB_Pressure_Read(void){
 			Raw_Pressure |= 0xFF000000;
 	}
 	
-	//Calculate Pressure in hPa
+	//Calculate Pressure in mbar
 	Pressure = (float)Raw_Pressure/4096.0f;
 	
 	return(Pressure);

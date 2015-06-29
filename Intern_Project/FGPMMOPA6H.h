@@ -40,9 +40,9 @@ typedef struct GGA_Data
 	char Position_Indicator[2];				/* 0 = Fix not available, 1 = GPS Fix, 2 = Differential GPS fix */
 	char Satellites_Used[3];					/* Range from 0 - 14 */
 	char HDOP[5];											/* Horizontal Dilution of Precision */
-	char MSL_Altitude[5];							/* Antenna Altitude above or below mean sea level */
+	char MSL_Altitude[6];							/* Antenna Altitude above or below mean sea level */
 	char Units_Altitude[2];						/* Units of antenna altitude */
-	char Geoidal_Seperation[5];				/*  */
+	char Geoidal_Seperation[6];				/*  */
 	char Units_Geoidal_Seperation[2];	/* Units for geoidal seperation */
 	char Age_Of_Diff_Corr[5];					/* Null fields when DGPS is not used (seconds) */
 	char Checksum[3];									/* XOR checksum value */

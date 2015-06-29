@@ -103,6 +103,7 @@ void USART1_IRQHandler(void){
 			if(Rx_Data[CharIndex] == '\n'){
 				if(strncmp(GGA_Tag,Rx_Data,(sizeof(GGA_Tag)-1)) == 0){
 					strcpy(GGA_Message,Rx_Data);
+					GGA.New_Data_Ready = TRUE;
 				}
 				if(strncmp(GSA_Tag,Rx_Data,(sizeof(GSA_Tag)-1)) == 0){
 					strcpy(GSA_Message,Rx_Data);
@@ -165,12 +166,27 @@ void USART1_Init(void){
 										(USART_CR1_RXNEIE));	/* Enable Interrupt */
 }
 
+/**
+  \fn					FGPMMOPA6H_Init(void)
+  \brief			Initializes the GPS module
+							Configuration:
+								*	5s Position echo time
+								*	5s Update time 
+								*	Outputs both GGA and RMC message
+*/
+
 void FGPMMOPA6H_Init(void){
 	USART1_Send(PMTK_API_SET_FIX_CTL_200_MILLIHERTZ);		/* 5s Position echo time */
 	USART1_Send(PMTK_SET_NMEA_UPDATE_200_MILLIHERTZ);		/* 5s update time */
 	USART1_Send(PMTK_SET_NMEA_OUTPUT_RMCGGA);					/* Output RMC Data and GGA */
 	printf("#####  GPS Initialized              #####\r\n");
 }
+
+/**
+	\fn				char USART1_PutChar(char ch)
+	\brief		Puts a character to the USART
+	\returns	ch: The character written to the USART
+*/
 
 char USART1_PutChar(char ch) {
 
@@ -185,6 +201,11 @@ char USART1_PutChar(char ch) {
   return (ch);
 }
 
+/**
+	\fn				void USART1_Send(char c[])
+	\brief		Sends a string to the USART
+*/
+
 void USART1_Send(char c[]){
 	
 	int String_Length = strlen(c);
@@ -195,6 +216,11 @@ void USART1_Send(char c[]){
 		Counter++;
 	}
 }
+
+/**
+	\fn				void FGPMMOPA6H_Parse_GGA(void)
+	\brief		Parses the GGA data based on the , delimeter
+*/
 
 void FGPMMOPA6H_Parse_GGA(void){
 	
@@ -239,8 +265,31 @@ void FGPMMOPA6H_Parse_GGA(void){
 }
 
 /**
+	\fn				void Print_GGA_Data(void)
+	\brief		Prints the GGA data after it has been parsed
+*/
+
+void Print_GGA_Data(void){
+	printf("GGA_Message: %s\r\n",GGA.Message_ID);
+	printf("UTC_Time: %s\r\n",GGA.UTC_Time);
+	printf("Latitude: %s\r\n",GGA.Latitude);
+	printf("N/S: %s\r\n",GGA.N_S_Indicator);
+	printf("Longitude: %s\r\n",GGA.Longitude);
+	printf("E/W: %s\r\n",GGA.E_W_Indicator);
+	printf("Position: %s\r\n",GGA.Position_Indicator);
+	printf("Satellites Used: %s\r\n",GGA.Satellites_Used);
+	printf("HDOP: %s\r\n",GGA.HDOP);
+	printf("MSL_Altitude: %s\r\n",GGA.MSL_Altitude);
+	printf("Altitude Units: %s\r\n",GGA.Units_Altitude);
+	printf("Geoidal_Seperation: %s\r\n",GGA.Geoidal_Seperation);
+	printf("Geoidal Units: %s\r\n",GGA.Units_Geoidal_Seperation);
+	printf("Age of different Corr: %s\r\n",GGA.Age_Of_Diff_Corr);
+	printf("Checksum %s\r\n",GGA.Checksum);
+}
+
+/**
   \fn          void FGPMMOPA6H_Parse_RMC_Data(void)
-  \brief       Parses the RMC Data						
+  \brief       Parses the RMC Data based on the , delimeter					
 */
 
 void FGPMMOPA6H_Parse_RMC_Data(void){
@@ -280,6 +329,11 @@ void FGPMMOPA6H_Parse_RMC_Data(void){
 	strcpy(RMC.Date,temp[9]);
 	strcpy(RMC.Mode,temp[10]);
 }
+
+/**
+	\fn				void Print_RMC_Data(void)
+	\brief		Prints the RMC data after it has been parsed
+*/
 
 void Print_RMC_Data(void){
 	printf("RMC_Message: %s\r\n",RMC.Message_ID);
@@ -393,6 +447,12 @@ float FGPMMOPA6H_Get_RMC_Ground_Speed(void){
 	return(GPS.Ground_Speed);
 }
 
+/**
+  \fn					int FGPMMOPA6H_Get_RMC_Status(void)
+  \brief			Retrieves RMC Status
+	\returns		GPS_Data.Valid Data: Is the gps data valid
+*/
+
 int FGPMMOPA6H_Get_RMC_Status(void){
 	
 	if((strcmp(RMC.Status,"A")) == 0){
@@ -402,6 +462,12 @@ int FGPMMOPA6H_Get_RMC_Status(void){
 	
 	return(GPS.Valid_Data);
 }
+
+/**
+  \fn					char* FGPMMOPA6H_Get_RMC_Date(void)
+  \brief			Retrieves RMC Date
+	\returns		GPS_Data.Date: What is the date
+*/
 
 char* FGPMMOPA6H_Get_RMC_Date(void){
 	char dd[3] = "";
@@ -419,17 +485,33 @@ char* FGPMMOPA6H_Get_RMC_Date(void){
 	return(GPS.Date);
 }
 
+/**
+  \fn					char* FGPMMOPA6H_Get_GGA_Altitude(void)
+  \brief			Retrieves altitude
+	\returns		GPS_Data.Altitude: The formatted Altitude data from GGA
+*/
+
 char* FGPMMOPA6H_Get_GGA_Altitude(void){
 	
-	sprintf(GPS.Altitude,"%s",GGA.MSL_Altitude);
+	float Altitude_In_Ft = 0.0;
+	
+	Altitude_In_Ft = atof(GGA.MSL_Altitude) * 3.28084;
+	
+	sprintf(GPS.Altitude,"%f",Altitude_In_Ft);
 	
 	return(GPS.Altitude);
 }
 
+/**
+  \fn					void FGPMMOPA6H_Get_GPS_Data(void)
+  \brief			Retrieves RMC Date
+	\returns		GPS_Data.Date: What is the date
+*/
+
 void FGPMMOPA6H_Get_GPS_Data(void){
 	
 	/* Wait for New data to come */
-	while(RMC.New_Data_Ready == 0){
+	while((RMC.New_Data_Ready & GGA.New_Data_Ready) == 0){
 		//Nop
 	}
 	/* Parse the RMC and GCC data */
@@ -443,9 +525,9 @@ void FGPMMOPA6H_Get_GPS_Data(void){
 	printf("Latitude: %s\r\n",FGPMMOPA6H_Get_RMC_Latitude());
 	printf("Longitude: %s\r\n",FGPMMOPA6H_Get_RMC_Longitude());
 	printf("Speed: %f MPH\r\n",FGPMMOPA6H_Get_RMC_Ground_Speed());
-	printf("Altitude: %s\r\n",FGPMMOPA6H_Get_GGA_Altitude());
-	printf("%s",GGA_Message);
+	printf("Altitude: %s ft \r\n",FGPMMOPA6H_Get_GGA_Altitude());
 		
 	/* Data has been read, set new data ready to 0 */
 	RMC.New_Data_Ready = 0;
+	GGA.New_Data_Ready = 0;
 }
