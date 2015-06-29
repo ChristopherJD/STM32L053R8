@@ -17,6 +17,7 @@
 #include "ADC.h"												// ADC Drivers
 #include "I2C.h"												// I2C Drivers
 #include "ISK01A1.h"										// ISK01A1 expansion board Drivers (gryo,temp,accel etc...)
+#include "XBeePro24.h"
 #include "string.h"
 
 /**
@@ -38,6 +39,7 @@ int main (void){
 	// Serial Communications Initializations
   SER_Initialize();
 	USART1_Init();		/* For the GPS */
+	LPUART_Init();		/* For XBee */
 	
 	//ADC Initializations
 	ADC_Init();
@@ -46,17 +48,16 @@ int main (void){
 	I2C_Init();
 	
 	//Mems board Initialization
-	ISK01A1_Init();
+	//ISK01A1_Init();
 	
 	//GPS Initialization
-	FGPMMOPA6H_Init();
+	//FGPMMOPA6H_Init();
+	
+	//XBee Initialization
 
 	//Loop Forever
   while (1) {
-		printf("Altitude: %f ft\r\n",ISK01A1_Get_Altitude());
-		printf("Acceleration %f mg\r\n",ISK01A1_Get_Acceleration_X());
-		printf("Quad Copter Alt: %f ft\r\n",QuadCopter_Altitude());
-		FGPMMOPA6H_Get_GPS_Data();
+		
   }
 
 }

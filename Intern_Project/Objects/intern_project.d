@@ -13,4 +13,5 @@
 .\objects\intern_project.o: ADC.h
 .\objects\intern_project.o: I2C.h
 .\objects\intern_project.o: ISK01A1.h
+.\objects\intern_project.o: XBeePro24.h
 .\objects\intern_project.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\string.h
