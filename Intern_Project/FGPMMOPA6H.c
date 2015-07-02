@@ -90,8 +90,9 @@ void USART1_IRQHandler(void){
 		/* Reads and CLEARS RXNE Flag */
     Rx_Data[CharIndex] = USART1->RDR;
 		
-		/* RMC Data not ready */
+		/* Data Not Ready */
 		RMC.New_Data_Ready = FALSE;
+		GGA.New_Data_Ready = FALSE;
 		
 		/* If Rx_Data = $, then we are in transmission */
 		if(Rx_Data[CharIndex] == '$'){

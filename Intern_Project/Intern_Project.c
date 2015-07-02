@@ -48,16 +48,16 @@ int main (void){
 	I2C_Init();
 	
 	//Mems board Initialization
-	//ISK01A1_Init();
+	ISK01A1_Init();
 	
 	//GPS Initialization
 	//FGPMMOPA6H_Init();
 	
 	//XBee Initialization
-
+	//XBee_Init();
 	//Loop Forever
   while (1) {
-		
+		XBee_Init();
   }
 
 }

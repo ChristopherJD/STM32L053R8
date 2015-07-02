@@ -14,6 +14,8 @@
  #define XBeePro24_H
  
  extern void LPUART_Init(void);
+ extern void XBee_Init(void);
+ extern void LPUART1_Send(char c[]);
  
  #endif
 
