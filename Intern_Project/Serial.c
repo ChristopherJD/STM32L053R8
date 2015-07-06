@@ -4,10 +4,11 @@
 
 #define USARTx  USART2
 
-#define __DIV(__PCLK, __BAUD)       ((__PCLK*25)/(4*__BAUD))
-#define __DIVMANT(__PCLK, __BAUD)   (__DIV(__PCLK, __BAUD)/100)
-#define __DIVFRAQ(__PCLK, __BAUD)   (((__DIV(__PCLK, __BAUD) - (__DIVMANT(__PCLK, __BAUD) * 100)) * 16 + 50) / 100)
-#define __USART_BRR(__PCLK, __BAUD) ((__DIVMANT(__PCLK, __BAUD) << 4)|(__DIVFRAQ(__PCLK, __BAUD) & 0x0F))
+/* Alternate USARTx_BRR calculation */
+//#define __DIV(__PCLK, __BAUD)       ((__PCLK*25)/(4*__BAUD))
+//#define __DIVMANT(__PCLK, __BAUD)   (__DIV(__PCLK, __BAUD)/100)
+//#define __DIVFRAQ(__PCLK, __BAUD)   (((__DIV(__PCLK, __BAUD) - (__DIVMANT(__PCLK, __BAUD) * 100)) * 16 + 50) / 100)
+//#define __USART_BRR(__PCLK, __BAUD) ((__DIVMANT(__PCLK, __BAUD) << 4)|(__DIVFRAQ(__PCLK, __BAUD) & 0x0F))
 
 
 void SER_Initialize (void) {
@@ -21,7 +22,7 @@ void SER_Initialize (void) {
   GPIOA->MODER  &= ~(( 3ul << 2* 3) | ( 3ul << 2* 2) );
   GPIOA->MODER  |=  (( 2ul << 2* 3) | ( 2ul << 2* 2) );
 
-  USARTx->BRR  = __USART_BRR(32000000ul, 9600ul);  /* 9600 baud @ 32MHz   */
+  USARTx->BRR  = 0xD05;  										/* 9600 baud @ 32MHz   */
   USARTx->CR3    = 0x0000;                 /* no flow control                 */
   USARTx->CR2    = 0x0000;                 /* 1 stop bit                      */
   USARTx->CR1    = ((   1ul <<  2) |       /* enable RX                       */

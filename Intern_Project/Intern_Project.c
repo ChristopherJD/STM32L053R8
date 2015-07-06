@@ -54,10 +54,11 @@ int main (void){
 	//FGPMMOPA6H_Init();
 	
 	//XBee Initialization
-	//XBee_Init();
+	XBee_Init();
+	Read_Xbee_Init();
 	//Loop Forever
   while (1) {
-		XBee_Init();
+		//XBee_Init();	
   }
 
 }

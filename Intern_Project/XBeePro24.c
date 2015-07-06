@@ -13,11 +13,7 @@
 #include "string.h"						//String functions
 #include "Serial.h"						//Printf function
 #include "Timing.h"						//Delay function
-/*---------------------------------Baud Rate Calculations------------------------------------------------------------*/
-#define __DIV(__PCLK, __BAUD)       ((__PCLK*25)/(4*__BAUD))
-#define __DIVMANT(__PCLK, __BAUD)   (__DIV(__PCLK, __BAUD)/100)
-#define __DIVFRAQ(__PCLK, __BAUD)   (((__DIV(__PCLK, __BAUD) - (__DIVMANT(__PCLK, __BAUD) * 100)) * 16 + 50) / 100)
-#define __USART_BRR(__PCLK, __BAUD) ((__DIVMANT(__PCLK, __BAUD) << 4)|(__DIVFRAQ(__PCLK, __BAUD) & 0x0F))
+#include "XBeePro24.h"
 /*---------------------------------XBee Commands----------------------------------------------------------------------*/
 /* Prefix(AT) + ASCII Command + Space(Optional) + Parameter(Optional,HEX) + Carridge Return */
 #define ENTER_AT_COMMAND_MODE					"+++"					//Enter three plus characters within 1s there is no \r on purpose
@@ -40,8 +36,10 @@
 char 				RX_Data[33] = "hi";				//Rx
 uint8_t 		ChIndex = 0;							//Character Index
 char 				XBee_Message[33] = "";		//Message Recieved by the XBee
-char				OK[3] = "OK";							//When data has been written XBee will send an OK
+static const char				OK[] = "OK";						//When data has been written XBee will send an OK
 uint8_t			Device_Ack_Flag = FALSE;	//XBee acknowledge
+/*--------------------------------Struct Initialize-------------------------------------------------------------------*/
+AT_Data AT;
 /*--------------------------------Functions---------------------------------------------------------------------------*/
 
 /**
@@ -54,7 +52,7 @@ void RNG_LPUART1_IRQHandler(void){
 		/* Read RX Data */
 		RX_Data[ChIndex] = LPUART1->RDR;
 		
-		/* Device has not acknowledged command */
+		/* Reset Device Acknowledge */
 		Device_Ack_Flag = FALSE;
 		
 		/* Check for end of recieved data */
@@ -67,8 +65,11 @@ void RNG_LPUART1_IRQHandler(void){
 			
 			/* Copy XBee message */
 			strcpy(XBee_Message,RX_Data);
+			
+			/* Clear RX_Data */
 			ChIndex = 0;
 			memset(RX_Data,0,sizeof(RX_Data));
+			
 		}else ChIndex++;
 	}
 }
@@ -86,7 +87,7 @@ void LPUART_Init(void){
   GPIOC->MODER  &= ~(( 3ul << 2* 10) | ( 3ul << 2* 11) );		/* Set to 0 */
   GPIOC->MODER  |=  (( 2ul << 2* 10) | ( 2ul << 2* 11) );		/* Set to alternate function mode */
 	
-	LPUART1->BRR  = __USART_BRR(32000000ul, 9600ul);  					/* 9600 baud @ 32MHz   */
+	LPUART1->BRR  = 0xD0555;  																/* 9600 baud @ 32MHz */
   LPUART1->CR3    = 0x0000;																	/* no flow control */
   LPUART1->CR1    = ((USART_CR1_RE) |												/* enable RX  */
                     (USART_CR1_TE) |												/* enable TX  */
@@ -124,16 +125,83 @@ void LPUART1_Send(char c[]){
 void XBee_Init(void){
 	
 	/* Enter AT command mode */
+	LPUART1_Send(ENTER_AT_COMMAND_MODE);
+	
+	/* Wait for XBee Acknowledge */
+	while(Device_Ack_Flag == 0){
+		//Nop
+	}
+	
+	/* MY address = 2 */
 	LPUART1_Send(SET_ATMY);
 	
-//	/* Wait for XBee Acknowledge */
-//	while(Device_Ack_Flag == 0){
-//		//Nop
-//	}
+	/* Wait for XBee Acknowledge */
+	while(Device_Ack_Flag == 0){
+		//Nop
+	}
 	
-//	LPUART1_Send(READ_ATMY);
+	/* PAL = 3001 */
+	LPUART1_Send(SET_ATID);
 	
-	/* Print the Recieved message */
-	printf("Recieved Data: %s",XBee_Message);
-	Delay(1000);
+	/* Wait for XBee Acknowledge */
+	while(Device_Ack_Flag == 0){
+		//Nop
+	}
+	
+	/* Set Destination address high */
+	LPUART1_Send(SET_ATDH);
+	
+	/* Wait for XBee Acknowledge */
+	while(Device_Ack_Flag == 0){
+		//Nop
+	}
+	
+	/* Set Destination Address low */
+	LPUART1_Send(SET_ATDL);
+	
+	/* Wait for XBee Acknowledge */
+	while(Device_Ack_Flag == 0){
+		//Nop
+	}
+	
+	/* End AT command mode */
+	LPUART1_Send(EXIT_AT_COMMAND_MODE);
+	
+	/* Wait for XBee Acknowledge */
+	while(Device_Ack_Flag == 0){
+		//Nop
+	}
+}
+
+void Read_Xbee_Init(void){
+	
+	/* Enter AT command mode */
+	LPUART1_Send(ENTER_AT_COMMAND_MODE);
+	
+	/* Wait for XBee Acknowledge */
+	while(Device_Ack_Flag == 0){
+		//Nop
+	}
+	
+	/* Read Personal Area Network */
+	LPUART1_Send(READ_ATID);
+	strncpy(AT.ID,XBee_Message,6);
+	
+	/* Read MY Address */
+	LPUART1_Send(READ_ATMY);
+	strncpy(AT.MY,XBee_Message,6);
+	
+	/* Read Destination address */
+	LPUART1_Send(READ_ATDH);
+	strncpy(AT.DH,XBee_Message,6);
+	
+	LPUART1_Send(READ_ATDL);
+	strncpy(AT.DL,XBee_Message,6);
+	
+	/* Print to serial monitor */
+	printf("ID: %s\r\n",AT.ID);
+	printf("MY: %s\r\n",AT.MY);
+	printf("DH: %s\r\n",AT.DH);
+	printf("DL: %s\r\n",AT.DL);
+	
 }
