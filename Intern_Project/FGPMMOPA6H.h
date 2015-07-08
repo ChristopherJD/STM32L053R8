@@ -58,6 +58,7 @@ typedef struct GPS_Data
 	char Latitude[15];
 	char Longitude[15];
 	float Ground_Speed;
+	char Packaged[65];								/* Data to be sent to other intern */
 }GPS_Data;
 
 /* Initialization methods */
@@ -82,5 +83,6 @@ extern void Print_RMC_Data(void);
 
 /*GPS Data*/
 extern void FGPMMOPA6H_Get_GPS_Data(void);
+extern char* FGPMMOPA6H_Package_Data(void);
 
 #endif

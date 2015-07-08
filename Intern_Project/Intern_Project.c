@@ -29,11 +29,16 @@ void IO_Init(void);
 
 int main (void){
 	
+	char Data[165];
+	
 	IO_Init();
 	
 	//Loop Forever
   while (1) {
 		
+		sprintf(Data,"%s%s",FGPMMOPA6H_Package_Data(),ISK01A1_Package_Data());
+		LPUART1_Send(Data);
+		Delay(5000);
   }
 	
 }
@@ -71,6 +76,5 @@ void IO_Init(void){
 	 * By the XBee AT command Sequence
 	 */
 	XBee_Init();
-	Read_Xbee_Init();
 	
 }

@@ -532,3 +532,28 @@ void FGPMMOPA6H_Get_GPS_Data(void){
 	RMC.New_Data_Ready = 0;
 	GGA.New_Data_Ready = 0;
 }
+
+char* FGPMMOPA6H_Package_Data(void){
+	
+	/* Parse the RMC and GCC data */
+	FGPMMOPA6H_Parse_RMC_Data();
+	FGPMMOPA6H_Parse_GGA();
+	
+	/* Get the data */
+	FGPMMOPA6H_Get_RMC_UTC_Time();
+	FGPMMOPA6H_Get_RMC_Latitude();
+	FGPMMOPA6H_Get_RMC_Longitude();
+	FGPMMOPA6H_Get_RMC_Ground_Speed();
+	FGPMMOPA6H_Get_RMC_Status();
+	FGPMMOPA6H_Get_RMC_Date();
+	FGPMMOPA6H_Get_GGA_Altitude();
+
+	/* Package the data */
+	sprintf(GPS.Packaged,"%i,%s,%s,%s,%s,%f,%s;\r\n",GPS.Valid_Data,GPS.Date,GPS.UTC_Time,GPS.Latitude,GPS.Longitude,GPS.Ground_Speed,GPS.Altitude);
+	
+	/* Data has been read, set new data ready to 0 */
+	RMC.New_Data_Ready = 0;
+	GGA.New_Data_Ready = 0;
+	
+	return(GPS.Packaged);
+}

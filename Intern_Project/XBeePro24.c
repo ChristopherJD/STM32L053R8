@@ -151,6 +151,8 @@ void XBee_Init(void){
 	/* End AT command mode */
 	LPUART1_Send(EXIT_AT_COMMAND_MODE);
 	Wait_For_OK();
+	
+	printf("#####  XBee Initialized             #####\r\n");
 }
 
 void Read_Xbee_Init(void){

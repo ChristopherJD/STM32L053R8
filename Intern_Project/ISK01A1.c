@@ -58,6 +58,11 @@
 #include "ISK01A1.h"
 /*------------------------------------------Structure Inits----------------------------------------*/
 Pressure_Data Pressure;
+HTS221_Data HTS221;
+LPS25HB_Data LPS25HB;
+LIS3MDL_Data LIS3MDL;
+LSM6DS0_Data LSM6DS0;
+ISK01A1_Data ISK01A1;
 /*------------------------------------------Functions----------------------------------------------*/
 
 /**
@@ -132,13 +137,11 @@ void ISK01A1_Configuration(void){
 */
 
 float ISK01A1_Get_Temperature(void){
-	//Local Variables
-	float Temperature = 0;
-	
+
 	//Read Temperature
-	Temperature = HTS221_Temp_Read();
+	HTS221.Temperature = HTS221_Temp_Read();
 	
-	return(Temperature);
+	return(HTS221.Temperature);
 }
 
 /**
@@ -148,13 +151,11 @@ float ISK01A1_Get_Temperature(void){
 */
 
 float ISK01A1_Get_Humidity(void){
-	//Local Variables
-	float Humidity = 0;
-	
+
 	//Read Humidity
-	Humidity = HTS221_Humidity_Read();
+	HTS221.Humidity = HTS221_Humidity_Read();
 	
-	return(Humidity);
+	return(HTS221.Humidity);
 }
 
 /**
@@ -164,13 +165,11 @@ float ISK01A1_Get_Humidity(void){
 */
 
 float ISK01A1_Get_Pressure(void){
-	//Local Variables
-	float Pressure = 0;
-	
+
 	//Read Pressure
-	Pressure = LPS25HB_Pressure_Read();
+	LPS25HB.Pressure = LPS25HB_Pressure_Read();
 	
-	return(Pressure);
+	return(LPS25HB.Pressure);
 }
 
 /**
@@ -181,13 +180,10 @@ float ISK01A1_Get_Pressure(void){
 
 float ISK01A1_Get_Magnetic_X(void){
 	
-	//Local Variables
-	float X_Magnetic_Field = 0;
-	
 	//Read Magnetic field
-	X_Magnetic_Field = LIS3MDL_X_Read();
+	LIS3MDL.X_Magnetic_Field = LIS3MDL_X_Read();
 	
-	return(X_Magnetic_Field);
+	return(LIS3MDL.X_Magnetic_Field);
 }
 
 /**
@@ -198,13 +194,10 @@ float ISK01A1_Get_Magnetic_X(void){
 
 float ISK01A1_Get_Magnetic_Y(void){
 	
-	//Local Variables
-	float Y_Magnetic_Field = 0;
-	
 	//Read Magnetic field
-	Y_Magnetic_Field = LIS3MDL_Y_Read();
+	LIS3MDL.Y_Magnetic_Field = LIS3MDL_Y_Read();
 	
-	return(Y_Magnetic_Field);
+	return(LIS3MDL.Y_Magnetic_Field);
 }
 
 /**
@@ -214,14 +207,11 @@ float ISK01A1_Get_Magnetic_Y(void){
 */
 
 float ISK01A1_Get_Magnetic_Z(void){
-	
-	//Local Variables
-	float Z_Magnetic_Field = 0;
-	
+
 	//Read Magnetic field
-	Z_Magnetic_Field = LIS3MDL_Z_Read();
+	LIS3MDL.Z_Magnetic_Field = LIS3MDL_Z_Read();
 	
-	return(Z_Magnetic_Field);
+	return(LIS3MDL.Z_Magnetic_Field);
 }
 
 /**
@@ -231,14 +221,11 @@ float ISK01A1_Get_Magnetic_Z(void){
 */
 
 float ISK01A1_Get_Acceleration_X(void){
-	
-	//Local Variables
-	float Acceleration_X = 0;
-	
+
 	//Read Acceleration
-	Acceleration_X = LSM6DS0_X_Acceleration_Read();
+	LSM6DS0.X_Acceleration = LSM6DS0_X_Acceleration_Read();
 	
-	return(Acceleration_X);
+	return(LSM6DS0.X_Acceleration);
 }
 
 /**
@@ -249,14 +236,11 @@ float ISK01A1_Get_Acceleration_X(void){
 
 
 float ISK01A1_Get_Acceleration_Y(void){
-	
-	//Local Variables
-	float Acceleration_Y = 0;
-	
+
 	//Read Acceleration
-	Acceleration_Y = LSM6DS0_Y_Acceleration_Read();
+	LSM6DS0.Y_Acceleration = LSM6DS0_Y_Acceleration_Read();
 	
-	return(Acceleration_Y);
+	return(LSM6DS0.Y_Acceleration);
 }
 
 /**
@@ -267,14 +251,11 @@ float ISK01A1_Get_Acceleration_Y(void){
 
 
 float ISK01A1_Get_Acceleration_Z(void){
-	
-	//Local Variables
-	float Acceleration_Z = 0;
-	
+
 	//Read Acceleration
-	Acceleration_Z = LSM6DS0_Z_Acceleration_Read();
+	LSM6DS0.Z_Acceleration = LSM6DS0_Z_Acceleration_Read();
 	
-	return(Acceleration_Z);
+	return(LSM6DS0.Z_Acceleration);
 }
 
 /**
@@ -285,14 +266,11 @@ float ISK01A1_Get_Acceleration_Z(void){
 
 
 float ISK01A1_Get_Roll(void){
-	
-	//Local Variables
-	float Roll = 0;
-	
+
 	//Read Roll
-	Roll = LSM6DS0_Gyroscope_Roll_Read();
+	LSM6DS0.Roll = LSM6DS0_Gyroscope_Roll_Read();
 	
-	return(Roll);
+	return(LSM6DS0.Roll);
 }
 
 /**
@@ -302,14 +280,11 @@ float ISK01A1_Get_Roll(void){
 */
 
 float ISK01A1_Get_Pitch(void){
-	
-	//Local Variables
-	float Pitch = 0;
-	
+
 	//Read Pitch
-	Pitch = LSM6DS0_Gyroscope_Pitch_Read();
+	LSM6DS0.Pitch = LSM6DS0_Gyroscope_Pitch_Read();
 	
-	return(Pitch);
+	return(LSM6DS0.Pitch);
 }
 
 /**
@@ -319,14 +294,11 @@ float ISK01A1_Get_Pitch(void){
 */
 
 float ISK01A1_Get_Yaw(void){
-	
-	//Local Variables
-	float Yaw = 0;
-	
+
 	//Read Yaw
-	Yaw = LSM6DS0_Gyroscope_Yaw_Read();
+	LSM6DS0.Yaw = LSM6DS0_Gyroscope_Yaw_Read();
 	
-	return(Yaw);
+	return(LSM6DS0.Yaw);
 }
 
 /**
@@ -339,7 +311,6 @@ float ISK01A1_Get_Altitude(void){
 	
 	/* Calculation should be good up to 11km */
 	/* Local Variables */
-	float Z = 0.0;												/* Altitude (Unknown) */
 	const float T0 = 288.15;							/* Temperatuer at zero altitude, ISA */
 	float P = 0.0;												/* Measured Pressure */
 	const float P0 = 101325.0;						/* Pressure at zero altitude, ISA */
@@ -352,9 +323,9 @@ float ISK01A1_Get_Altitude(void){
 	P = LPS25HB_Pressure_Read()*100.0;			/* Convert mbar to Pa */
 	
 	/* Calculate Altitude in feet */
-	Z = (T0/L)*(pow((P/P0),((-L*R)/g))-1)*Meters_to_Feet;
+	ISK01A1.Altitude = (T0/L)*(pow((P/P0),((-L*R)/g))-1)*Meters_to_Feet;
 	
-	return(Z);
+	return(ISK01A1.Altitude);
 }
 
 /**
@@ -374,4 +345,26 @@ float QuadCopter_Altitude(void){
 	Altitude_Difference = Pressure.Current - Pressure.Initial;
 	
 	return(Altitude_Difference);
+}
+
+char* ISK01A1_Package_Data(void){
+
+	/* Get all the data */
+	ISK01A1_Get_Temperature();
+	ISK01A1_Get_Humidity();
+	ISK01A1_Get_Magnetic_X();
+	ISK01A1_Get_Magnetic_Y();
+	ISK01A1_Get_Magnetic_Z();
+	ISK01A1_Get_Acceleration_X();
+	ISK01A1_Get_Acceleration_Y();
+	ISK01A1_Get_Acceleration_Z();
+	ISK01A1_Get_Roll();
+	ISK01A1_Get_Pitch();
+	ISK01A1_Get_Yaw();
+	ISK01A1_Get_Altitude();
+	
+	/* Combine the data into a string */
+	sprintf(ISK01A1.Packaged_Data,"%f,%f,%f,%f,%f,%f,%f,%f,%f;\r\n",HTS221.Temperature,HTS221.Humidity,LSM6DS0.X_Acceleration,LSM6DS0.Y_Acceleration,LSM6DS0.Z_Acceleration,LSM6DS0.Pitch,LSM6DS0.Roll,LSM6DS0.Yaw,ISK01A1.Altitude);
+	
+	return(ISK01A1.Packaged_Data);
 }

@@ -12,6 +12,41 @@
 #ifndef ISK01A1_H
 #define ISK01A1_H
 
+typedef struct HTS221_Data
+{
+	float Temperature;
+	float Humidity;	
+}HTS221_Data;
+
+typedef struct LPS25HB_Data
+{
+	float Pressure;
+}LPS25HB_Data;
+
+typedef struct LIS3MDL_Data
+{
+	float X_Magnetic_Field;
+	float Y_Magnetic_Field;
+	float Z_Magnetic_Field;
+}LIS3MDL_Data;
+
+typedef struct LSM6DS0_Data
+{
+	float X_Acceleration;
+	float Y_Acceleration;
+	float Z_Acceleration;
+	float Pitch;
+	float Yaw;
+	float Roll;
+}LSM6DS0_Data;
+
+typedef struct ISK01A1_Data
+{
+	char Packaged_Data[100];
+	float Altitude;
+}ISK01A1_Data;
+
+/* Used for finding the altitude */
 typedef struct Pressure_Data
 {
 	float Initial;
@@ -34,5 +69,6 @@ extern float ISK01A1_Get_Pitch(void);
 extern float ISK01A1_Get_Yaw(void);
 extern float ISK01A1_Get_Altitude(void);
 extern float QuadCopter_Altitude(void);
+extern char* ISK01A1_Package_Data(void);
 
 #endif
