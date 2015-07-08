@@ -17,8 +17,8 @@
  {
 	 char MY[6];		/* Source Address unique to this device */
 	 char ID[6];		/* Personal Area Network */
-	 char DH[6];		/* Destination register high */
-	 char DL[6];		/* Destination register low */
+	 char DH[9];		/* Destination register high */
+	 char DL[9];		/* Destination register low */
  } AT_Data;
  
  extern void LPUART_Init(void);

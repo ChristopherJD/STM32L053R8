@@ -33,27 +33,27 @@
 #define TRUE	1;
 #define FALSE 0;
 /*---------------------------------Globals----------------------------------------------------------------------------*/
-char 				RX_Data[33] = "hi";				//Rx
-uint8_t 		ChIndex = 0;							//Character Index
-char 				XBee_Message[33] = "";		//Message Recieved by the XBee
-static const char				OK[] = "OK";						//When data has been written XBee will send an OK
-uint8_t			Device_Ack_Flag = FALSE;	//XBee acknowledge
+char 										RX_Data[33] = "";							//Rx
+uint8_t 								ChIndex = 0;									//Character Index
+char 										XBee_Message[33] = "";				//Message Recieved by the XBee
+static const char				OK[] = "OK";									//When data has been written XBee will send an OK
+uint8_t									Device_Ack_Flag = FALSE;			//XBee OK acknowledge
+uint8_t									XBee_Ready_To_Read = FALSE;		//XBee data ready
 /*--------------------------------Struct Initialize-------------------------------------------------------------------*/
 AT_Data AT;
 /*--------------------------------Functions---------------------------------------------------------------------------*/
+void Wait_For_OK(void);
+void Wait_For_Data(void);
 
 /**
 	\fn			void RNG_LPUART1_IRQHandler(void)
 	\breif	Global interrupt handler for LPUART, Currently only handles RX
 */
 void RNG_LPUART1_IRQHandler(void){
-	if(LPUART1->ISR & USART_ISR_RXNE){
+	if((LPUART1->ISR & USART_ISR_RXNE) == USART_ISR_RXNE){
 		
 		/* Read RX Data */
 		RX_Data[ChIndex] = LPUART1->RDR;
-		
-		/* Reset Device Acknowledge */
-		Device_Ack_Flag = FALSE;
 		
 		/* Check for end of recieved data */
 		if(RX_Data[ChIndex] == '\r'){
@@ -65,6 +65,9 @@ void RNG_LPUART1_IRQHandler(void){
 			
 			/* Copy XBee message */
 			strcpy(XBee_Message,RX_Data);
+			
+			/* set data ready to read flag */
+			XBee_Ready_To_Read = TRUE;
 			
 			/* Clear RX_Data */
 			ChIndex = 0;
@@ -125,83 +128,93 @@ void LPUART1_Send(char c[]){
 void XBee_Init(void){
 	
 	/* Enter AT command mode */
+	Delay(1000);
 	LPUART1_Send(ENTER_AT_COMMAND_MODE);
-	
-	/* Wait for XBee Acknowledge */
-	while(Device_Ack_Flag == 0){
-		//Nop
-	}
+	Wait_For_OK();
 	
 	/* MY address = 2 */
 	LPUART1_Send(SET_ATMY);
-	
-	/* Wait for XBee Acknowledge */
-	while(Device_Ack_Flag == 0){
-		//Nop
-	}
+	Wait_For_OK();
 	
 	/* PAL = 3001 */
 	LPUART1_Send(SET_ATID);
-	
-	/* Wait for XBee Acknowledge */
-	while(Device_Ack_Flag == 0){
-		//Nop
-	}
+	Wait_For_OK();
 	
 	/* Set Destination address high */
 	LPUART1_Send(SET_ATDH);
-	
-	/* Wait for XBee Acknowledge */
-	while(Device_Ack_Flag == 0){
-		//Nop
-	}
+	Wait_For_OK();
 	
 	/* Set Destination Address low */
 	LPUART1_Send(SET_ATDL);
-	
-	/* Wait for XBee Acknowledge */
-	while(Device_Ack_Flag == 0){
-		//Nop
-	}
+	Wait_For_OK();
 	
 	/* End AT command mode */
 	LPUART1_Send(EXIT_AT_COMMAND_MODE);
-	
-	/* Wait for XBee Acknowledge */
-	while(Device_Ack_Flag == 0){
-		//Nop
-	}
+	Wait_For_OK();
 }
 
 void Read_Xbee_Init(void){
 	
 	/* Enter AT command mode */
+	Delay(1000);
 	LPUART1_Send(ENTER_AT_COMMAND_MODE);
+	
+	/* Wait for XBee Acknowledge */
+	Wait_For_OK();
+	
+	/* Read Personal Area Network */
+	LPUART1_Send(READ_ATID);
+	Wait_For_Data();
+	strncpy(AT.ID,XBee_Message,6);
+	
+	/* Read MY Address */
+	LPUART1_Send(READ_ATMY);
+	Wait_For_Data();
+	strncpy(AT.MY,XBee_Message,6);
+	
+	/* Read Destination address */
+	LPUART1_Send(READ_ATDH);
+	Wait_For_Data();
+	strncpy(AT.DH,XBee_Message,9);
+	
+	LPUART1_Send(READ_ATDL);
+	Wait_For_Data();
+	strncpy(AT.DL,XBee_Message,9);
+	
+	/* End AT command mode */
+	LPUART1_Send(EXIT_AT_COMMAND_MODE);
+	Wait_For_OK();
+	
+	/* Print to serial monitor */
+	printf("PAN: %s\r\n",AT.ID);
+	printf("MY: %s\r\n",AT.MY);
+	printf("DH: %s\r\n",AT.DH);
+	printf("DL: %s\r\n",AT.DL);
+	
+}
+
+void Wait_For_OK(void){
 	
 	/* Wait for XBee Acknowledge */
 	while(Device_Ack_Flag == 0){
 		//Nop
 	}
 	
-	/* Read Personal Area Network */
-	LPUART1_Send(READ_ATID);
-	strncpy(AT.ID,XBee_Message,6);
-	
-	/* Read MY Address */
-	LPUART1_Send(READ_ATMY);
-	strncpy(AT.MY,XBee_Message,6);
-	
-	/* Read Destination address */
-	LPUART1_Send(READ_ATDH);
-	strncpy(AT.DH,XBee_Message,6);
-	
-	LPUART1_Send(READ_ATDL);
-	strncpy(AT.DL,XBee_Message,6);
-	
-	/* Print to serial monitor */
-	printf("ID: %s\r\n",AT.ID);
-	printf("MY: %s\r\n",AT.MY);
-	printf("DH: %s\r\n",AT.DH);
-	printf("DL: %s\r\n",AT.DL);
+	/* Reset Flags */
+	Device_Ack_Flag = FALSE;
+	XBee_Ready_To_Read = FALSE;
 	
 }
+
+void Wait_For_Data(void){
+	
+	/* Wait for data to be copied */
+	while(XBee_Ready_To_Read == 0){
+		//Nop
+	}
+	
+	/* Reset Flags */
+	Device_Ack_Flag = FALSE;
+	XBee_Ready_To_Read = FALSE;
+}
+

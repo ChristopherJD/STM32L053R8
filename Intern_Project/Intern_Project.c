@@ -7,7 +7,7 @@
  * Note(s):
  *----------------------------------------------------------------------------*/
  
- /*-----------------------Include Statements----------------------------------*/
+ /*-----------------------Include Statements-----------------------------------------------------------*/
 #include <stdio.h>											// Standard Input Output
 #include "stm32l053xx.h"								// Specific Device Header
 #include "Serial.h"											// Usart2 Communication
@@ -19,6 +19,8 @@
 #include "ISK01A1.h"										// ISK01A1 expansion board Drivers (gryo,temp,accel etc...)
 #include "XBeePro24.h"
 #include "string.h"
+/*-----------------------Functions----------------------------------------------------------------------*/
+void IO_Init(void);
 
 /**
   \fn          int main (void)
@@ -26,6 +28,17 @@
 */
 
 int main (void){
+	
+	IO_Init();
+	
+	//Loop Forever
+  while (1) {
+		
+  }
+	
+}
+
+void IO_Init(void){
 	
 	// configure HSI as System Clock
 	SystemCoreClockInit();
@@ -51,14 +64,13 @@ int main (void){
 	ISK01A1_Init();
 	
 	//GPS Initialization
-	//FGPMMOPA6H_Init();
+	FGPMMOPA6H_Init();
 	
 	//XBee Initialization
+	/* Note that setup takes 2 seconds due to 1 second delays required
+	 * By the XBee AT command Sequence
+	 */
 	XBee_Init();
 	Read_Xbee_Init();
-	//Loop Forever
-  while (1) {
-		//XBee_Init();	
-  }
-
+	
 }
