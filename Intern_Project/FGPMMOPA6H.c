@@ -77,6 +77,7 @@ RMC_Data RMC;
 GPS_Data GPS;
 GGA_Data GGA;
 /*---------------------------------Functions-------------------------------------------------------------------------*/
+void Init_Structs(void);
 
 /**
   \fn          void USART1_IRQHandler(void)
@@ -177,6 +178,10 @@ void USART1_Init(void){
 */
 
 void FGPMMOPA6H_Init(void){
+	
+	/* Initialize Structures */
+	Init_Structs();
+	
 	USART1_Send(PMTK_API_SET_FIX_CTL_200_MILLIHERTZ);		/* 5s Position echo time */
 	USART1_Send(PMTK_SET_NMEA_UPDATE_200_MILLIHERTZ);		/* 5s update time */
 	USART1_Send(PMTK_SET_NMEA_OUTPUT_RMCGGA);					/* Output RMC Data and GGA */
@@ -512,7 +517,7 @@ char* FGPMMOPA6H_Get_GGA_Altitude(void){
 void FGPMMOPA6H_Get_GPS_Data(void){
 	
 	/* Wait for New data to come */
-	while((RMC.New_Data_Ready & GGA.New_Data_Ready) == 0){
+	while(RMC.New_Data_Ready == 0){
 		//Nop
 	}
 	/* Parse the RMC and GCC data */
@@ -548,12 +553,61 @@ char* FGPMMOPA6H_Package_Data(void){
 	FGPMMOPA6H_Get_RMC_Date();
 	FGPMMOPA6H_Get_GGA_Altitude();
 
-	/* Package the data */
-	sprintf(GPS.Packaged,"%i,%s,%s,%s,%s,%f,%s;\r\n",GPS.Valid_Data,GPS.Date,GPS.UTC_Time,GPS.Latitude,GPS.Longitude,GPS.Ground_Speed,GPS.Altitude);
+	if(GPS.Valid_Data == 1){
+		
+		/* Package the data */
+		sprintf(GPS.Packaged,"%i,%s,%s,%s,%s,%f,%s;\r\n",GPS.Valid_Data,GPS.Date,GPS.UTC_Time,GPS.Latitude,GPS.Longitude,GPS.Ground_Speed,GPS.Altitude);
+	}
+	else{
+		sprintf(GPS.Packaged,"No GPS Fix;\r\n");
+	}
 	
 	/* Data has been read, set new data ready to 0 */
 	RMC.New_Data_Ready = 0;
 	GGA.New_Data_Ready = 0;
 	
 	return(GPS.Packaged);
+}
+
+void Init_Structs(void){
+	
+	/* Clear RMC Memory */
+	memset(RMC.Course_Over_Ground,0,sizeof(RMC.Course_Over_Ground));
+	memset(RMC.Date,0,sizeof(RMC.Date));
+	memset(RMC.E_W_Indicator,0,sizeof(RMC.E_W_Indicator));
+	memset(RMC.Latitude,0,sizeof(RMC.Latitude));
+	memset(RMC.Longitude,0,sizeof(RMC.Longitude));
+	memset(RMC.Message_ID,0,sizeof(RMC.Message_ID));
+	memset(RMC.Mode,0,sizeof(RMC.Mode));
+	memset(RMC.N_S_Indicator,0,sizeof(RMC.N_S_Indicator));
+	memset(RMC.Speed_Over_Ground,0,sizeof(RMC.Speed_Over_Ground));
+	memset(RMC.Status,0,sizeof(RMC.Status));
+	memset(RMC.UTC_Time,0,sizeof(RMC.UTC_Time));
+	RMC.New_Data_Ready = FALSE;
+	
+	/* Clear GGA Data */
+	memset(GGA.Age_Of_Diff_Corr,0,sizeof(GGA.Age_Of_Diff_Corr));
+	memset(GGA.Checksum,0,sizeof(GGA.Checksum));
+	memset(GGA.E_W_Indicator,0,sizeof(GGA.E_W_Indicator));
+	memset(GGA.Geoidal_Seperation,0,sizeof(GGA.Geoidal_Seperation));
+	memset(GGA.HDOP,0,sizeof(GGA.HDOP));
+	memset(GGA.Latitude,0,sizeof(GGA.Latitude));
+	memset(GGA.Longitude,0,sizeof(GGA.Longitude));
+	memset(GGA.Message_ID,0,sizeof(GGA.Message_ID));
+	memset(GGA.MSL_Altitude,0,sizeof(GGA.MSL_Altitude));
+	memset(GGA.N_S_Indicator,0,sizeof(GGA.N_S_Indicator));
+	memset(GGA.Position_Indicator,0,sizeof(GGA.Position_Indicator));
+	memset(GGA.Satellites_Used,0,sizeof(GGA.Satellites_Used));
+	memset(GGA.Units_Altitude,0,sizeof(GGA.Units_Altitude));
+	memset(GGA.Units_Geoidal_Seperation,0,sizeof(GGA.Units_Geoidal_Seperation));
+	memset(GGA.UTC_Time,0,sizeof(GGA.UTC_Time));
+	GGA.New_Data_Ready = FALSE;
+	
+	/* Clear GPS Data */
+	memset(GPS.Altitude,0,sizeof(GPS.Altitude));
+	memset(GPS.Date,0,sizeof(GPS.Date));
+	memset(GPS.Latitude,0,sizeof(GPS.Latitude));
+	memset(GPS.Longitude,0,sizeof(GPS.Longitude));
+	memset(GPS.Packaged,0,sizeof(GPS.Packaged));
+	memset(GPS.UTC_Time,0,sizeof(GPS.UTC_Time));
 }

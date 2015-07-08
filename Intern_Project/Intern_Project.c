@@ -35,10 +35,11 @@ int main (void){
 	
 	//Loop Forever
   while (1) {
-		
 		sprintf(Data,"%s%s",FGPMMOPA6H_Package_Data(),ISK01A1_Package_Data());
 		LPUART1_Send(Data);
-		Delay(5000);
+		
+		/* Wait for GPS data, which is set to update every 5 seconds */
+		Delay(5500);
   }
 	
 }

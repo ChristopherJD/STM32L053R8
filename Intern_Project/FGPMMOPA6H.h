@@ -18,9 +18,9 @@ typedef struct RMC_Data
 	char UTC_Time[11];						/* hhmmss.sss */
 	char Status[2];								/* A = data valid, V = data NOT valid */
 	char Latitude[10];						/* ddmm.mmmm */
-	char N_S_Indicator[2];				/* N = North, S = South */
+	char N_S_Indicator[3];				/* N = North, S = South */
 	char Longitude[11];						/* dddmm.mmmm */
-	char E_W_Indicator[2];				/* E = East, W = West */
+	char E_W_Indicator[3];				/* E = East, W = West */
 	char Speed_Over_Ground[5];		/* In Knots */
 	char Course_Over_Ground[7];		/* Degrees */
 	char Date[7];									/* ddmmyy */
@@ -34,9 +34,9 @@ typedef struct GGA_Data
 	char Message_ID[7];								/* GGA Protocol header */
 	char UTC_Time[11];								/* hhmmss.sss */
 	char Latitude[10];								/* ddmm.mmmm */
-	char N_S_Indicator[2];						/* N = North, S = South */
+	char N_S_Indicator[3];						/* N = North, S = South */
 	char Longitude[11];								/* dddmm.mmmm */
-	char E_W_Indicator[2];						/* E = East, W = West */
+	char E_W_Indicator[3];						/* E = East, W = West */
 	char Position_Indicator[2];				/* 0 = Fix not available, 1 = GPS Fix, 2 = Differential GPS fix */
 	char Satellites_Used[3];					/* Range from 0 - 14 */
 	char HDOP[5];											/* Horizontal Dilution of Precision */
@@ -58,7 +58,7 @@ typedef struct GPS_Data
 	char Latitude[15];
 	char Longitude[15];
 	float Ground_Speed;
-	char Packaged[65];								/* Data to be sent to other intern */
+	char Packaged[70];								/* Repackaged Data */
 }GPS_Data;
 
 /* Initialization methods */
