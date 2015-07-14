@@ -1,15 +1,25 @@
+/*------------------------------------------------------------------------------------------------------
+ * Name:    Timing.c
+ * Purpose: Sets up the system clock and also has a delay function
+ * Date: 		7/14/15
+ * Author:	Christopher Jordan - Denny
+ *------------------------------------------------------------------------------------------------------
+ * Note(s):
+ *----------------------------------------------------------------------------------------------------*/
+
+/*---------------------------------------Include Statements-------------------------------------------*/
 #include "stm32l0xx.h"                  // Device header
 #include "Timing.h"
-
-/*------------------------Global Variables------------------------------------*/
+/*---------------------------------------Global Variables---------------------------------------------*/
 volatile unsigned int msTicks;															// counts 1ms timeTicks
+/*---------------------------------------Functions----------------------------------------------------*/
 
 /**
   \fn          void SysTick_Handler(void)
 	\brief       SysTick handler that increases msTicks 
 */
 
-void SysTick_Handler(void) {
+void SysTick_Handler(void){
   msTicks++;
 }
 
@@ -17,7 +27,7 @@ void SysTick_Handler(void) {
   \fn          void SystemCoreClockInit(void)
 	\brief       SystemCoreClockConfigure: Uses HSI clock
 */
-void SystemCoreClockInit(void) {
+void SystemCoreClockInit(void){
 
   RCC->CR |= ((uint32_t)RCC_CR_HSION);                     // Enable HSI
   while ((RCC->CR & RCC_CR_HSIRDY) == 0);                  // Wait for HSI Ready
@@ -59,7 +69,7 @@ void SystemCoreClockInit(void) {
   \brief       Delay a number of SysTicks
 */
 
-void Delay (unsigned int dlyTicks) {
+void Delay (unsigned int dlyTicks){
   unsigned int curTicks;
 
   curTicks = msTicks;

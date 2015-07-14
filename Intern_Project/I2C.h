@@ -1,3 +1,14 @@
+/*------------------------------------------------------------------------------------------------------
+ * Name:    I2C.c
+ * Purpose: Initializes and reads and writes to I2C
+ * Date: 		6/18/15
+ * Author:	Christopher Jordan - Denny
+ *------------------------------------------------------------------------------------------------------
+ * Note(s): The read and write sequence is specific to the ISK01A1, so these functions may not work
+						for a different Devices I2C.
+ *----------------------------------------------------------------------------------------------------*/
+ 
+ /*-------------------------------Include Statements--------------------------------------------------*/
 #include "stm32l053xx.h"                  // Device header
 
 #ifndef I2C_H

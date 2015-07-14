@@ -1,13 +1,14 @@
-/*----------------------------------------------------------------------------
+/*------------------------------------------------------------------------------------------------------
  * Name:    Intern_Project.c
- * Purpose: Demonstrate the STM32L053 Nucleo Board and its capabilities
- * Date: 		6/18/15
+ * Purpose: Collects data from the GPS and ISK01A1 expansion board sensors
+ * 					and sends that data using an XBee to a reciever.
+ * Date: 		7/14/15
  * Author:	Christopher Jordan - Denny
- *----------------------------------------------------------------------------
+ *------------------------------------------------------------------------------------------------------
  * Note(s):
- *----------------------------------------------------------------------------*/
+ *----------------------------------------------------------------------------------------------------*/
  
- /*-----------------------Include Statements-----------------------------------------------------------*/
+ /*-----------------------Include Statements----------------------------------------------------------*/
 #include <stdio.h>											// Standard Input Output
 #include "stm32l053xx.h"								// Specific Device Header
 #include "Serial.h"											// Usart2 Communication
@@ -17,25 +18,31 @@
 #include "ADC.h"												// ADC Drivers
 #include "I2C.h"												// I2C Drivers
 #include "ISK01A1.h"										// ISK01A1 expansion board Drivers (gryo,temp,accel etc...)
-#include "XBeePro24.h"
-#include "string.h"
-/*-----------------------Functions----------------------------------------------------------------------*/
+#include "XBeePro24.h"									// XBee drivers
+#include "string.h"											// Various useful string manipulation functions
+/*-----------------------Functions--------------------------------------------------------------------*/
 void IO_Init(void);
 
 /**
   \fn          int main (void)
-  \brief       Initializes all peripherals and loops forever
+  \brief       Initializes all peripherals and continually fetch data
 */
 
 int main (void){
 	
+	/* Local Variables */
 	char Data[165];
 	
+	/* Initialize I2C,XBEE,ADC,USART1,USART2,LPUART1,CLOCK,ISK01A1,GPIO */
 	IO_Init();
 	
-	//Loop Forever
+	/* Grab data from sensors and send */
   while (1) {
+		
+		/* Congregate Data */
 		sprintf(Data,"%s%s",FGPMMOPA6H_Package_Data(),ISK01A1_Package_Data());
+		
+		/* Send data over the XBEE */
 		LPUART1_Send(Data);
 		
 		/* Wait for GPS data, which is set to update every 5 seconds */
@@ -44,38 +51,52 @@ int main (void){
 	
 }
 
+/**
+  \fn					void IO_Init(void)
+	\brief			Initializes peripherals:
+							*	System Clock
+							*	GPIO
+							*	USART2
+							* USART1
+							*	LPUART1
+							*	ADC
+							*	I2C
+							* ISK01A1 Expansion Board
+							*	FGMMOPA6H Gps module
+							*	XBEE Wireless communication
+*/
+
 void IO_Init(void){
 	
-	// configure HSI as System Clock
+	/* configure HSI as System Clock */
 	SystemCoreClockInit();
   SystemCoreClockUpdate();
-	SysTick_Config(SystemCoreClock / 1000);									// SysTick 1 msec interrupts
+	SysTick_Config(SystemCoreClock / 1000);  // SysTick 1 msec interrupts
 	
-  // Port initializations
-	LED_Init();																							//LD2 Initialization
-	Button_Initialize();																		//User button init
+  /* Port initializations */
+	LED_Init();										//LD2 Initialization
+	Button_Initialize();					//User button init
 	
-	// Serial Communications Initializations
+	/* Serial Communications Initializations */
   SER_Initialize();
 	USART1_Init();		/* For the GPS */
 	LPUART_Init();		/* For XBee */
 	
-	//ADC Initializations
+	/* ADC Initializations */
 	ADC_Init();
 	
-	//I2C Initialization
+	/* I2C Initialization */
 	I2C_Init();
 	
-	//Mems board Initialization
+	/* Mems board Initialization */
 	ISK01A1_Init();
 	
-	//GPS Initialization
+	/* GPS Initialization */
 	FGPMMOPA6H_Init();
 	
-	//XBee Initialization
+	/* XBee Initialization */
 	/* Note that setup takes 2 seconds due to 1 second delays required
 	 * By the XBee AT command Sequence
 	 */
 	XBee_Init();
-	
 }

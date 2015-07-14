@@ -1,10 +1,22 @@
-#include "stm32l053xx.h"                  // Device header
-#include "I2C.h"
+/*------------------------------------------------------------------------------------------------------
+ * Name:    I2C.c
+ * Purpose: Initializes and reads and writes to I2C
+ * Date: 		6/18/15
+ * Author:	Christopher Jordan - Denny
+ *------------------------------------------------------------------------------------------------------
+ * Note(s): The read and write sequence is specific to the ISK01A1, so these functions may not work
+						for a different Devices I2C.
+ *----------------------------------------------------------------------------------------------------*/
 
+/*-------------------------------------------Include Statements---------------------------------------*/
+#include "stm32l053xx.h"                  // Specific Device header
+#include "I2C.h"
+/*-------------------------------------------Global Variables-----------------------------------------*/
 uint32_t I2C1_RX_Data = 0;
+/*-------------------------------------------Functions------------------------------------------------*/
 
 /**
-  \fn          void I2C_Init(void)
+  \fn         void I2C_Init(void)
   \brief			I2C initialization
 							*PORTB-8: SCL
 							*PORTB-9: SDA
@@ -14,27 +26,34 @@ uint32_t I2C1_RX_Data = 0;
 
 void I2C_Init(void){
 	
-	int SCL = 8;											//SCL pin on PORTB alt fnc 4
-	int SDA = 9;											//SDA pin on PORTB alt fnc 4
+	int SCL = 8;							//SCL pin on PORTB alt fnc 4
+	int SDA = 9;							//SDA pin on PORTB alt fnc 4
 	
-	//Reset Control Clock
-	RCC->APB1ENR |= RCC_APB1ENR_I2C1EN;			// Enable the clock for I2C1
+	/*Enable Clock for I2C*/
+	RCC->APB1ENR |= RCC_APB1ENR_I2C1EN;
 	
-	//Enable Port Clock
-	RCC->IOPENR |=  (1UL << 1);							// Enable GPIOB clock
+	/* Enable GPIO Clock */
+	RCC->IOPENR |=  (1UL << 1);
 	
 	//interrupt init
 //	NVIC_EnableIRQ(I2C1_IRQn);
 //	NVIC_SetPriority(I2C1_IRQn,0);
 	
-	//GPIO Setup
-	I2C1->CR1 |= (1<<8);		//Digital Noise filter with supression of 1 I2Cclk
-	GPIOB->MODER = ~((~GPIOB->MODER) | ((1 << 2*SCL) + (1 << 2*SDA)));						// Alternate Mode PORTB pin 8 and pin 9
-	GPIOB->AFR[1] = 0x00000044;																										// Set alternate function 4 for both pin 8 an 9 AF[1] HIGH PINS AF[0] LOW PINS	
+/** GPIOB Setup
+	*	Digital Noise filter with supression of 1 I2Cclk.(1)
+	*	Alternate Mode PORTB pin 8 and pin 9.............(2)
+	*	Set alternate function 4 for both pin 8 an 9.....(3)
+	*/
+	I2C1->CR1 |= (1<<8);																								/*(1)*/
+	GPIOB->MODER = ~((~GPIOB->MODER) | ((1 << 2*SCL) + (1 << 2*SDA)));	/*(2)*/
+	GPIOB->AFR[1] = 0x00000044;																					/*(3)*/
 	
-	//Configuration for I2C
-	I2C1->TIMINGR = (uint32_t)0x00503D5A;			//Standard Mode @100kHz with I2CCLK = 16MHz, rise time = 100ns, fall time = 10ns
-	I2C1->CR1 |= I2C_CR1_PE;		//Enable I2C1 peripheral and the RX interrupt
+/** GPIOB Setup
+	*	Standard Mode @100kHz with I2CCLK = 16MHz, rise time = 100ns, fall time = 10ns.(1)
+	*	Enable I2C1 peripheral and the RX interrupt....................................(2)
+	*/
+	I2C1->TIMINGR = (uint32_t)0x00503D5A;	/*(1)*/
+	I2C1->CR1 |= I2C_CR1_PE;							/*(2)*/
 }
 
 /**

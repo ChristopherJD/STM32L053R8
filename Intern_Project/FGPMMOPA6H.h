@@ -1,3 +1,16 @@
+/*------------------------------------------------------------------------------------------------------
+ * Name:    FGPMMOPA6H.h
+ * Purpose: Initializes USART1 on PA9 and PA10 and communicates with the 
+						adafruit GPS Shield.
+ * Date: 		6/18/15
+ * Author:	Christopher Jordan - Denny
+ *------------------------------------------------------------------------------------------------------
+ * Note(s): This is created to be used with the adafruit GPS module.
+ * A jumper between rx to pin 2 when on soft serial mode must 
+ * be present.
+ *----------------------------------------------------------------------------------------------------*/
+
+/*-------------------------------------------Include Statements---------------------------------------*/
 #include "stm32l053xx.h"
 
 #ifndef FGPMMOPA6H_H
@@ -85,4 +98,5 @@ extern void Print_RMC_Data(void);
 extern void FGPMMOPA6H_Get_GPS_Data(void);
 extern char* FGPMMOPA6H_Package_Data(void);
 
+void Init_Structs(void);
 #endif

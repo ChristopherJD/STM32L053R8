@@ -1,67 +1,67 @@
-/*-------------------------------------------------------------------------------------------------------------------
+/*------------------------------------------------------------------------------------------------------
  * Name:    FGPMMOPA6H.c
  * Purpose: Initializes USART1 on PA9 and PA10 and communicates with the 
 						adafruit GPS Shield.
  * Date: 		6/18/15
  * Author:	Christopher Jordan - Denny
- *-------------------------------------------------------------------------------------------------------------------
+ *------------------------------------------------------------------------------------------------------
  * Note(s): This is created to be used with the adafruit GPS module.
  * A jumper between rx to pin 2 when on soft serial mode must 
  * be present.
- *-------------------------------------------------------------------------------------------------------------------*/
+ *----------------------------------------------------------------------------------------------------*/
 
-/*---------------------------------Include Statements----------------------------------------------------------------*/
+/*---------------------------------Include Statements-------------------------------------------------*/
 #include "stm32l053xx.h"			//Specific Device Header
-#include <stdio.h>
-#include <string.h>
-#include <stdlib.h>
+#include <stdio.h>						//Standard input and output
+#include <string.h>						//Various useful string functions
+#include <stdlib.h>						//Various useful conversion functions
 #include "FGPMMOPA6H.h"
-#include "Serial.h"
-/*---------------------------------Define Statments------------------------------------------------------------------*/
+#include "Serial.h"						//USART2 computer communication
+/*---------------------------------Define Statments---------------------------------------------------*/
 #define TRUE				0x1				//Truth value is 1
 #define FALSE				0x0				//False value is 0
 
 // different commands to set the update rate from once a second (1 Hz) to 10 times a second (10Hz)
 // Note that these only control the rate at which the position is echoed, to actually speed up the
 // position fix you must also send one of the position fix rate commands below too.
-#define PMTK_SET_NMEA_UPDATE_100_MILLIHERTZ  "$PMTK220,10000*2F\r\n" // Once every 10 seconds, 100 millihertz.
-#define PMTK_SET_NMEA_UPDATE_200_MILLIHERTZ  "$PMTK220,5000*1B\r\n"  // Once every 5 seconds, 200 millihertz.
-#define PMTK_SET_NMEA_UPDATE_1HZ  "$PMTK220,1000*1F\r\n"
-#define PMTK_SET_NMEA_UPDATE_5HZ  "$PMTK220,200*2C\r\n"
-#define PMTK_SET_NMEA_UPDATE_10HZ "$PMTK220,100*2F\r\n"
+#define PMTK_SET_NMEA_UPDATE_100_MILLIHERTZ		"$PMTK220,10000*2F\r\n" // Once every 10 seconds, 100 millihertz.
+#define PMTK_SET_NMEA_UPDATE_200_MILLIHERTZ		"$PMTK220,5000*1B\r\n"  // Once every 5 seconds, 200 millihertz.
+#define PMTK_SET_NMEA_UPDATE_1HZ  						"$PMTK220,1000*1F\r\n"
+#define PMTK_SET_NMEA_UPDATE_5HZ  						"$PMTK220,200*2C\r\n"
+#define PMTK_SET_NMEA_UPDATE_10HZ 						"$PMTK220,100*2F\r\n"
 // Position fix update rate commands.
-#define PMTK_API_SET_FIX_CTL_100_MILLIHERTZ  "$PMTK300,10000,0,0,0,0*2C\r\n" // Once every 10 seconds, 100 millihertz.
-#define PMTK_API_SET_FIX_CTL_200_MILLIHERTZ  "$PMTK300,5000,0,0,0,0*18\r\n"  // Once every 5 seconds, 200 millihertz.
-#define PMTK_API_SET_FIX_CTL_1HZ  "$PMTK300,1000,0,0,0,0*1C\r\n"
-#define PMTK_API_SET_FIX_CTL_5HZ  "$PMTK300,200,0,0,0,0*2F\r\n"
+#define PMTK_API_SET_FIX_CTL_100_MILLIHERTZ		"$PMTK300,10000,0,0,0,0*2C\r\n" // Once every 10 seconds, 100 millihertz.
+#define PMTK_API_SET_FIX_CTL_200_MILLIHERTZ		"$PMTK300,5000,0,0,0,0*18\r\n"  // Once every 5 seconds, 200 millihertz.
+#define PMTK_API_SET_FIX_CTL_1HZ							"$PMTK300,1000,0,0,0,0*1C\r\n"
+#define PMTK_API_SET_FIX_CTL_5HZ							"$PMTK300,200,0,0,0,0*2F\r\n"
 // Can't fix position faster than 5 times a second!
 
-#define PMTK_SET_BAUD_57600 "$PMTK251,57600*2C\r\n"
-#define PMTK_SET_BAUD_9600 "$PMTK251,9600*17\r\n"
+#define PMTK_SET_BAUD_57600										"$PMTK251,57600*2C\r\n"
+#define PMTK_SET_BAUD_9600										"$PMTK251,9600*17\r\n"
 
 // turn on only the second sentence (GPRMC)
-#define PMTK_SET_NMEA_OUTPUT_RMCONLY "$PMTK314,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0*29\r\n"
+#define PMTK_SET_NMEA_OUTPUT_RMCONLY 					"$PMTK314,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0*29\r\n"
 // turn on GPRMC and GGA
-#define PMTK_SET_NMEA_OUTPUT_RMCGGA "$PMTK314,0,1,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0*28\r\n"
+#define PMTK_SET_NMEA_OUTPUT_RMCGGA						"$PMTK314,0,1,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0*28\r\n"
 // turn on ALL THE DATA
-#define PMTK_SET_NMEA_OUTPUT_ALLDATA "$PMTK314,1,1,1,1,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0*28\r\n"
+#define PMTK_SET_NMEA_OUTPUT_ALLDATA					"$PMTK314,1,1,1,1,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0*28\r\n"
 // turn off output
-#define PMTK_SET_NMEA_OUTPUT_OFF "$PMTK314,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0*28\r\n"
+#define PMTK_SET_NMEA_OUTPUT_OFF							"$PMTK314,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0*28\r\n"
 
-/*---------------------------------Baud Rate Calculations------------------------------------------------------------*/
+/*---------------------------------Baud Rate Calculations---------------------------------------------*/
 #define __DIV(__PCLK, __BAUD)       ((__PCLK*25)/(4*__BAUD))
 #define __DIVMANT(__PCLK, __BAUD)   (__DIV(__PCLK, __BAUD)/100)
 #define __DIVFRAQ(__PCLK, __BAUD)   (((__DIV(__PCLK, __BAUD) - (__DIVMANT(__PCLK, __BAUD) * 100)) * 16 + 50) / 100)
 #define __USART_BRR(__PCLK, __BAUD) ((__DIVMANT(__PCLK, __BAUD) << 4)|(__DIVFRAQ(__PCLK, __BAUD) & 0x0F))
 
-/*---------------------------------NMEA Output Sentences--------------------------------------------------------------*/
+/*---------------------------------NMEA Output Sentences----------------------------------------------*/
 static const char GGA_Tag[] = "$GPGGA";
 static const char GSA_Tag[] = "$GPGSA";
 static const char GSV_Tag[] = "$GPGSV";
 static const char RMC_Tag[] = "$GPRMC";
 static const char VTG_Tag[] = "$GPVTG";
 
-/*---------------------------------Globals----------------------------------------------------------------------------*/
+/*---------------------------------Globals------------------------------------------------------------*/
 volatile int 				CharIndex = 0;												/* Character index of the char array */
 const int 					NMEA_LENGTH = 128;										/* The max length of one NMEA line */
 char 								Rx_Data[NMEA_LENGTH] = "0";						/* Rx Sring */
@@ -72,12 +72,11 @@ char 								GSV_Message[128];											/* Original GSV message */
 char 								RMC_Message[128];											/* Original RMC message */
 char 								VTG_Message[128];											/* Original VTG message */
 
-/*---------------------------------Structure Instantiate-------------------------------------------------------------*/
+/*---------------------------------Structure Instantiate----------------------------------------------*/
 RMC_Data RMC;
 GPS_Data GPS;
 GGA_Data GGA;
-/*---------------------------------Functions-------------------------------------------------------------------------*/
-void Init_Structs(void);
+/*---------------------------------Functions----------------------------------------------------------*/
 
 /**
   \fn          void USART1_IRQHandler(void)
@@ -538,6 +537,12 @@ void FGPMMOPA6H_Get_GPS_Data(void){
 	GGA.New_Data_Ready = 0;
 }
 
+/**
+  \fn					char* FGPMMOPA6H_Package_Data(void)
+  \brief			Packages GPS Data
+	\returns		GPS_Data.Packaged: All the data chosen to format
+*/
+
 char* FGPMMOPA6H_Package_Data(void){
 	
 	/* Parse the RMC and GCC data */
@@ -568,6 +573,11 @@ char* FGPMMOPA6H_Package_Data(void){
 	
 	return(GPS.Packaged);
 }
+
+/**
+  \fn					void Init_Structs(void)
+  \brief			Clears all the structs
+*/
 
 void Init_Structs(void){
 	

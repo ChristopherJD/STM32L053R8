@@ -1,137 +1,78 @@
-#include "stm32l0xx.h"                  // Device header
+/*------------------------------------------------------------------------------------------------------
+ * Name:    GPIO.c
+ * Purpose: Initializes GPIO and has LED and Button functions for the green LED and the 
+						User button
+ * Date: 		7/14/15
+ * Author:	Christopher Jordan - Denny
+ *------------------------------------------------------------------------------------------------------
+ * Note(s):
+ *----------------------------------------------------------------------------------------------------*/
+
+/*---------------------------------------------Include Statements-------------------------------------*/
+#include "stm32l053xx.h"									// Specific Device header
 #include "GPIO.h"
-
-#define green_LED  5										//LD2 on nucleo board
-#define blue_Button		13								//B1 User button
-
-/*--------------------------------------------------Global Variables---------------------------------------------*/
-
+/*---------------------------------------------Definitions--------------------------------------------*/
+#define Green_LED  		5										//LD2 on nucleo board
+#define Blue_Button		13									//B1 User button
+/*---------------------------------------------Functions----------------------------------------------*/
 
 /**
-  \fn 			void Initialize_Port_A(int pin, unsigned long mode, unsigned long output_Type, unsigned long output_Speed, unsigned long pupd)
-  \brief		Initialize pins on PORTA
-	\param		int pin: The number of the pin you want to set ie PORTC pin 13 would be 13
-	\param 		unsigned long mode:
-							*Set Mode
-							*00 : input mode
-							*01 : General purpose output mode
-							*10 : Alternate function mode
-							*11 : Analog Mode(reset state)
-	\param		unsigned long output_Type:
-							*Set output type 
-							* 0 : output push/pull (reset state)
-							* 1 : output open drain
-	\param		unsigned long output_Speed: 
-							*Set GPIOx_OSPEEDR
-							* 00 : very low speed
-							* 01 : Low speed
-							* 10 : medium speed
-							* 11 : High speed
-	\param		unsigned long pupd:
-							*Set GPIOx_PUPDR
-							* 00 : No pull up, pull down
-							* 01 : Pull up
-							* 10 : Pull down
-							* 11 : Reserved
+  \fn 			void GPIO_Init(GPIO_TypeDef* GPIOx, struct GPIO_Parameters GPIO)
+  \brief		Initialize GPIO
+	\param		GPIO_TypeDef* GPIOx: Which port to initialize, i.e. GPIOA,GPIOB
+	\param		struct GPIO_Parameters GPIO: Structure containing all GPIO parameters:
+						* Pin
+						*	Mode
+						*	Output Type
+						* Output Speed
+						* Pull up / Pull down
 */
 
-void Initialize_Port_A(int pin, unsigned long mode, unsigned long output_Type, unsigned long output_Speed, unsigned long pupd){
+void GPIO_Init(GPIO_TypeDef* GPIOx, struct GPIO_Parameters GPIO){
 	
-	/*---------------GPIO Clock Init----------------------------------------------*/
-	RCC->IOPENR |=  (1UL << 0);															// Enable GPIOA clock
-	/*----------------------------------------------------------------------------*/
+	/* Enable GPIO Clock depending on port */
+	if(GPIOx == GPIOA) RCC->IOPENR |= RCC_IOPENR_GPIOAEN;		// Enable GPIOA clock
+	if(GPIOx == GPIOB) RCC->IOPENR |= RCC_IOPENR_GPIOBEN;		// Enable GPIOB clock
+	if(GPIOx == GPIOC) RCC->IOPENR |= RCC_IOPENR_GPIOCEN;		// Enable GPIOC clock
+	if(GPIOx == GPIOD) RCC->IOPENR |= RCC_IOPENR_GPIODEN;		// Enbale GPIOD clock
 	
-	/*---------------GPIO Mode Init-----------------------------------------------*/
-	GPIOA->MODER   &= ~((3ul << 2*pin));		// write 00 to pin location
-  GPIOA->MODER   |=  ((mode << 2*pin));		// Choose mode
-	/*----------------------------------------------------------------------------*/
+	/* GPIO Mode Init */
+	GPIOx->MODER   &= ~((3ul << 2*GPIO.Pin));					// write 00 to pin location
+  GPIOx->MODER   |=  ((GPIO.Mode << 2*GPIO.Pin));		// Choose mode
 	
-	/*---------------Output Type Init---------------------------------------------*/
-  GPIOA->OTYPER  &= ~((~(output_Type) <<   pin));
-	/*----------------------------------------------------------------------------*/
+	/* Output Type Init */
+  GPIOx->OTYPER  &= ~((~(GPIO.OType) << GPIO.Pin));
 	
-	/*--------------------GPIO Speed Init-----------------------------------------*/
-  GPIOA->OSPEEDR |=  ((output_Speed << 2*pin));
-	/*----------------------------------------------------------------------------*/
+	/* GPIO Speed Init */
+  GPIOx->OSPEEDR |=  ((GPIO.Speed << 2*GPIO.Pin));
 	
-	/*---------------------GPIO PULLUP/PULLDOWN Init------------------------------*/
-  GPIOA->PUPDR   |= (pupd << 2*pin);
-	/*----------------------------------------------------------------------------*/
+	/* GPIO PULLUP/PULLDOWN Init */
+  GPIOx->PUPDR   |= (GPIO.PuPd << 2*GPIO.Pin);
 }
 
 /**
-  \fn          void Unitialize_Port_A(void)
-  \brief       Uninitialize PortA
+  \fn					void GPIO_Uninit(GPIO_TypeDef* GPIOx)
+  \brief			Reset the given port
+	\param			GPIO_TypeDef* GPIOx: Which port to reset
 */
 
-void Unitialize_Port_A(void){
-	GPIOA->OTYPER = 0X00000000;											//Reset for portA
-	GPIOA->MODER = 0xEBFFFCFF;											//Reset for portA
-	GPIOA->PUPDR = 0X24000000;											//Reset for portA
-	GPIOA->OSPEEDR = 0x0C000000;									//Reset for portA
-}
-
-/**
-  \fn 			void Initialize_Port_C(int pin, unsigned long mode, unsigned long output_Type, unsigned long output_Speed, unsigned long pupd)
-  \brief		Initialize pins on PORTC
-	\param		int pin: The number of the pin you want to set ie PORTC pin 13 would be 13
-	\param 		unsigned long mode:
-							*Set Mode
-							*00 : input mode
-							*01 : General purpose output mode
-							*10 : Alternate function mode
-							*11 : Analog Mode(reset state)
-	\param		unsigned long output_Type:
-							*Set output type 
-							* 0 : output push/pull (reset state)
-							* 1 : output open drain
-	\param		unsigned long output_Speed: 
-							*Set GPIOx_OSPEEDR
-							* 00 : very low speed
-							* 01 : Low speed
-							* 10 : medium speed
-							* 11 : High speed
-	\param		unsigned long pupd:
-							*Set GPIOx_PUPDR
-							* 00 : No pull up, pull down
-							* 01 : Pull up
-							* 10 : Pull down
-							* 11 : Reserved
-*/
-
-void Initialize_Port_C(int pin, unsigned long mode, unsigned long output_Type, unsigned long output_Speed, unsigned long pupd){
-
-	/*---------------GPIO Clock Init----------------------------------------------*/
-	RCC->IOPENR |=  (1ul << 2);                   	// Enable GPIOC clock
-	/*----------------------------------------------------------------------------*/
+void GPIO_Uninit(GPIO_TypeDef* GPIOx){
 	
-	/*---------------GPIO Mode Init-----------------------------------------------*/
-	GPIOC->MODER &= (mode << 2*pin);
-	/*----------------------------------------------------------------------------*/
+	/* GPIOA has different reset parameters */
+	if(GPIOx == GPIOA){
+		GPIOA->OTYPER = 0X00000000;											//Reset for portA
+		GPIOA->MODER = 0xEBFFFCFF;											//Reset for portA
+		GPIOA->PUPDR = 0X24000000;											//Reset for portA
+		GPIOA->OSPEEDR = 0x0C000000;										//Reset for portA
+	}
 	
-	/*---------------Output Type Init---------------------------------------------*/
-  GPIOC->OTYPER  &= ~((~(output_Type) <<   pin));
-	/*----------------------------------------------------------------------------*/
-	
-	/*--------------------GPIO Speed Init-----------------------------------------*/
-  GPIOC->OSPEEDR |=  ((output_Speed << 2*pin));
-	/*----------------------------------------------------------------------------*/
-	
-	/*---------------------GPIO PULLUP/PULLDOWN Init------------------------------*/
-  GPIOC->PUPDR   |= (pupd << 2*pin);
-	/*----------------------------------------------------------------------------*/
-}
-
-/**
-  \fn          void Unitialize_Port_C(void)
-  \brief       Uninitialize User Button
-*/
-
-void Unitialize_Port_C(void){
-	GPIOC->OTYPER = 0X00000000;											//Reset for portC
-	GPIOC->MODER = 0XFFFFFFFF;											//Reset for portC
-	GPIOC->PUPDR = 0X00000000;											//Reset for portC
-	GPIOC->OSPEEDR = 0x00000000; 										//Reset for portC
+	/* Normal Reset States */
+	else{
+		GPIOx->OTYPER = 0X00000000;											//Reset for port
+		GPIOx->MODER = 0XFFFFFFFF;											//Reset for port
+		GPIOx->PUPDR = 0X00000000;											//Reset for port
+		GPIOx->OSPEEDR = 0x00000000; 										//Reset for port
+	}
 }
 
 /**
@@ -139,10 +80,18 @@ void Unitialize_Port_C(void){
   \brief       Initialize User Button
 */
 
-void Button_Initialize (void) {
+void Button_Initialize(void){
 	
-	Initialize_Port_C(blue_Button,0,0,1,0);
+	/* Set port parameters */
+	struct GPIO_Parameters GPIO;
+	GPIO.Pin	= Blue_Button;
+	GPIO.Mode = Input;
+	GPIO.OType = Push_Pull;
+	GPIO.PuPd = No_PuPd;
+	GPIO.Speed = Low_Speed;
 	
+	/* Initialize button */
+	GPIO_Init(GPIOC,GPIO);
 }
 
 /**
@@ -151,7 +100,17 @@ void Button_Initialize (void) {
 */
 
 void LED_Init(void){
-	Initialize_Port_A(green_LED,1,0,3,0);
+	
+	/* Set port parameters */
+	struct GPIO_Parameters GPIO;
+	GPIO.Pin = Green_LED;
+	GPIO.Mode = Output;
+	GPIO.OType = Push_Pull;
+	GPIO.PuPd = No_PuPd;
+	GPIO.Speed = High_Speed;
+	
+	/* Initialize the LED */
+	GPIO_Init(GPIOA,GPIO);
 }
 
 /**
@@ -160,11 +119,12 @@ void LED_Init(void){
 */
 
 void LED_On(void){
-	//Local Variables
-	const unsigned long gpio_Pin = {1UL << green_LED};			//calculate position of pin
+	/* Local Variables */
+	const unsigned long gpio_Pin = {1UL << Green_LED};
 	
-	GPIOA->BSRR |= (gpio_Pin);											// Set PORTA-5 [Green LED]
-	//GPIOA->ODR = 0x20;														// Same as using the BSRR register
+	/* Turn on GPIOA-5 */
+	GPIOA->BSRR |= (gpio_Pin);
+	//GPIOA->ODR = 0x20;				// Same as using the BSRR register
 }
 
 /**
@@ -173,10 +133,11 @@ void LED_On(void){
 */
 
 void LED_Off(void){
-	//Local Variables
-	const unsigned long gpio_Pin = {1UL << green_LED};			//calculate position of pin
+	/* Local Variables */
+	const unsigned long gpio_Pin = {1UL << Green_LED};
 	
-	GPIOA->BSRR |= (gpio_Pin << 16);              	// Turn specified LED off
+	/* Turn the LED off */
+	GPIOA->BSRR |= (gpio_Pin << 16);
 }
 
 /**
@@ -184,11 +145,11 @@ void LED_Off(void){
   \brief       Get buttons state
   \returns     Buttons state
 */
-int Button_Get_State (void) {
+int Button_Get_State(void){
 
   int val = 0;
 
-  if ((GPIOC->IDR & (1UL << blue_Button)) == 0) {
+  if ((GPIOC->IDR & (1UL << Blue_Button)) == 0) {
     /* USER button */
     val |= 1;
   }

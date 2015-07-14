@@ -1,22 +1,23 @@
-/*----------------------------------------------------------------------------
+/*------------------------------------------------------------------------------------------------------
  * Name:    hTS221.c
  * Purpose: Retrieve Temperature and Humidity data
  * Date: 		6/18/15
  * Author:	Christopher Jordan - Denny
- *----------------------------------------------------------------------------
+ *------------------------------------------------------------------------------------------------------
  * Note(s): Communicates using I2C
- *----------------------------------------------------------------------------*/
-/*------------------------------------Include Statments-----------------------*/
+ *----------------------------------------------------------------------------------------------------*/
+ 
+/*------------------------------------Include Statments-----------------------------------------------*/
 #include "stm32l053xx.h"                  // Device header
-#include <stdio.h>
+#include <stdio.h>												// Standard Input and Output
 #include "I2C.h"													// I2C Support
 #include "HTS221.h"
-#include "Serial.h"
-/*------------------------------------Slave Address-------------------------------------------*/
-#define HTS221_ADDRESS  	0x0000005F 		//Slave Address	for temp humidity sensor (WITHOUT R/W)
-/*------------------------------------Device ID-----------------------------------------------*/
+#include "Serial.h"												// USART2 Communication
+
+/*------------------------------------Adresses--------------------------------------------------------*/
+#define HTS221_ADDRESS  					0x0000005F 		//Slave Address	for temp humidity sensor (WITHOUT R/W)
 #define	HTS221_DEVICE_ID					0xBC					//The ID of the device (different from slave address)
-/*------------------------------------HTS221 Registers----------------------------------------*/
+/*------------------------------------HTS221 Registers------------------------------------------------*/
 #define HTS221_AV_CONF  					0x10					//Accuracy configuration Register
 #define HTS221_WHO_AM_I						0x0F					//Who am I register on HTS221
 #define HTS221_TEMP_OUT_L					0x2A					//Temperature Data (LSB)
@@ -39,15 +40,13 @@
 #define HTS221_T0_OUT_H						0x3D					//Temperature Calibration
 #define HTS221_T1_OUT_L						0x3E					//Temperature Calibration
 #define HTS221_T1_OUT_H						0x3F					//Temperature Calibration
-/*-------------------------------------HTS221 Configuration Bits------------------------------*/
+/*-------------------------------------HTS221 Configuration Bits--------------------------------------*/
 #define HTS221_STATUS_REG_TDA				0x00000001						//Temperature Data Available
 #define HTS221_STATUS_REG_HDA				0x00000002						//Humidity data available
 #define HTS221_CTRL_REG2_ONE_SHOT		0x00000001						//Single Acquisition of Temperature and Humidity when 1
 #define HTS221_CTRL_REG1_PD					0x00000080						//Power Down, 0 = Power down mode, 1 = active mode
 #define HTS221_CTRL_REG1_BDU				0x00000004						//Block Data Output, 0 continuous update, 1 wait until LSB and MSB Read
-
-/*-------------------------------------Functions----------------------------------------------*/
-
+/*-------------------------------------Functions------------------------------------------------------*/
 /**
   \fn					void HTS221_Init(void)
   \brief			Initialize the HTS221 and check device signature
@@ -59,9 +58,7 @@ uint8_t HTS221_Init(void){
 	//Local variables
 	uint8_t Device_Found = 0;
 	uint32_t AV_CONF_Init = 0x1B;		/*16 Temp (AVGT) and 32 Hum (AVGT)*/
-	
-	/*---------------------------------Check the Device ID--------------------------------------------*/
-	
+
 	//Read data from register and check signature	
 	I2C_Read_Reg(HTS221_ADDRESS,HTS221_WHO_AM_I);
 	
@@ -71,7 +68,7 @@ uint8_t HTS221_Init(void){
 	}
 	else Device_Found = 0;
 	
-	/*-------------------------------Setup HTS221_AV_CONF Register------------------------------------*/
+	/* Setup HTS221_AV_CONF Register */
 	if(Device_Found){
 		//Set to Default Configuration
 		I2C_Write_Reg(HTS221_ADDRESS,HTS221_AV_CONF,AV_CONF_Init);
@@ -105,7 +102,7 @@ void HTS221_Configuration(void){
 
 float HTS221_Temp_Read(void){
 	
-	/*------------------------------Local Variables---------------------------------*/
+	/* Local Variables */
 	uint8_t STATUS_REG = 0;
 	
 	//T0_degC and T1_degC
@@ -131,7 +128,6 @@ float HTS221_Temp_Read(void){
 	//Temperature Variables
 	float Temperature_In_C = 0;
 	float Temperature_In_F = 0;
-	/*------------------------------------------------------------------------------*/
 	
 	//Start a temperature conversion
 	I2C_Write_Reg(HTS221_ADDRESS,HTS221_CTRL_REG2,HTS221_CTRL_REG2_ONE_SHOT);
@@ -192,7 +188,7 @@ float HTS221_Temp_Read(void){
 
 float HTS221_Humidity_Read(void){
 	
-	/*-----------------------------Local Variables----------------------------------------*/
+	/* Local Variables */
 	uint8_t STATUS_REG = 0;
 	
 	//H0_rH and H1_rH
@@ -216,7 +212,6 @@ float HTS221_Humidity_Read(void){
 
 	//Humidity Variables
 	float Humidity_rH = 0;
-	/*------------------------------------------------------------------------------------*/
 	
 	//Start a humidity conversion
 	I2C_Write_Reg(HTS221_ADDRESS,HTS221_CTRL_REG2,HTS221_CTRL_REG2_ONE_SHOT);

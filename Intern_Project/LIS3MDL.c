@@ -1,37 +1,36 @@
-/*----------------------------------------------------------------------------
+/*------------------------------------------------------------------------------------------------------
  * Name:    LIS3MDL.c
  * Purpose: Retrieve magnetometer data
  * Date: 		6/18/15
  * Author:	Christopher Jordan - Denny
- *----------------------------------------------------------------------------
+ *------------------------------------------------------------------------------------------------------
  * Note(s): Sensor communicates using I2C.Reads magnetrometer data
- *----------------------------------------------------------------------------*/
+ *----------------------------------------------------------------------------------------------------*/
 
-/*------------------------------------Include Statements--------------------------------*/
+/*------------------------------------Include Statements----------------------------------------------*/
 #include "stm32l053xx.h"                  // Specific device header
 #include <stdio.h>												// Standard input output
 #include "I2C.h"													// I2C Support
 #include "Serial.h"												// USART Drivers
 #include "LIS3MDL.h"
-/*------------------------------------Slave Address--------------------------------------*/
-#define LIS3MDL_ADDRESS			0x1E		//Slave Address without the r/w
-/*------------------------------------LIS3MDL Registers----------------------------------*/
-#define LIS3MDL_WHO_AM_I		0x0F		//Who am I register, contains device ID
-#define LIS3MDL_OUT_X_L			0x28		//X coordinates Lower 8 bits
-#define LIS3MDL_OUT_X_H			0x29		//X coordinates Upper 8 bits
-#define LIS3MDL_OUT_Y_L			0x2A		//Y coordinates Lower 8 bits
-#define LIS3MDL_OUT_Y_H			0x2B		//Y coordinates Upper 8 bits
-#define LIS3MDL_OUT_Z_L			0x2C		//Z coordinates Lower 8 bits
-#define LIS3MDL_OUT_Z_H			0x2D		//Z coordinates Upper 8 bits
-#define LIS3MDL_STATUS_REG	0x27		//Status register contains XYZ data available and overrun
-#define LIS3MDL_CTRL_REG1		0x20		//Determine XY power consumption vs performance
-#define LIS3MDL_CTRL_REG2		0x21		//Contains Full scale configuration
-#define LTS3MDL_CTRL_REG3		0x22		//Contains operating mode (similar to PD)
-#define LTS3MDL_CTRL_REG4		0x23		//Determine Z power consumption vs performance
-#define LTS3MDL_CTRL_REG5		0x24		//Contains BDU
-/*------------------------------------Device ID -----------------------------------------*/
-#define LIS3MDL_DEVICE_ID						0x3D		//Device ID in Who am I register						
-/*------------------------------------Configuration Bits---------------------------------*/
+/*------------------------------------Addresses-------------------------------------------------------*/
+#define LIS3MDL_ADDRESS						0x1E		//Slave Address without the r/w
+#define LIS3MDL_DEVICE_ID					0x3D		//Device ID in Who am I register				
+/*------------------------------------LIS3MDL Registers-----------------------------------------------*/
+#define LIS3MDL_WHO_AM_I					0x0F		//Who am I register, contains device ID
+#define LIS3MDL_OUT_X_L						0x28		//X coordinates Lower 8 bits
+#define LIS3MDL_OUT_X_H						0x29		//X coordinates Upper 8 bits
+#define LIS3MDL_OUT_Y_L						0x2A		//Y coordinates Lower 8 bits
+#define LIS3MDL_OUT_Y_H						0x2B		//Y coordinates Upper 8 bits
+#define LIS3MDL_OUT_Z_L						0x2C		//Z coordinates Lower 8 bits
+#define LIS3MDL_OUT_Z_H						0x2D		//Z coordinates Upper 8 bits
+#define LIS3MDL_STATUS_REG				0x27		//Status register contains XYZ data available and overrun
+#define LIS3MDL_CTRL_REG1					0x20		//Determine XY power consumption vs performance
+#define LIS3MDL_CTRL_REG2					0x21		//Contains Full scale configuration
+#define LTS3MDL_CTRL_REG3					0x22		//Contains operating mode (similar to PD)
+#define LTS3MDL_CTRL_REG4					0x23		//Determine Z power consumption vs performance
+#define LTS3MDL_CTRL_REG5					0x24		//Contains BDU				
+/*------------------------------------Configuration Bits----------------------------------------------*/
 #define LIS3MDL_STATUS_REG_ZYXDA	0x8		//XYZ data available
 #define LIS3MDL_STATUS_REG_XDA		0x1		//X data ready
 #define LIS3MDL_STATUS_REG_YDA		0x2		//Y data ready
@@ -48,7 +47,7 @@
 #define LIS3MDL_CTRL_REG1_DO2			0x10	//Data outptu rate
 #define LIS3MDL_CTRL_REG2_FS0			0x20	//Full scale setting
 #define LIS3MDL_CTRL_REG2_FS1			0x40	//Full scale setting
-/*-------------------------------------Functions----------------------------------------*/
+/*-------------------------------------Functions------------------------------------------------------*/
 
 /**
   \fn					uint8_t LIS3MDL_Init(void)

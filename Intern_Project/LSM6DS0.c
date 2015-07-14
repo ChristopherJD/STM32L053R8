@@ -1,48 +1,46 @@
-/*----------------------------------------------------------------------------
+/*------------------------------------------------------------------------------------------------------
  * Name:    LSM6DS0.c
  * Purpose: Retrieve gyroscope and acceleration data
  * Date: 		6/18/15
  * Author:	Christopher Jordan - Denny
- *----------------------------------------------------------------------------
+ *------------------------------------------------------------------------------------------------------
  * Note(s): Sensor communicates using I2C.Reads gyro and acceleration data
- *----------------------------------------------------------------------------*/
+ *----------------------------------------------------------------------------------------------------*/
  
-/*----------------------------------------------Include Statements----------------------------------*/
+/*----------------------------------------------Include Statements------------------------------------*/
 #include "stm32l053xx.h"                  // Specific device header
 #include <stdio.h>												// Standard Input Output
 #include "I2C.h"													// I2C Drivers
 #include "Serial.h"												// USART Drivers
 #include "LSM6DS0.h"
-/*------------------------------------Device Slave Address------------------------------------------*/
-#define LSM6DS0_ADDRESS			0x6B		//The slave address of the device without r/w
-/*------------------------------------Device ID-----------------------------------------------------*/
-#define LSM6DS0_DEVICE_ID		0x68		//The value in the who am I register
-/*------------------------------------Registers-----------------------------------------------------*/
-#define LSM6DS0_WHO_AM_I		0x0F		//Contains the device ID
-#define LSM6DS0_CTRL_REG1_G		0x10		//Contains output data rate
-#define LSM6DS0_CTRL_REG2_G		0x11		//Contains INT and OUT select for angular acceleration
-#define LSM6DS0_CTRL_REG8			0x22		//Contains BDU (Block Data Update)
-#define LSM6DS0_STATUS_REG		0x17		//Status of Interrupts and if new data is available
-#define LSM6DS0_OUT_X_G_L			0x18		//LSB of angular rate
-#define LSM6DS0_OUT_X_G_H			0x19		//MSB of angular rate
-#define LSM6DS0_OUT_Y_G_L			0x1A		//LSB of angular rate
-#define LSM6DS0_OUT_Y_G_H			0x1B		//MSB of angular rate
-#define LSM6DS0_OUT_Z_G_L			0x1C		//LSB of angular rate
-#define LSM6DS0_OUT_Z_G_H			0x1D		//MSB of angular rate
-#define LSM6DS0_OUT_X_XL_L		0x28		//LSB Linear Acceleration
-#define LSM6DS0_OUT_X_XL_H		0x29		//MSB Linear Acceleration
-#define LSM6DS0_OUT_Y_XL_L		0x2A		//LSB Linear Acceleration
-#define LSM6DS0_OUT_Y_XL_H		0x2B		//MSB Linear Acceleration
-#define LSM6DS0_OUT_Z_XL_L		0x2C		//LSB Linear Acceleration
-#define LSM6DS0_OUT_Z_XL_H		0x2D		//MSB Linear Acceleration
-/*------------------------------------Register Control bits------------------------------------------*/
+/*------------------------------------Addresses-------------------------------------------------------*/
+#define LSM6DS0_ADDRESS								0x6B		//The slave address of the device without r/w
+#define LSM6DS0_DEVICE_ID							0x68		//The value in the who am I register
+/*------------------------------------Registers-------------------------------------------------------*/
+#define LSM6DS0_WHO_AM_I							0x0F		//Contains the device ID
+#define LSM6DS0_CTRL_REG1_G						0x10		//Contains output data rate
+#define LSM6DS0_CTRL_REG2_G						0x11		//Contains INT and OUT select for angular acceleration
+#define LSM6DS0_CTRL_REG8							0x22		//Contains BDU (Block Data Update)
+#define LSM6DS0_STATUS_REG						0x17		//Status of Interrupts and if new data is available
+#define LSM6DS0_OUT_X_G_L							0x18		//LSB of angular rate
+#define LSM6DS0_OUT_X_G_H							0x19		//MSB of angular rate
+#define LSM6DS0_OUT_Y_G_L							0x1A		//LSB of angular rate
+#define LSM6DS0_OUT_Y_G_H							0x1B		//MSB of angular rate
+#define LSM6DS0_OUT_Z_G_L							0x1C		//LSB of angular rate
+#define LSM6DS0_OUT_Z_G_H							0x1D		//MSB of angular rate
+#define LSM6DS0_OUT_X_XL_L						0x28		//LSB Linear Acceleration
+#define LSM6DS0_OUT_X_XL_H						0x29		//MSB Linear Acceleration
+#define LSM6DS0_OUT_Y_XL_L						0x2A		//LSB Linear Acceleration
+#define LSM6DS0_OUT_Y_XL_H						0x2B		//MSB Linear Acceleration
+#define LSM6DS0_OUT_Z_XL_L						0x2C		//LSB Linear Acceleration
+#define LSM6DS0_OUT_Z_XL_H						0x2D		//MSB Linear Acceleration
+/*------------------------------------Register Control bits-------------------------------------------*/
 #define LSM6DS0_CTRL_REG8_BDU					0x40		//BDU Enable
 #define LSM6DS0_STATUS_REG_XLDA				0x1			//Acceleration Data available
 #define LSM6DS0_STATUS_REG_GDA				0x2			//Gyroscope Data Available
 #define LSM6DS0_CTRL_REG1_G_ODR_G0		0x20		//Gyroscope output data rate
 #define LSM6DS0_CTRL_REG1_G_ODR_G1		0x40		//Gyroscope output data rate
 #define LSM6DS0_CTRL_REG1_G_ODR_G2		0x80		//Gyroscope output data rate
-
 /*------------------------------------Functions------------------------------------------------------*/
 
 /**

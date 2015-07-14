@@ -1,20 +1,26 @@
+/*------------------------------------------------------------------------------------------------------
+ * Name:    Serial.c
+ * Purpose: Used to communicat with your computer using USART2
+ * Date: 		7/14/15
+ * Author:	Christopher Jordan - Denny
+ *------------------------------------------------------------------------------------------------------
+ * Note(s):	SER_PutChar are used to redefine printf function
+ *----------------------------------------------------------------------------------------------------*/
 
-#include "stm32l0xx.h"                  // Device header
+/*-------------------------------------------------Include Statements---------------------------------*/
+#include "stm32l0xx.h"                  // Specific Device header
 #include "Serial.h"
+/*-------------------------------------------------Functions------------------------------------------*/
 
-#define USARTx  USART2
+/**
+  \fn          void SER_Initialize (void)
+  \brief       Initializes USART2 to be used with the serial monitor
+*/
+	
+void SER_Initialize (void){
 
-/* Alternate USARTx_BRR calculation */
-//#define __DIV(__PCLK, __BAUD)       ((__PCLK*25)/(4*__BAUD))
-//#define __DIVMANT(__PCLK, __BAUD)   (__DIV(__PCLK, __BAUD)/100)
-//#define __DIVFRAQ(__PCLK, __BAUD)   (((__DIV(__PCLK, __BAUD) - (__DIVMANT(__PCLK, __BAUD) * 100)) * 16 + 50) / 100)
-//#define __USART_BRR(__PCLK, __BAUD) ((__DIVMANT(__PCLK, __BAUD) << 4)|(__DIVFRAQ(__PCLK, __BAUD) & 0x0F))
-
-
-void SER_Initialize (void) {
-
-  RCC->IOPENR   |=   ( 1ul <<  0);         /* Enable GPIOA clock              */
-  RCC->APB1ENR  |=   ( 1ul << 17);         /* Enable USART#2 clock            */
+  RCC->IOPENR   |=   ( 1ul <<  0);         /* Enable GPIOA clock   */
+  RCC->APB1ENR  |=   ( 1ul << 17);         /* Enable USART#2 clock */
 
   /* Configure PA3 to USART2_RX, PA2 to USART2_TX */
   GPIOA->AFR[0] &= ~((15ul << 4* 3) | (15ul << 4* 2) );
@@ -22,36 +28,46 @@ void SER_Initialize (void) {
   GPIOA->MODER  &= ~(( 3ul << 2* 3) | ( 3ul << 2* 2) );
   GPIOA->MODER  |=  (( 2ul << 2* 3) | ( 2ul << 2* 2) );
 
-  USARTx->BRR  = 0xD05;  										/* 9600 baud @ 32MHz   */
-  USARTx->CR3    = 0x0000;                 /* no flow control                 */
-  USARTx->CR2    = 0x0000;                 /* 1 stop bit                      */
-  USARTx->CR1    = ((   1ul <<  2) |       /* enable RX                       */
-                    (   1ul <<  3) |       /* enable TX                       */
-                    (   0ul << 12) |       /* 8 data bits                     */
-                    (   0ul << 28) |       /* 8 data bits                     */
-                    (   1ul <<  0) );      /* enable USART                    */
+  USART2->BRR		= 0xD05;  								/* 9600 baud @ 32MHz   */
+  USART2->CR3   = 0x0000;                 /* no flow control */
+  USART2->CR2   = 0x0000;                 /* 1 stop bit */
+  USART2->CR1   = ((   1ul <<  2) |       /* enable RX */
+                   (   1ul <<  3) |       /* enable TX */
+                   (   0ul << 12) |       /* 8 data bits */
+                   (   0ul << 28) |       /* 8 data bits */
+                   (   1ul <<  0) );      /* enable USART */
 }
 
-char SER_PutChar (char ch) {
+/**
+  \fn					char SER_PutChar(char ch)
+  \brief			Put character to the serial monitor
+	\param			char ch: Character to send to the serial monitor
+	\returns		char ch: The character that was sent to the serial monitor
+*/
+
+char SER_PutChar(char ch){
 
 	//Wait for buffer to be empty
-  while ((USARTx->ISR & USART_ISR_TXE) == 0){
+  while ((USART2->ISR & USART_ISR_TXE) == 0){
 			//Nop
 	}
 	
 	//Send character
-  USARTx->TDR = (ch);
+  USART2->TDR = (ch);
 
   return (ch);
 }
 
-/*----------------------------------------------------------------------------
-  Read character from Serial Port
- *----------------------------------------------------------------------------*/
-int SER_GetChar (void) {
+/**
+  \fn					int SER_GetChar(void)
+  \brief			Get character from the serial monitor
+	\returns		int USART2->RDR: The value of character from the serial monitor
+*/
 
-  if (USARTx->ISR & USART_ISR_RXNE)
-    return (USARTx->RDR);
+int SER_GetChar(void){
+
+  if (USART2->ISR & USART_ISR_RXNE)
+    return (USART2->RDR);
 
   return (-1);
 }

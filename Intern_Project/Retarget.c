@@ -1,53 +1,33 @@
-/*----------------------------------------------------------------------------
+/*------------------------------------------------------------------------------------------------------
  * Name:    Retarget.c
- * Purpose: 'Retarget' layer for target-dependent low level functions
- * Note(s):
- *----------------------------------------------------------------------------
- * This file is part of the uVision/ARM development tools.
- * This software may only be used under the terms of a valid, current,
- * end user licence from KEIL for a compatible version of KEIL software
- * development tools. Nothing else gives you the right to use this software.
- *
- * This software is supplied "AS IS" without warranties of any kind.
- *
- * Copyright (c) 2011 Keil - An ARM Company. All rights reserved.
- *----------------------------------------------------------------------------*/
+ * Purpose: Retargets printf C function to be used with USART2
+ * Date: 		7/14/15
+ * Author:	Christopher Jordan - Denny
+ *------------------------------------------------------------------------------------------------------
+ * Note(s):	This is really just magic
+ *----------------------------------------------------------------------------------------------------*/
 
+/*--------------------------------------Include Statements--------------------------------------------*/
 #include <stdio.h>
 #include <rt_misc.h>
 #include "Serial.h"
-#include "USART1.h"
-
+/*--------------------------------------Additional Compiler Info--------------------------------------*/
 #pragma import(__use_no_semihosting_swi)
-
-
-
-struct __FILE { int handle; /* Add whatever you need here */ };
+/*--------------------------------------Structure Definitions-----------------------------------------*/
+struct __FILE { int handle;};
 FILE __stdout;
 FILE __stdin;
+/*--------------------------------------Functions-----------------------------------------------------*/
 
-
-int fputc(int c, FILE *f) {
+int fputc(int c, FILE *f){
   return (SER_PutChar(c));
 }
 
 
-int fgetc(FILE *f) {
+int fgetc(FILE *f){
   return (SER_GetChar());
 }
 
-
-int ferror(FILE *f) {
-  /* Your implementation of ferror */
-  return EOF;
-}
-
-
-void _ttywrch(int c) {
-  SER_PutChar(c);
-}
-
-
-void _sys_exit(int return_code) {
+void _sys_exit(int return_code){
 label:  goto label;  /* endless loop */
 }

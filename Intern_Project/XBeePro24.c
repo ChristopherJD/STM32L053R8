@@ -42,13 +42,12 @@ uint8_t									XBee_Ready_To_Read = FALSE;		//XBee data ready
 /*--------------------------------Struct Initialize-------------------------------------------------------------------*/
 AT_Data AT;
 /*--------------------------------Functions---------------------------------------------------------------------------*/
-void Wait_For_OK(void);
-void Wait_For_Data(void);
 
 /**
 	\fn			void RNG_LPUART1_IRQHandler(void)
-	\breif	Global interrupt handler for LPUART, Currently only handles RX
+	\brief	Global interrupt handler for LPUART, Currently only handles RX
 */
+
 void RNG_LPUART1_IRQHandler(void){
 	if((LPUART1->ISR & USART_ISR_RXNE) == USART_ISR_RXNE){
 		
@@ -77,6 +76,11 @@ void RNG_LPUART1_IRQHandler(void){
 	}
 }
 
+/**
+	\fn			void LPUART_Init(void)
+	\brief	Initializes the Low Powered UART
+*/
+
 void LPUART_Init(void){
 	
 	RCC->IOPENR   |=   RCC_IOPENR_GPIOCEN;			/* Enable GPIOB clock */
@@ -101,7 +105,13 @@ void LPUART_Init(void){
 										
 }
 
-char LPUART1_PutChar(char ch) {
+/**
+	\fn				char LPUART1_PutChar(char ch)
+	\brief		Sends a character to the XBEE
+	\returns 	char ch: The character sent to the XBEE
+*/
+
+char LPUART1_PutChar(char ch){
 
 	//Wait for buffer to be empty
   while ((LPUART1->ISR & USART_ISR_TXE) == 0){
@@ -114,6 +124,11 @@ char LPUART1_PutChar(char ch) {
   return (ch);
 }
 
+/**
+	\fn				void LPUART1_Send(char c[])
+	\brief		Sends a string to the XBEE
+*/
+
 void LPUART1_Send(char c[]){
 	
 	int String_Length = strlen(c);
@@ -124,6 +139,11 @@ void LPUART1_Send(char c[]){
 		Counter++;
 	}
 }
+
+/**
+	\fn				void XBee_Init(void)
+	\brief		Initializes the XBEE
+*/
 
 void XBee_Init(void){
 	
@@ -154,6 +174,11 @@ void XBee_Init(void){
 	
 	printf("#####  XBee Initialized             #####\r\n");
 }
+
+/**
+	\fn				void Read_Xbee_Init(void)
+	\brief		Reads what the XBEE was initialized to
+*/
 
 void Read_Xbee_Init(void){
 	
@@ -195,6 +220,12 @@ void Read_Xbee_Init(void){
 	
 }
 
+/**
+	\fn				void Wait_For_OK(void)
+	\brief		Waits until the XBEE has sent the OK message
+						This is done when it has changed its settings
+*/
+
 void Wait_For_OK(void){
 	
 	/* Wait for XBee Acknowledge */
@@ -207,6 +238,11 @@ void Wait_For_OK(void){
 	XBee_Ready_To_Read = FALSE;
 	
 }
+
+/**
+	\fn				void Wait_For_Data(void)
+	\brief		This waits for the data the XBEE writes to the bus
+*/
 
 void Wait_For_Data(void){
 	

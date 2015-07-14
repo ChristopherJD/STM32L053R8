@@ -1,14 +1,63 @@
+/*------------------------------------------------------------------------------------------------------
+ * Name:    GPIO.h
+ * Purpose: Initializes GPIO and has LED and Button functions for the green LED and the 
+						User button
+ * Date: 		7/14/15
+ * Author:	Christopher Jordan - Denny
+ *------------------------------------------------------------------------------------------------------
+ * Note(s):
+ *----------------------------------------------------------------------------------------------------*/
+
+/*-----------------------------------Include Statements-----------------------------------------------*/
+#include "stm32l053xx.h"
+
 #ifndef GPIO_H
 #define GPIO_H
 
-extern void Initialize_Port_A(int pin, unsigned long mode, unsigned long output_Type, unsigned long output_Speed, unsigned long pupd);
-extern void Initialize_Port_C(int pin, unsigned long mode, unsigned long output_Type, unsigned long output_Speed, unsigned long pupd);
-extern void Unitialize_Port_C(void);
-extern void Unitialize_Port_A(void);
-extern void LED_Init(void);
-extern int Button_Get_State (void);
+struct GPIO_Parameters
+{
+	int Pin;
+	int Mode;
+	int Speed;
+	int OType;
+	int PuPd;
+};
+
+typedef enum Mode_Choices
+{
+	Input									= 0,
+	Output								= 1,
+	Alternate_Function		= 2,
+	Analog_Mode						= 3
+}Mode_Choices;
+
+typedef enum OType_Choices
+{
+	Push_Pull		= 0,
+	Open_Drain	= 1
+}OType_Choices;
+
+typedef enum Speed_Choices
+{
+	Very_Low_Speed		= 0,
+	Low_Speed					= 1,
+	Medium_Speed			= 2,
+	High_Speed				= 3
+}Speed_Choices;
+
+typedef enum PuPd_Choices
+{
+	No_PuPd			= 0,
+	Pull_Up			= 1,
+	Pull_Down		= 2,
+}PuPd_Choices;
+
+extern void GPIO_Init(GPIO_TypeDef* GPIOx, struct GPIO_Parameters GPIO);
+extern void GPIO_Uninit(GPIO_TypeDef* GPIOx);
 extern void Button_Initialize(void);
+extern void LED_Init(void);
 extern void LED_On(void);
 extern void LED_Off(void);
+extern int Button_Get_State(void);
 
 #endif

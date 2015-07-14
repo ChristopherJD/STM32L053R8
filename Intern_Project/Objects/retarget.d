@@ -4,4 +4,3 @@
 .\objects\retarget.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\stddef.h
 .\objects\retarget.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\stdint.h
 .\objects\retarget.o: Serial.h
-.\objects\retarget.o: USART1.h

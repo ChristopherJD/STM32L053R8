@@ -1,9 +1,9 @@
-/*----------------------------------------------------------------------------
+/*------------------------------------------------------------------------------------------------------
  * Name:    ISK01A1.c
  * Purpose: Initialize ISK01A1 expansion board and get data from sensors
  * Date: 		6/18/15
  * Author:	Christopher Jordan - Denny
- *----------------------------------------------------------------------------
+ *------------------------------------------------------------------------------------------------------
  * Note(s): All sensors use I2C for communication. Each sensor will output
 						in one-shot mode, meaning there is no bursts of data, just a 
 						single read of the sensors output registers.
@@ -43,9 +43,9 @@
 							---------------------
 								*Full-Scale +/- 245 is about 8.75 mdps 
 						
- *----------------------------------------------------------------------------*/
+ *----------------------------------------------------------------------------------------------------*/
 
-/*------------------------------------------Include Statements------------------------------------*/
+/*------------------------------------------Include Statements----------------------------------------*/
 #include "stm32l053xx.h"								// Specific Device Header
 #include <stdio.h>											// Standard Input Output
 #include <math.h>												// Standard math operations
@@ -56,14 +56,14 @@
 #include "LIS3MDL.h"										// Magnetometer drivers
 #include "LSM6DS0.h"										// Accelerometer and gyroscope
 #include "ISK01A1.h"
-/*------------------------------------------Structure Inits----------------------------------------*/
+/*------------------------------------------Structure Inits-------------------------------------------*/
 Pressure_Data Pressure;
 HTS221_Data HTS221;
 LPS25HB_Data LPS25HB;
 LIS3MDL_Data LIS3MDL;
 LSM6DS0_Data LSM6DS0;
 ISK01A1_Data ISK01A1;
-/*------------------------------------------Functions----------------------------------------------*/
+/*------------------------------------------Functions-------------------------------------------------*/
 
 /**
   \fn          void ISK01A1_Init(void)

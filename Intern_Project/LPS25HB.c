@@ -1,39 +1,38 @@
-/*----------------------------------------------------------------------------
+/*------------------------------------------------------------------------------------------------------
  * Name:    LPS25HB.c
  * Purpose: Retrieve Pressure data
  * Date: 		6/18/15
  * Author:	Christopher Jordan - Denny
- *----------------------------------------------------------------------------
+ *------------------------------------------------------------------------------------------------------
  * Note(s): Communicates using I2C
- *----------------------------------------------------------------------------*/
+ *----------------------------------------------------------------------------------------------------*/
 
-/*---------------------------------Include Statements-------------------------*/
-#include "stm32l053xx.h"                  // Specific device header
-#include <stdio.h>												// Standard input and output
-#include "I2C.h"													// I2C Drivers
-#include "Serial.h"												// Usart Drivers
+/*---------------------------------Include Statements-------------------------------------------------*/
+#include "stm32l053xx.h"                  	// Specific device header
+#include <stdio.h>													// Standard input and output
+#include "I2C.h"														// I2C Drivers
+#include "Serial.h"													// Usart Drivers
 #include "LPS25HB.h"
-/*---------------------------------Slave Address---------------------------------*/
-#define LPS25HB_ADDRESS 0x5D		//Note that SA0 = 1 so address is 1011101 and not 1011100
-/*---------------------------------Device ID-------------------------------------*/
-#define LPS25HB_DEVICE_ID				0xBD	//Device ID, the value in the WHO_AM_I 	Register
-/*---------------------------------Register Locations----------------------------*/
-#define LPS25HB_WHO_AM_I				0x0F	//Who am I register location
-#define LPS25HB_STATUS_REG			0x27	//Tells whether the Pressure Data is ready or is being overrun
-#define LPS25HB_PRESS_OUT_XL		0x28	//(LSB) Pressure output value
-#define LPS25HB_PRESS_OUT_L			0x29  //(mid part) Pressure output value
-#define LPS25HB_PRESS_OUT_H			0x2A	//(MSB) Pressure output value
-#define LPS25HB_CTRL_REG1				0x20	//Contains PD, BDU and more
-#define LPS25HB_CTRL_REG2				0x21	//Contains one-shot mode and FIFO settings
-#define LPS25HB_RES_CONF				0x10	//Pressure and temperature Resolution
-/*---------------------------------Configuration Bits------------------------------*/
+/*---------------------------------Addresses----------------------------------------------------------*/
+#define LPS25HB_ADDRESS 							0x5D	//Note that SA0 = 1 so address is 1011101 and not 1011100
+#define LPS25HB_DEVICE_ID							0xBD	//Device ID, the value in the WHO_AM_I 	Register
+/*---------------------------------Register Locations-------------------------------------------------*/
+#define LPS25HB_WHO_AM_I							0x0F	//Who am I register location
+#define LPS25HB_STATUS_REG						0x27	//Tells whether the Pressure Data is ready or is being overrun
+#define LPS25HB_PRESS_OUT_XL					0x28	//(LSB) Pressure output value
+#define LPS25HB_PRESS_OUT_L						0x29  //(mid part) Pressure output value
+#define LPS25HB_PRESS_OUT_H						0x2A	//(MSB) Pressure output value
+#define LPS25HB_CTRL_REG1							0x20	//Contains PD, BDU and more
+#define LPS25HB_CTRL_REG2							0x21	//Contains one-shot mode and FIFO settings
+#define LPS25HB_RES_CONF							0x10	//Pressure and temperature Resolution
+/*---------------------------------Configuration Bits-------------------------------------------------*/
 #define LPS25HB_CTRL_REG1_PD					0x80	//Power Down when 0, active mode when 1 (Default 0)
 #define LPS25HB_CTRL_REG1_BDU					0x4		//Block Data Update: 0 Continuous mode, 1 read LSB,Mid,MSB first
 #define LPS25HB_CTRL_REG2_ONE_SHOT		0x1		//One shot mode enabled, obtains a new dataset
 #define LPS25HB_RES_CONF_AVGP0				0x1		//Pressure resolution Configuration
 #define LPS25HB_RES_CONF_AVGP1				0x2		//Pressure resolution Configuration
 #define LPS25HB_STATUS_REG_PDA				0x2		//Pressure data available
-/*---------------------------------Functions--------------------------------------*/
+/*---------------------------------Functions----------------------------------------------------------*/
 
 /**
   \fn					uint8_t LPS25HB_Init(void))
