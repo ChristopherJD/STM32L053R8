@@ -10,6 +10,9 @@
 /*-------------------------------------------------Include Statements---------------------------------*/
 #include "stm32l0xx.h"                  // Specific Device header
 #include "Serial.h"
+/*-------------------------------------------------Define Statements----------------------------------*/
+#define PCLK	32000000									// Peripheral Clock
+#define BAUD	9600											// Baud rate
 /*-------------------------------------------------Functions------------------------------------------*/
 
 /**
@@ -18,6 +21,11 @@
 */
 	
 void SER_Initialize (void){
+
+  /* Local variables */
+  uint16_t USARTDIV = 0;
+  uint16_t USART_FRACTION = 0;
+  uint16_t USART_MANTISSA = 0;
 
   RCC->IOPENR   |=   ( 1ul <<  0);         /* Enable GPIOA clock   */
   RCC->APB1ENR  |=   ( 1ul << 17);         /* Enable USART#2 clock */
@@ -28,7 +36,17 @@ void SER_Initialize (void){
   GPIOA->MODER  &= ~(( 3ul << 2* 3) | ( 3ul << 2* 2) );
   GPIOA->MODER  |=  (( 2ul << 2* 3) | ( 2ul << 2* 2) );
 
-  USART2->BRR		= 0xD05;  								/* 9600 baud @ 32MHz   */
+  /* Check to see if oversampling by 8 or 16 to properly set baud rate*/
+  if((USART2->CR1 & USART_CR1_OVER8) == 1){
+  	USARTDIV = PCLK/BAUD;
+  	USART_FRACTION = ((USARTDIV & 0x0F) >> 1) & (0xB);
+  	USART_MANTISSA = ((USARTDIV & 0xFFF0) << 4);
+  	USARTDIV = USART_MANTISSA | USART_FRACTION;
+  	USART2->BRR = USARTDIV;		/* 9600 Baud with 32MHz peripheral clock 8bit oversampling */
+  }
+  else{
+  	USART2->BRR = PCLK/BAUD;	/* 9600 Baud with 32MHz peripheral clock 16bit oversampling */	
+  }								/* 9600 baud @ 32MHz   */
   USART2->CR3   = 0x0000;                 /* no flow control */
   USART2->CR2   = 0x0000;                 /* 1 stop bit */
   USART2->CR1   = ((   1ul <<  2) |       /* enable RX */
