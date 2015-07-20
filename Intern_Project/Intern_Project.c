@@ -46,7 +46,7 @@ int main (void){
 		LPUART1_Send(Data);
 		
 		/* Wait for GPS data, which is set to update every 5 seconds */
-		Delay(1100);
+		Delay(5100);
   }
 	
 }

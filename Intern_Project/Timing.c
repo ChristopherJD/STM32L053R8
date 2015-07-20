@@ -29,19 +29,25 @@ void SysTick_Handler(void){
 */
 void SystemCoreClockInit(void){
 
-  RCC->CR |= ((uint32_t)RCC_CR_HSION);                     // Enable HSI
-  while ((RCC->CR & RCC_CR_HSIRDY) == 0);                  // Wait for HSI Ready
+  /* Enable HSI */
+	RCC->CR |= ((uint32_t)RCC_CR_HSION);
+	
+	/* Wait for HSI to be ready */
+  while ((RCC->CR & RCC_CR_HSIRDY) == 0){
+		// Nop
+	}
 
-  RCC->CFGR = RCC_CFGR_SW_HSI;                             // HSI is system clock
-  while ((RCC->CFGR & RCC_CFGR_SWS) != RCC_CFGR_SWS_HSI);  // Wait for HSI used as system clock
+	/* Set HSI as the System Clock */
+  RCC->CFGR = RCC_CFGR_SW_HSI;
+	
+	/* Wait for HSI to be used for teh system clock */
+  while ((RCC->CFGR & RCC_CFGR_SWS) != RCC_CFGR_SWS_HSI){
+		// Nop
+	}
 
-  // PLL configuration: PLLCLK = (HSI * 6)/3 = 32 MHz
-  RCC->CFGR &= ~(RCC_CFGR_PLLSRC |
-                 RCC_CFGR_PLLMUL |
-                 RCC_CFGR_PLLDIV  );
-  RCC->CFGR |=  (RCC_CFGR_PLLSRC_HSI |
-                 RCC_CFGR_PLLMUL4    |
-                 RCC_CFGR_PLLDIV2     );
+  /* PLLCLK = (HSI * 4)/2 = 32 MHz */
+  RCC->CFGR &= ~(RCC_CFGR_PLLSRC | RCC_CFGR_PLLMUL | RCC_CFGR_PLLDIV);				/* Clear */
+  RCC->CFGR |=  (RCC_CFGR_PLLSRC_HSI | RCC_CFGR_PLLMUL4 | RCC_CFGR_PLLDIV2);	/* Set   */
 
   FLASH->ACR |= FLASH_ACR_PRFTEN;                          // Enable Prefetch Buffer
   FLASH->ACR |= FLASH_ACR_LATENCY;                         // Flash 1 wait state
@@ -50,18 +56,28 @@ void SystemCoreClockInit(void){
   PWR->CR = PWR_CR_VOS_0;                                  // Select the Voltage Range 1 (1.8V)
   while((PWR->CSR & PWR_CSR_VOSF) != 0);                   // Wait for Voltage Regulator Ready
 
+	
   RCC->CFGR |= RCC_CFGR_HPRE_DIV1;                         // HCLK = SYSCLK
   RCC->CFGR |= RCC_CFGR_PPRE1_DIV1;                        // PCLK1 = HCLK
   RCC->CFGR |= RCC_CFGR_PPRE2_DIV1;                        // PCLK2 = HCLK
 
-  RCC->CR &= ~RCC_CR_PLLON;                                // Disable PLL
-
-  RCC->CR |= RCC_CR_PLLON;                                 // Enable PLL
-  while((RCC->CR & RCC_CR_PLLRDY) == 0) __NOP();           // Wait till PLL is ready
-
-  RCC->CFGR &= ~RCC_CFGR_SW;                               // Select PLL as system clock source
-  RCC->CFGR |=  RCC_CFGR_SW_PLL;
-  while ((RCC->CFGR & RCC_CFGR_SWS) != RCC_CFGR_SWS_PLL);  // Wait till PLL is system clock src
+	/* Toggle PLL */
+  RCC->CR &= ~RCC_CR_PLLON;		/* Disable PLL */
+  RCC->CR |= RCC_CR_PLLON;		/* Enable PLL	 */
+	
+	/* Wait until the PLL is ready */
+  while((RCC->CR & RCC_CR_PLLRDY) == 0){
+		//Nop
+	}
+	
+	/* Select PLL as system Clock */
+  RCC->CFGR &= ~RCC_CFGR_SW;			/* Clear */
+  RCC->CFGR |=  RCC_CFGR_SW_PLL;	/* Set   */
+	
+	/* Wait for PLL to become system core clock */
+  while ((RCC->CFGR & RCC_CFGR_SWS) != RCC_CFGR_SWS_PLL){
+		//Nop
+	}
 }
 
 /**

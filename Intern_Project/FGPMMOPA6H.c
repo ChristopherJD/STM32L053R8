@@ -17,6 +17,7 @@
 #include <stdlib.h>						//Various useful conversion functions
 #include "FGPMMOPA6H.h"
 #include "Serial.h"						//USART2 computer communication
+
 /*---------------------------------Define Statments---------------------------------------------------*/
 #define TRUE				0x1				//Truth value is 1
 #define FALSE				0x0				//False value is 0
@@ -48,11 +49,8 @@
 // turn off output
 #define PMTK_SET_NMEA_OUTPUT_OFF							"$PMTK314,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0*28\r\n"
 
-/*---------------------------------Baud Rate Calculations---------------------------------------------*/
-#define __DIV(__PCLK, __BAUD)       ((__PCLK*25)/(4*__BAUD))
-#define __DIVMANT(__PCLK, __BAUD)   (__DIV(__PCLK, __BAUD)/100)
-#define __DIVFRAQ(__PCLK, __BAUD)   (((__DIV(__PCLK, __BAUD) - (__DIVMANT(__PCLK, __BAUD) * 100)) * 16 + 50) / 100)
-#define __USART_BRR(__PCLK, __BAUD) ((__DIVMANT(__PCLK, __BAUD) << 4)|(__DIVFRAQ(__PCLK, __BAUD) & 0x0F))
+#define PCLK	32000000									// Peripheral Clock
+#define BAUD	9600											// Baud rate
 
 /*---------------------------------NMEA Output Sentences----------------------------------------------*/
 static const char GGA_Tag[] = "$GPGGA";
@@ -76,6 +74,7 @@ char 								VTG_Message[128];											/* Original VTG message */
 RMC_Data RMC;
 GPS_Data GPS;
 GGA_Data GGA;
+
 /*---------------------------------Functions----------------------------------------------------------*/
 
 /**
@@ -138,6 +137,11 @@ void USART1_IRQHandler(void){
 
 void USART1_Init(void){
 	
+	 /* Local variables */
+  uint16_t USARTDIV = 0;
+  uint16_t USART_FRACTION = 0;
+  uint16_t USART_MANTISSA = 0;
+
 	RCC->IOPENR   |=   RCC_IOPENR_GPIOAEN;			/* Enable GPIOA clock */
 	RCC->APB2ENR  |=   RCC_APB2ENR_USART1EN;    /* Enable USART#1 clock */
 	
@@ -156,15 +160,26 @@ void USART1_Init(void){
   GPIOA->MODER  &= ~(( 3ul << 2* 9) | ( 3ul << 2* 10) );		/* Set to 0 */
   GPIOA->MODER  |=  (( 2ul << 2* 9) | ( 2ul << 2* 10) );		/* Set to alternate function mode */
 	
-	USART1->BRR  = __USART_BRR(32000000ul, 9600ul);  /* 9600 baud @ 32MHz   */
+	  /* Check to see if oversampling by 8 or 16 to properly set baud rate*/
+  if((USART1->CR1 & USART_CR1_OVER8) == 1){
+  	USARTDIV = PCLK/BAUD;
+  	USART_FRACTION = ((USARTDIV & 0x0F) >> 1) & (0xB);
+  	USART_MANTISSA = ((USARTDIV & 0xFFF0) << 4);
+  	USARTDIV = USART_MANTISSA | USART_FRACTION;
+  	USART1->BRR = USARTDIV;															/* 9600 Baud with 32MHz peripheral clock 8bit oversampling */
+  }
+  else{
+  	USART1->BRR = PCLK/BAUD;														/* 9600 Baud with 32MHz peripheral clock 16bit oversampling */	
+  }
+
   USART1->CR3    = 0x0000;								/* no flow control */
   USART1->CR2    |= USART_CR2_SWAP;				/* Swap Tx and Rx */
-  USART1->CR1    = ((USART_CR1_RE) |			/* enable RX  */
-                    (USART_CR1_TE) |			/* enable TX  */
-                    (   0ul << 12) |			/* 8 data bits */
-                    (   0ul << 28) |			/* 8 data bits */
-                    (USART_CR1_UE) |      /* enable USART */
-										(USART_CR1_RXNEIE));	/* Enable Interrupt */
+	
+	/* 1 stop bit, 8 data bits */
+  USART1->CR1    = ((USART_CR1_RE) |												/* enable RX  */
+                     (USART_CR1_TE) |												/* enable TX  */
+                     (USART_CR1_UE) |      									/* enable USART */
+										 (USART_CR1_RXNEIE));										/* Enable Interrupt */
 }
 
 /**
@@ -180,8 +195,8 @@ void FGPMMOPA6H_Init(void){
 	
 	/* Initialize Structures */
 	//Init_Structs();
-	USART1_Send(PMTK_API_SET_FIX_CTL_1HZ);		/* 1s Position echo time   */
-	USART1_Send(PMTK_SET_NMEA_UPDATE_1HZ);		/* 1s update time 			   */
+	USART1_Send(PMTK_API_SET_FIX_CTL_200_MILLIHERTZ);		/* 5s Position echo time   */
+	USART1_Send(PMTK_SET_NMEA_UPDATE_200_MILLIHERTZ);		/* 5s update time 			   */
 	
 	USART1_Send(PMTK_SET_NMEA_OUTPUT_RMCGGA);					  /* Output RMC Data and GGA */
 	printf("#####  GPS             Initialized  #####\r\n");

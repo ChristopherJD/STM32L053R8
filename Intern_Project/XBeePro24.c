@@ -24,14 +24,18 @@
 #define SET_ATID											"ATID 3001\r"	//Personal Area Network = 3001
 #define SET_ATDH											"ATDH 0\r"		//Destination Address high
 #define SET_ATDL											"ATDL 1\r"		//Destination Address Low - (The address of XBee A)
+#define SET_ATCH											"ATCH c\r"		//Operating Channel Selection
 #define SAVE_SETTINGS									"ATWR\r"			//Saves the Settings you have configured
-#define READ_ATMY											"ATMY\r"			//Read ATMY register
-#define READ_ATID											"ATID\r"			//Read ATID register
-#define READ_ATDH											"ATDH\r"			//Read ATDH register
-#define READ_ATDL											"ATDL\r"			//Read ATDL register
+#define READ_ATMY											"ATMY\r"			//Read MY register
+#define READ_ATID											"ATID\r"			//Read ID register
+#define READ_ATDH											"ATDH\r"			//Read DH register
+#define READ_ATDL											"ATDL\r"			//Read DL register
+#define READ_ATCH											"ADCH\r"			//Read CH register
 /*---------------------------------More defines-----------------------------------------------------------------------*/
 #define TRUE	1;
 #define FALSE 0;
+#define PCLK	32000000									// Peripheral Clock
+#define BAUD	9600											// Baud rate
 /*---------------------------------Globals----------------------------------------------------------------------------*/
 char 										RX_Data[33] = 				"";				//Rx
 uint8_t 								ChIndex =							0;				//Character Index
@@ -94,14 +98,15 @@ void LPUART_Init(void){
   GPIOC->MODER  &= ~(( 3ul << 2* 10) | ( 3ul << 2* 11) );		/* Set to 0 */
   GPIOC->MODER  |=  (( 2ul << 2* 10) | ( 2ul << 2* 11) );		/* Set to alternate function mode */
 	
-	LPUART1->BRR  = 0xD0555;  																/* 9600 baud @ 32MHz */
+	LPUART1->BRR  	= (unsigned long)((256.0f/BAUD)*PCLK); 		/* 9600 baud @ 32MHz */
   LPUART1->CR3    = 0x0000;																	/* no flow control */
+	LPUART1->CR2    = 0x0000;																	/* 1 stop bit */
+	
+	/* 1 stop bit, 8 data bits */
   LPUART1->CR1    = ((USART_CR1_RE) |												/* enable RX  */
-                    (USART_CR1_TE) |												/* enable TX  */
-                    (   0ul << 12) |												/* 8 data bits */
-                    (   0ul << 28) |												/* 8 data bits */
-                    (USART_CR1_UE) |      									/* enable USART */
-										(USART_CR1_RXNEIE));										/* Enable Interrupt */
+                     (USART_CR1_TE) |												/* enable TX  */
+                     (USART_CR1_UE) |      									/* enable USART */
+										 (USART_CR1_RXNEIE));										/* Enable Interrupt */
 										
 }
 
@@ -156,7 +161,7 @@ void XBee_Init(void){
 	LPUART1_Send(SET_ATMY);
 	Wait_For_OK();
 	
-	/* PAL = 3001 */
+	/* PAN = 3001 */
 	LPUART1_Send(SET_ATID);
 	Wait_For_OK();
 	
@@ -166,6 +171,10 @@ void XBee_Init(void){
 	
 	/* Set Destination Address low */
 	LPUART1_Send(SET_ATDL);
+	Wait_For_OK();
+	
+	/* Set Channel */
+	LPUART1_Send(SET_ATCH);
 	Wait_For_OK();
 	
 	/* End AT command mode */
@@ -208,6 +217,11 @@ void Read_Xbee_Init(void){
 	Wait_For_Data();
 	strncpy(AT.DL,XBee_Message,9);
 	
+	/* Read Channel */
+	LPUART1_Send(READ_ATCH);
+	Wait_For_Data();
+	strncpy(AT.CH,XBee_Message,4);
+	
 	/* End AT command mode */
 	LPUART1_Send(EXIT_AT_COMMAND_MODE);
 	Wait_For_OK();
@@ -217,6 +231,7 @@ void Read_Xbee_Init(void){
 	printf("MY: %s\r\n",AT.MY);
 	printf("DH: %s\r\n",AT.DH);
 	printf("DL: %s\r\n",AT.DL);
+	printf("CH: %s\r\n",AT.CH);
 	
 }
 

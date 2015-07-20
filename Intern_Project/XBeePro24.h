@@ -16,9 +16,10 @@
  typedef struct AT_Data
  {
 	 char MY[6];		/* Source Address unique to this device */
-	 char ID[6];		/* Personal Area Network */
-	 char DH[9];		/* Destination register high */
-	 char DL[9];		/* Destination register low */
+	 char ID[6];		/* Personal Area Network 								*/
+	 char DH[9];		/* Destination register high 						*/
+	 char DL[9];		/* Destination register low							*/
+	 char CH[4];		/* Channel Selection										*/
  } AT_Data;
  
  extern void LPUART_Init(void);

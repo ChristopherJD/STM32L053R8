@@ -3,7 +3,7 @@
 <title>Static Call Graph - [.\Objects\Intern_Project.axf]</title></head>
 <body><HR>
 <H1>Static Call Graph for image .\Objects\Intern_Project.axf</H1><HR>
-<BR><P>#&#060CALLGRAPH&#062# ARM Linker, 5050106: Last Updated: Thu Jul 16 16:27:11 2015
+<BR><P>#&#060CALLGRAPH&#062# ARM Linker, 5050106: Last Updated: Mon Jul 20 15:47:21 2015
 <BR><P>
 <H3>Maximum Stack Usage =        636 bytes + Unknown(Functions without stacksize, Cycles, Untraceable Function Pointers)</H3><H3>
 Call chain for Maximum Stack Depth:</H3>
@@ -1565,7 +1565,7 @@ Global Symbols
 <LI><a href="#[4d]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;main
 </UL>
 
-<P><STRONG><a name="[cc]"></a>LPUART_Init</STRONG> (Thumb, 90 bytes, Stack size 8 bytes, xbeepro24.o(i.LPUART_Init))
+<P><STRONG><a name="[cc]"></a>LPUART_Init</STRONG> (Thumb, 92 bytes, Stack size 8 bytes, xbeepro24.o(i.LPUART_Init))
 <BR><BR>[Stack]<UL><LI>Max Depth = 16<LI>Call Chain = LPUART_Init &rArr; NVIC_SetPriority
 </UL>
 <BR>[Calls]<UL><LI><a href="#[f0]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;NVIC_SetPriority
@@ -1651,8 +1651,10 @@ Global Symbols
 </UL>
 <BR>[Address Reference Count : 1]<UL><LI> startup_stm32l053xx.o(RESET)
 </UL>
-<P><STRONG><a name="[ca]"></a>SER_Initialize</STRONG> (Thumb, 104 bytes, Stack size 0 bytes, serial.o(i.SER_Initialize))
-<BR><BR>[Called By]<UL><LI><a href="#[c4]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;IO_Init
+<P><STRONG><a name="[ca]"></a>SER_Initialize</STRONG> (Thumb, 158 bytes, Stack size 8 bytes, serial.o(i.SER_Initialize))
+<BR><BR>[Stack]<UL><LI>Max Depth = 8<LI>Call Chain = SER_Initialize
+</UL>
+<BR>[Called By]<UL><LI><a href="#[c4]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;IO_Init
 </UL>
 
 <P><STRONG><a name="[102]"></a>SER_PutChar</STRONG> (Thumb, 22 bytes, Stack size 0 bytes, serial.o(i.SER_PutChar))
@@ -1662,7 +1664,7 @@ Global Symbols
 <P><STRONG><a name="[c]"></a>SysTick_Handler</STRONG> (Thumb, 12 bytes, Stack size 0 bytes, timing.o(i.SysTick_Handler))
 <BR>[Address Reference Count : 1]<UL><LI> startup_stm32l053xx.o(RESET)
 </UL>
-<P><STRONG><a name="[c5]"></a>SystemCoreClockInit</STRONG> (Thumb, 236 bytes, Stack size 0 bytes, timing.o(i.SystemCoreClockInit))
+<P><STRONG><a name="[c5]"></a>SystemCoreClockInit</STRONG> (Thumb, 234 bytes, Stack size 0 bytes, timing.o(i.SystemCoreClockInit))
 <BR><BR>[Called By]<UL><LI><a href="#[c4]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;IO_Init
 </UL>
 
@@ -1686,8 +1688,8 @@ Global Symbols
 </UL>
 <BR>[Address Reference Count : 1]<UL><LI> startup_stm32l053xx.o(RESET)
 </UL>
-<P><STRONG><a name="[cb]"></a>USART1_Init</STRONG> (Thumb, 186 bytes, Stack size 8 bytes, fgpmmopa6h.o(i.USART1_Init))
-<BR><BR>[Stack]<UL><LI>Max Depth = 16<LI>Call Chain = USART1_Init &rArr; NVIC_SetPriority
+<P><STRONG><a name="[cb]"></a>USART1_Init</STRONG> (Thumb, 238 bytes, Stack size 16 bytes, fgpmmopa6h.o(i.USART1_Init))
+<BR><BR>[Stack]<UL><LI>Max Depth = 24<LI>Call Chain = USART1_Init &rArr; NVIC_SetPriority
 </UL>
 <BR>[Calls]<UL><LI><a href="#[f2]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;NVIC_SetPriority
 </UL>
@@ -1711,7 +1713,7 @@ Global Symbols
 <BR><BR>[Called By]<UL><LI><a href="#[d0]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;XBee_Init
 </UL>
 
-<P><STRONG><a name="[d0]"></a>XBee_Init</STRONG> (Thumb, 78 bytes, Stack size 8 bytes, xbeepro24.o(i.XBee_Init))
+<P><STRONG><a name="[d0]"></a>XBee_Init</STRONG> (Thumb, 88 bytes, Stack size 8 bytes, xbeepro24.o(i.XBee_Init))
 <BR><BR>[Stack]<UL><LI>Max Depth = 136 + Unknown Stack Size
 <LI>Call Chain = XBee_Init &rArr; __2printf &rArr; _printf_char_file &rArr; _printf_char_common &rArr; __printf
 </UL>

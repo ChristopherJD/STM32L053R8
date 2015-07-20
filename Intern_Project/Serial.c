@@ -42,18 +42,19 @@ void SER_Initialize (void){
   	USART_FRACTION = ((USARTDIV & 0x0F) >> 1) & (0xB);
   	USART_MANTISSA = ((USARTDIV & 0xFFF0) << 4);
   	USARTDIV = USART_MANTISSA | USART_FRACTION;
-  	USART2->BRR = USARTDIV;		/* 9600 Baud with 32MHz peripheral clock 8bit oversampling */
+  	USART2->BRR = USARTDIV;															/* 9600 Baud with 32MHz peripheral clock 8bit oversampling */
   }
   else{
-  	USART2->BRR = PCLK/BAUD;	/* 9600 Baud with 32MHz peripheral clock 16bit oversampling */	
-  }								/* 9600 baud @ 32MHz   */
+  	USART2->BRR = PCLK/BAUD;														/* 9600 Baud with 32MHz peripheral clock 16bit oversampling */	
+  }
   USART2->CR3   = 0x0000;                 /* no flow control */
   USART2->CR2   = 0x0000;                 /* 1 stop bit */
-  USART2->CR1   = ((   1ul <<  2) |       /* enable RX */
-                   (   1ul <<  3) |       /* enable TX */
-                   (   0ul << 12) |       /* 8 data bits */
-                   (   0ul << 28) |       /* 8 data bits */
-                   (   1ul <<  0) );      /* enable USART */
+	
+	/* 1 stop bit, 8 data bits */
+  USART2->CR1    = ((USART_CR1_RE) |												/* enable RX  */
+                     (USART_CR1_TE) |												/* enable TX  */
+                     (USART_CR1_UE) |      									/* enable USART */
+										 (USART_CR1_RXNEIE));										/* Enable Interrupt */
 }
 
 /**
