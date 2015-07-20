@@ -33,12 +33,12 @@
 #define TRUE	1;
 #define FALSE 0;
 /*---------------------------------Globals----------------------------------------------------------------------------*/
-char 										RX_Data[33] = "";							//Rx
-uint8_t 								ChIndex = 0;									//Character Index
-char 										XBee_Message[33] = "";				//Message Recieved by the XBee
-static const char				OK[] = "OK";									//When data has been written XBee will send an OK
-uint8_t									Device_Ack_Flag = FALSE;			//XBee OK acknowledge
-uint8_t									XBee_Ready_To_Read = FALSE;		//XBee data ready
+char 										RX_Data[33] = 				"";				//Rx
+uint8_t 								ChIndex =							0;				//Character Index
+char 										XBee_Message[33] = 		"";				//Message Recieved by the XBee
+static const char				OK[] = 								"OK";			//When data has been written XBee will send an OK
+uint8_t									Device_Ack_Flag = 		FALSE;		//XBee OK acknowledge
+uint8_t									XBee_Ready_To_Read = 	FALSE;		//XBee data ready
 /*--------------------------------Struct Initialize-------------------------------------------------------------------*/
 AT_Data AT;
 /*--------------------------------Functions---------------------------------------------------------------------------*/
@@ -172,7 +172,7 @@ void XBee_Init(void){
 	LPUART1_Send(EXIT_AT_COMMAND_MODE);
 	Wait_For_OK();
 	
-	printf("#####  XBee Initialized             #####\r\n");
+	printf("#####  XBee 	       Initialized  #####\r\n");
 }
 
 /**

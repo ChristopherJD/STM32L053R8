@@ -304,7 +304,7 @@ float ISK01A1_Get_Yaw(void){
 /**
   \fn					ISK01A1_Get_Altitude(void)
   \brief			Calculates the altitude based on the pressure
-	\returns		float Z: Altitude calculation in feet
+	\returns		float Z: Altitude calculation in meters
 */
 
 float ISK01A1_Get_Altitude(void){
@@ -312,18 +312,17 @@ float ISK01A1_Get_Altitude(void){
 	/* Calculation should be good up to 11km */
 	/* Local Variables */
 	const float T0 = 288.15;							/* Temperatuer at zero altitude, ISA */
-	float P = 0.0;												/* Measured Pressure */
-	const float P0 = 101325.0;						/* Pressure at zero altitude, ISA */
-	const float g = 9.80655;							/* Acceleration due to gravity */
-	const float L = -0.0065;							/* Lapse Rate, ISA */
-	const float R = 287.053;							/* Gas constant for air */
-	const float Meters_to_Feet = 3.2808;	/* Convert meters to feet */
+	float P = 0.0;												/* Measured Pressure                 */
+	const float P0 = 101325.0;						/* Pressure at zero altitude, ISA    */
+	const float g = 9.80655;							/* Acceleration due to gravity       */
+	const float L = -0.0065;							/* Lapse Rate, ISA                   */
+	const float R = 287.053;							/* Gas constant for air              */
 	
 	/* Read Pressure */
 	P = LPS25HB_Pressure_Read()*100.0;			/* Convert mbar to Pa */
 	
-	/* Calculate Altitude in feet */
-	ISK01A1.Altitude = (T0/L)*(pow((P/P0),((-L*R)/g))-1)*Meters_to_Feet;
+	/* Calculate Altitude in meters */
+	ISK01A1.Altitude = (T0/L)*(pow((P/P0),((-L*R)/g))-1);
 	
 	return(ISK01A1.Altitude);
 }
@@ -364,7 +363,19 @@ char* ISK01A1_Package_Data(void){
 	ISK01A1_Get_Altitude();
 	
 	/* Combine the data into a string */
-	sprintf(ISK01A1.Packaged_Data,"%f,%f,%f,%f,%f,%f,%f,%f,%f;\r\n",HTS221.Temperature,HTS221.Humidity,LSM6DS0.X_Acceleration,LSM6DS0.Y_Acceleration,LSM6DS0.Z_Acceleration,LSM6DS0.Pitch,LSM6DS0.Roll,LSM6DS0.Yaw,ISK01A1.Altitude);
+	sprintf(
+	ISK01A1.Packaged_Data,								/* Destination  */
+	"%f,%f,%f,%f,%f,%f,%f,%f,%f;\r\n",		/* Foramat      */
+	HTS221.Temperature,										/* Temperature  */
+	HTS221.Humidity,											/* Humidity     */
+	LSM6DS0.X_Acceleration,								/* Acceleration */
+	LSM6DS0.Y_Acceleration,								/* Acceleration */
+	LSM6DS0.Z_Acceleration,								/* Acceleration */
+	LSM6DS0.Pitch,												/* Pitch        */
+	LSM6DS0.Roll,													/* roll         */
+	LSM6DS0.Yaw,													/* Yaw          */
+	ISK01A1.Altitude											/* Altitude     */
+	);
 	
 	return(ISK01A1.Packaged_Data);
 }

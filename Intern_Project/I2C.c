@@ -35,6 +35,7 @@ void I2C_Init(void){
 	/* Enable GPIO Clock */
 	RCC->IOPENR |=  (1UL << 1);
 	
+	/* Don't forget to also enable which interrupts you want in CR1 */
 	//interrupt init
 //	NVIC_EnableIRQ(I2C1_IRQn);
 //	NVIC_SetPriority(I2C1_IRQn,0);
@@ -50,7 +51,7 @@ void I2C_Init(void){
 	
 /** GPIOB Setup
 	*	Standard Mode @100kHz with I2CCLK = 16MHz, rise time = 100ns, fall time = 10ns.(1)
-	*	Enable I2C1 peripheral and the RX interrupt....................................(2)
+	*	Enable I2C1 peripheral.........................................................(2)
 	*/
 	I2C1->TIMINGR = (uint32_t)0x00503D5A;	/*(1)*/
 	I2C1->CR1 |= I2C_CR1_PE;							/*(2)*/

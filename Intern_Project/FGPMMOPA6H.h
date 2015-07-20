@@ -66,12 +66,12 @@ typedef struct GPS_Data
 {
 	int Valid_Data;
 	char Altitude[5];
-	char UTC_Time[15];
+	char TRF_Time[15];
 	char Date[9];
 	char Latitude[15];
 	char Longitude[15];
 	float Ground_Speed;
-	char Packaged[70];								/* Repackaged Data */
+	char Packaged[100];								/* Repackaged Data */
 }GPS_Data;
 
 /* Initialization methods */

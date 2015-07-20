@@ -31,7 +31,7 @@ void IO_Init(void);
 int main (void){
 	
 	/* Local Variables */
-	char Data[165];
+	char Data[200];
 	
 	/* Initialize I2C,XBEE,ADC,USART1,USART2,LPUART1,CLOCK,ISK01A1,GPIO */
 	IO_Init();
@@ -46,7 +46,7 @@ int main (void){
 		LPUART1_Send(Data);
 		
 		/* Wait for GPS data, which is set to update every 5 seconds */
-		Delay(5500);
+		Delay(1100);
   }
 	
 }
@@ -91,7 +91,7 @@ void IO_Init(void){
 	/* Mems board Initialization */
 	ISK01A1_Init();
 	
-	/* GPS Initialization */
+	/* GPS Initialization with 5 second refresh rate */
 	FGPMMOPA6H_Init();
 	
 	/* XBee Initialization */
