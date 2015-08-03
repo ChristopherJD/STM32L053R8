@@ -71,12 +71,12 @@ typedef struct GPS_Data
 	char Latitude[15];
 	char Longitude[15];
 	float Ground_Speed;
-	char Packaged[100];								/* Repackaged Data */
+	char Packaged[128];								/* Repackaged Data */
 }GPS_Data;
 
 /* Initialization methods */
 extern void USART1_Init(void);
-extern void FGPMMOPA6H_Init(void);
+extern void FGPMMOPA6H_Init(int Refresh_Rate);
 
 /* USART Methods */
 extern int USART1_GetChar(void);

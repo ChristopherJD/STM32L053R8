@@ -1,6 +1,10 @@
 /*-------------------------------------------------------------------------------------------------------------------
  * Name:    XBeePro24.c
- * Purpose: Initialize LPUSART, XBee, and send all data acquired
+ * Purpose: Initialize LPUSART, XBee, and sends all data acquired. This is XBEE B in the peer to peer network.
+ *					*	Personal Area Network: 	3001
+ *					* Destination Address: 		1
+ *					* Operating Channel:			C
+ *					* My address:							2 
  * Date: 		6/18/15
  * Author:	Christopher Jordan - Denny
  *-------------------------------------------------------------------------------------------------------------------

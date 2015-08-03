@@ -43,7 +43,7 @@ typedef struct LSM6DS0_Data
 
 typedef struct ISK01A1_Data
 {
-	char Packaged_Data[100];
+	char Packaged_Data[128];
 	float Altitude;
 }ISK01A1_Data;
 

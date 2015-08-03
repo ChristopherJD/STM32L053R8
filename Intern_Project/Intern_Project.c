@@ -20,6 +20,11 @@
 #include "ISK01A1.h"										// ISK01A1 expansion board Drivers (gryo,temp,accel etc...)
 #include "XBeePro24.h"									// XBee drivers
 #include "string.h"											// Various useful string manipulation functions
+
+#define GPIOC_0				0
+#define GPIOC_1				1
+#define Green_LED  		5										//LD2 on nucleo board
+RMC_Data GPS_Ready;
 /*-----------------------Functions--------------------------------------------------------------------*/
 void IO_Init(void);
 
@@ -39,6 +44,10 @@ int main (void){
 	/* Grab data from sensors and send */
   while (1) {
 		
+		while(GPS_Ready.Status == 0){
+			//Nop
+		}
+		
 		/* Congregate Data */
 		sprintf(Data,"%s%s",FGPMMOPA6H_Package_Data(),ISK01A1_Package_Data());
 		
@@ -46,7 +55,7 @@ int main (void){
 		LPUART1_Send(Data);
 		
 		/* Wait for GPS data, which is set to update every 5 seconds */
-		Delay(5100);
+		//Delay(100);
   }
 	
 }
@@ -74,7 +83,9 @@ void IO_Init(void){
 	SysTick_Config(SystemCoreClock / 1000);  // SysTick 1 msec interrupts
 	
   /* Port initializations */
-	LED_Init();										//LD2 Initialization
+	GPIO_Output_Init(GPIOA,Green_LED);										//LD2 Initialization
+	GPIO_Output_Init(GPIOC,GPIOC_0);
+	GPIO_Output_Init(GPIOC,GPIOC_1);
 	Button_Initialize();					//User button init
 	
 	/* Serial Communications Initializations */
@@ -91,8 +102,8 @@ void IO_Init(void){
 	/* Mems board Initialization */
 	ISK01A1_Init();
 	
-	/* GPS Initialization with 5 second refresh rate */
-	FGPMMOPA6H_Init();
+	/* GPS Initialization with 1 second refresh rate */
+	FGPMMOPA6H_Init(3);
 	
 	/* XBee Initialization */
 	/* Note that setup takes 2 seconds due to 1 second delays required

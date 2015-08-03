@@ -55,9 +55,9 @@ typedef enum PuPd_Choices
 extern void GPIO_Init(GPIO_TypeDef* GPIOx, struct GPIO_Parameters GPIO);
 extern void GPIO_Uninit(GPIO_TypeDef* GPIOx);
 extern void Button_Initialize(void);
-extern void LED_Init(void);
-extern void LED_On(void);
-extern void LED_Off(void);
+extern void GPIO_Output_Init(GPIO_TypeDef* GPIOx,int LED);
+extern void GPIO_On(GPIO_TypeDef* GPIOx,int LED);
+extern void GPIO_Off(GPIO_TypeDef* GPIOx,int LED);
 extern int Button_Get_State(void);
 
 #endif

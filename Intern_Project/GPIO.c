@@ -12,7 +12,6 @@
 #include "stm32l053xx.h"									// Specific Device header
 #include "GPIO.h"
 /*---------------------------------------------Definitions--------------------------------------------*/
-#define Green_LED  		5										//LD2 on nucleo board
 #define Blue_Button		13									//B1 User button
 /*---------------------------------------------Functions----------------------------------------------*/
 
@@ -99,18 +98,18 @@ void Button_Initialize(void){
   \brief       Initialize LD2
 */
 
-void LED_Init(void){
+void GPIO_Output_Init(GPIO_TypeDef* GPIOx,int LED){
 	
 	/* Set port parameters */
 	struct GPIO_Parameters GPIO;
-	GPIO.Pin = Green_LED;
+	GPIO.Pin = LED;
 	GPIO.Mode = Output;
 	GPIO.OType = Push_Pull;
 	GPIO.PuPd = No_PuPd;
 	GPIO.Speed = High_Speed;
 	
 	/* Initialize the LED */
-	GPIO_Init(GPIOA,GPIO);
+	GPIO_Init(GPIOx,GPIO);
 }
 
 /**
@@ -118,12 +117,12 @@ void LED_Init(void){
   \brief       Turn LD2 on
 */
 
-void LED_On(void){
+void GPIO_On(GPIO_TypeDef* GPIOx,int LED){
 	/* Local Variables */
-	const unsigned long gpio_Pin = {1UL << Green_LED};
+	const unsigned long gpio_Pin = {1UL << LED};
 	
 	/* Turn on GPIOA-5 */
-	GPIOA->BSRR |= (gpio_Pin);
+	GPIOx->BSRR |= (gpio_Pin);
 	//GPIOA->ODR = 0x20;				// Same as using the BSRR register
 }
 
@@ -132,12 +131,12 @@ void LED_On(void){
   \brief       Turn LD2 off
 */
 
-void LED_Off(void){
+void GPIO_Off(GPIO_TypeDef* GPIOx,int LED){
 	/* Local Variables */
-	const unsigned long gpio_Pin = {1UL << Green_LED};
+	const unsigned long gpio_Pin = {1UL << LED};
 	
 	/* Turn the LED off */
-	GPIOA->BSRR |= (gpio_Pin << 16);
+	GPIOx->BSRR |= (gpio_Pin << 16);
 }
 
 /**

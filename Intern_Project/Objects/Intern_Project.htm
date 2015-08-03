@@ -3,7 +3,7 @@
 <title>Static Call Graph - [.\Objects\Intern_Project.axf]</title></head>
 <body><HR>
 <H1>Static Call Graph for image .\Objects\Intern_Project.axf</H1><HR>
-<BR><P>#&#060CALLGRAPH&#062# ARM Linker, 5050106: Last Updated: Mon Jul 20 15:47:21 2015
+<BR><P>#&#060CALLGRAPH&#062# ARM Linker, 5050106: Last Updated: Fri Jul 31 11:06:32 2015
 <BR><P>
 <H3>Maximum Stack Usage =        636 bytes + Unknown(Functions without stacksize, Cycles, Untraceable Function Pointers)</H3><H3>
 Call chain for Maximum Stack Depth:</H3>
@@ -552,9 +552,9 @@ Global Symbols
 
 <P><STRONG><a name="[131]"></a>__aeabi_uidiv</STRONG> (Thumb, 0 bytes, Stack size 0 bytes, aeabi_sdiv.o(.text), UNUSED)
 
-<P><STRONG><a name="[c7]"></a>__aeabi_uidivmod</STRONG> (Thumb, 20 bytes, Stack size 0 bytes, aeabi_sdiv.o(.text))
-<BR><BR>[Called By]<UL><LI><a href="#[c6]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;SystemCoreClockUpdate
-<LI><a href="#[c4]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;IO_Init
+<P><STRONG><a name="[c8]"></a>__aeabi_uidivmod</STRONG> (Thumb, 20 bytes, Stack size 0 bytes, aeabi_sdiv.o(.text))
+<BR><BR>[Called By]<UL><LI><a href="#[c7]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;SystemCoreClockUpdate
+<LI><a href="#[c5]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;IO_Init
 </UL>
 
 <P><STRONG><a name="[132]"></a>__aeabi_idiv</STRONG> (Thumb, 0 bytes, Stack size 8 bytes, aeabi_sdiv.o(.text), UNUSED)
@@ -575,18 +575,18 @@ Global Symbols
 <BR><BR>[Stack]<UL><LI>Max Depth = 12<LI>Call Chain = __aeabi_d2f
 </UL>
 <BR>[Called By]<UL><LI><a href="#[d7]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;ISK01A1_Get_Altitude
-<LI><a href="#[c1]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HTS221_Temp_Read
-<LI><a href="#[b9]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HTS221_Humidity_Read
+<LI><a href="#[c2]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HTS221_Temp_Read
+<LI><a href="#[ba]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HTS221_Humidity_Read
 <LI><a href="#[a8]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;FGPMMOPA6H_Get_RMC_Ground_Speed
 <LI><a href="#[fd]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__mathlib_tofloat
 </UL>
 
 <P><STRONG><a name="[136]"></a>_d2f</STRONG> (Thumb, 120 bytes, Stack size 12 bytes, d2f.o(.text), UNUSED)
 
-<P><STRONG><a name="[c3]"></a>__aeabi_dadd</STRONG> (Thumb, 0 bytes, Stack size 8 bytes, daddsub.o(.text))
+<P><STRONG><a name="[c4]"></a>__aeabi_dadd</STRONG> (Thumb, 0 bytes, Stack size 8 bytes, daddsub.o(.text))
 <BR><BR>[Stack]<UL><LI>Max Depth = 8<LI>Call Chain = __aeabi_dadd
 </UL>
-<BR>[Called By]<UL><LI><a href="#[c1]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HTS221_Temp_Read
+<BR>[Called By]<UL><LI><a href="#[c2]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HTS221_Temp_Read
 <LI><a href="#[f6]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__kernel_poly
 <LI><a href="#[f8]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__mathlib_dbl_infnan2
 <LI><a href="#[d9]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;pow
@@ -620,11 +620,11 @@ Global Symbols
 <LI><a href="#[6d]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;_dadd1
 </UL>
 
-<P><STRONG><a name="[bc]"></a>__aeabi_ddiv</STRONG> (Thumb, 0 bytes, Stack size 64 bytes, ddiv.o(.text))
+<P><STRONG><a name="[bd]"></a>__aeabi_ddiv</STRONG> (Thumb, 0 bytes, Stack size 64 bytes, ddiv.o(.text))
 <BR><BR>[Stack]<UL><LI>Max Depth = 64<LI>Call Chain = __aeabi_ddiv
 </UL>
-<BR>[Called By]<UL><LI><a href="#[c1]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HTS221_Temp_Read
-<LI><a href="#[b9]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HTS221_Humidity_Read
+<BR>[Called By]<UL><LI><a href="#[c2]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HTS221_Temp_Read
+<LI><a href="#[ba]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HTS221_Humidity_Read
 <LI><a href="#[f9]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__mathlib_dbl_invalid
 <LI><a href="#[f7]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__mathlib_dbl_divzero
 <LI><a href="#[d9]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;pow
@@ -638,11 +638,11 @@ Global Symbols
 <BR><BR>[Calls]<UL><LI><a href="#[71]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;_ddiv
 </UL>
 
-<P><STRONG><a name="[c2]"></a>__aeabi_dmul</STRONG> (Thumb, 0 bytes, Stack size 56 bytes, dmul.o(.text))
+<P><STRONG><a name="[c3]"></a>__aeabi_dmul</STRONG> (Thumb, 0 bytes, Stack size 56 bytes, dmul.o(.text))
 <BR><BR>[Stack]<UL><LI>Max Depth = 56<LI>Call Chain = __aeabi_dmul
 </UL>
 <BR>[Called By]<UL><LI><a href="#[d7]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;ISK01A1_Get_Altitude
-<LI><a href="#[c1]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HTS221_Temp_Read
+<LI><a href="#[c2]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HTS221_Temp_Read
 <LI><a href="#[f6]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__kernel_poly
 <LI><a href="#[d9]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;pow
 </UL>
@@ -651,21 +651,21 @@ Global Symbols
 
 <P><STRONG><a name="[b6]"></a>__aeabi_f2d</STRONG> (Thumb, 0 bytes, Stack size 0 bytes, f2d.o(.text))
 <BR><BR>[Called By]<UL><LI><a href="#[d7]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;ISK01A1_Get_Altitude
-<LI><a href="#[c1]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HTS221_Temp_Read
-<LI><a href="#[b9]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HTS221_Humidity_Read
+<LI><a href="#[c2]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HTS221_Temp_Read
+<LI><a href="#[ba]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HTS221_Humidity_Read
 <LI><a href="#[ec]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;ISK01A1_Package_Data
 <LI><a href="#[b3]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;FGPMMOPA6H_Package_Data
 </UL>
 
 <P><STRONG><a name="[138]"></a>_f2d</STRONG> (Thumb, 80 bytes, Stack size 0 bytes, f2d.o(.text), UNUSED)
 
-<P><STRONG><a name="[be]"></a>__aeabi_fdiv</STRONG> (Thumb, 0 bytes, Stack size 20 bytes, fdiv.o(.text))
+<P><STRONG><a name="[bf]"></a>__aeabi_fdiv</STRONG> (Thumb, 0 bytes, Stack size 20 bytes, fdiv.o(.text))
 <BR><BR>[Stack]<UL><LI>Max Depth = 20<LI>Call Chain = __aeabi_fdiv
 </UL>
 <BR>[Called By]<UL><LI><a href="#[d7]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;ISK01A1_Get_Altitude
 <LI><a href="#[d8]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;LPS25HB_Pressure_Read
-<LI><a href="#[c1]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HTS221_Temp_Read
-<LI><a href="#[b9]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HTS221_Humidity_Read
+<LI><a href="#[c2]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HTS221_Temp_Read
+<LI><a href="#[ba]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HTS221_Humidity_Read
 </UL>
 
 <P><STRONG><a name="[73]"></a>_fdiv</STRONG> (Thumb, 334 bytes, Stack size 20 bytes, fdiv.o(.text), UNUSED)
@@ -694,8 +694,8 @@ Global Symbols
 <LI><a href="#[df]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;LIS3MDL_Y_Read
 <LI><a href="#[dd]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;LIS3MDL_X_Read
 <LI><a href="#[d8]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;LPS25HB_Pressure_Read
-<LI><a href="#[c1]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HTS221_Temp_Read
-<LI><a href="#[b9]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HTS221_Humidity_Read
+<LI><a href="#[c2]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HTS221_Temp_Read
+<LI><a href="#[ba]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HTS221_Humidity_Read
 </UL>
 
 <P><STRONG><a name="[139]"></a>_fflt</STRONG> (Thumb, 0 bytes, Stack size 0 bytes, fflti.o(.text), UNUSED)
@@ -703,7 +703,7 @@ Global Symbols
 <P><STRONG><a name="[76]"></a>__aeabi_ui2f</STRONG> (Thumb, 6 bytes, Stack size 0 bytes, fflti.o(.text))
 <BR><BR>[Calls]<UL><LI><a href="#[75]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__aeabi_i2f_normalise
 </UL>
-<BR>[Called By]<UL><LI><a href="#[b9]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HTS221_Humidity_Read
+<BR>[Called By]<UL><LI><a href="#[ba]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HTS221_Humidity_Read
 </UL>
 
 <P><STRONG><a name="[13a]"></a>_ffltu</STRONG> (Thumb, 0 bytes, Stack size 0 bytes, fflti.o(.text), UNUSED)
@@ -1102,7 +1102,7 @@ Global Symbols
 <P><STRONG><a name="[143]"></a>_ll_shift_l</STRONG> (Thumb, 0 bytes, Stack size 8 bytes, llshl.o(.text), UNUSED)
 
 <P><STRONG><a name="[cd]"></a>ADC_Init</STRONG> (Thumb, 106 bytes, Stack size 0 bytes, adc.o(i.ADC_Init))
-<BR><BR>[Called By]<UL><LI><a href="#[c4]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;IO_Init
+<BR><BR>[Called By]<UL><LI><a href="#[c5]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;IO_Init
 </UL>
 
 <P><STRONG><a name="[a5]"></a>Button_Initialize</STRONG> (Thumb, 42 bytes, Stack size 32 bytes, gpio.o(i.Button_Initialize))
@@ -1110,12 +1110,11 @@ Global Symbols
 </UL>
 <BR>[Calls]<UL><LI><a href="#[a6]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;GPIO_Init
 </UL>
-<BR>[Called By]<UL><LI><a href="#[c4]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;IO_Init
+<BR>[Called By]<UL><LI><a href="#[c5]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;IO_Init
 </UL>
 
 <P><STRONG><a name="[f4]"></a>Delay</STRONG> (Thumb, 20 bytes, Stack size 0 bytes, timing.o(i.Delay))
 <BR><BR>[Called By]<UL><LI><a href="#[d0]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;XBee_Init
-<LI><a href="#[4d]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;main
 </UL>
 
 <P><STRONG><a name="[a7]"></a>FGPMMOPA6H_Get_RMC_Date</STRONG> (Thumb, 66 bytes, Stack size 24 bytes, fgpmmopa6h.o(i.FGPMMOPA6H_Get_RMC_Date))
@@ -1177,17 +1176,17 @@ Global Symbols
 <BR>[Called By]<UL><LI><a href="#[b3]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;FGPMMOPA6H_Package_Data
 </UL>
 
-<P><STRONG><a name="[b1]"></a>FGPMMOPA6H_Init</STRONG> (Thumb, 28 bytes, Stack size 8 bytes, fgpmmopa6h.o(i.FGPMMOPA6H_Init))
+<P><STRONG><a name="[b1]"></a>FGPMMOPA6H_Init</STRONG> (Thumb, 82 bytes, Stack size 8 bytes, fgpmmopa6h.o(i.FGPMMOPA6H_Init))
 <BR><BR>[Stack]<UL><LI>Max Depth = 136 + Unknown Stack Size
 <LI>Call Chain = FGPMMOPA6H_Init &rArr; __2printf &rArr; _printf_char_file &rArr; _printf_char_common &rArr; __printf
 </UL>
 <BR>[Calls]<UL><LI><a href="#[53]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__2printf
 <LI><a href="#[b2]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;USART1_Send
 </UL>
-<BR>[Called By]<UL><LI><a href="#[c4]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;IO_Init
+<BR>[Called By]<UL><LI><a href="#[c5]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;IO_Init
 </UL>
 
-<P><STRONG><a name="[b3]"></a>FGPMMOPA6H_Package_Data</STRONG> (Thumb, 120 bytes, Stack size 64 bytes, fgpmmopa6h.o(i.FGPMMOPA6H_Package_Data))
+<P><STRONG><a name="[b3]"></a>FGPMMOPA6H_Package_Data</STRONG> (Thumb, 130 bytes, Stack size 64 bytes, fgpmmopa6h.o(i.FGPMMOPA6H_Package_Data))
 <BR><BR>[Stack]<UL><LI>Max Depth = 436 + Unknown Stack Size
 <LI>Call Chain = FGPMMOPA6H_Package_Data &rArr; FGPMMOPA6H_Parse_GGA &rArr; strtok &rArr; __strtok_internal &rArr; strspn
 </UL>
@@ -1228,51 +1227,59 @@ Global Symbols
 <P><STRONG><a name="[a6]"></a>GPIO_Init</STRONG> (Thumb, 150 bytes, Stack size 16 bytes, gpio.o(i.GPIO_Init))
 <BR><BR>[Stack]<UL><LI>Max Depth = 16<LI>Call Chain = GPIO_Init
 </UL>
-<BR>[Called By]<UL><LI><a href="#[c9]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;LED_Init
+<BR>[Called By]<UL><LI><a href="#[b9]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;GPIO_Output_Init
 <LI><a href="#[a5]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Button_Initialize
 </UL>
 
-<P><STRONG><a name="[b9]"></a>HTS221_Humidity_Read</STRONG> (Thumb, 374 bytes, Stack size 88 bytes, hts221.o(i.HTS221_Humidity_Read))
+<P><STRONG><a name="[b9]"></a>GPIO_Output_Init</STRONG> (Thumb, 46 bytes, Stack size 40 bytes, gpio.o(i.GPIO_Output_Init))
+<BR><BR>[Stack]<UL><LI>Max Depth = 56<LI>Call Chain = GPIO_Output_Init &rArr; GPIO_Init
+</UL>
+<BR>[Calls]<UL><LI><a href="#[a6]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;GPIO_Init
+</UL>
+<BR>[Called By]<UL><LI><a href="#[c5]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;IO_Init
+</UL>
+
+<P><STRONG><a name="[ba]"></a>HTS221_Humidity_Read</STRONG> (Thumb, 374 bytes, Stack size 88 bytes, hts221.o(i.HTS221_Humidity_Read))
 <BR><BR>[Stack]<UL><LI>Max Depth = 152<LI>Call Chain = HTS221_Humidity_Read &rArr; __aeabi_ddiv
 </UL>
-<BR>[Calls]<UL><LI><a href="#[ba]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;I2C_Write_Reg
-<LI><a href="#[bb]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;I2C_Read_Reg
+<BR>[Calls]<UL><LI><a href="#[bb]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;I2C_Write_Reg
+<LI><a href="#[bc]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;I2C_Read_Reg
 <LI><a href="#[ab]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__aeabi_fmul
 <LI><a href="#[76]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__aeabi_ui2f
 <LI><a href="#[74]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__aeabi_i2f
-<LI><a href="#[be]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__aeabi_fdiv
-<LI><a href="#[bd]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__aeabi_fsub
-<LI><a href="#[bf]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__aeabi_fadd
+<LI><a href="#[bf]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__aeabi_fdiv
+<LI><a href="#[be]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__aeabi_fsub
+<LI><a href="#[c0]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__aeabi_fadd
 <LI><a href="#[b6]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__aeabi_f2d
-<LI><a href="#[bc]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__aeabi_ddiv
+<LI><a href="#[bd]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__aeabi_ddiv
 <LI><a href="#[aa]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__aeabi_d2f
 </UL>
 <BR>[Called By]<UL><LI><a href="#[db]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;ISK01A1_Get_Humidity
 </UL>
 
-<P><STRONG><a name="[c0]"></a>HTS221_Init</STRONG> (Thumb, 56 bytes, Stack size 16 bytes, hts221.o(i.HTS221_Init))
+<P><STRONG><a name="[c1]"></a>HTS221_Init</STRONG> (Thumb, 56 bytes, Stack size 16 bytes, hts221.o(i.HTS221_Init))
 <BR><BR>[Stack]<UL><LI>Max Depth = 28<LI>Call Chain = HTS221_Init &rArr; I2C_Write_Reg
 </UL>
-<BR>[Calls]<UL><LI><a href="#[ba]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;I2C_Write_Reg
-<LI><a href="#[bb]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;I2C_Read_Reg
+<BR>[Calls]<UL><LI><a href="#[bb]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;I2C_Write_Reg
+<LI><a href="#[bc]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;I2C_Read_Reg
 </UL>
 <BR>[Called By]<UL><LI><a href="#[cf]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;ISK01A1_Init
 </UL>
 
-<P><STRONG><a name="[c1]"></a>HTS221_Temp_Read</STRONG> (Thumb, 444 bytes, Stack size 96 bytes, hts221.o(i.HTS221_Temp_Read))
+<P><STRONG><a name="[c2]"></a>HTS221_Temp_Read</STRONG> (Thumb, 444 bytes, Stack size 96 bytes, hts221.o(i.HTS221_Temp_Read))
 <BR><BR>[Stack]<UL><LI>Max Depth = 160<LI>Call Chain = HTS221_Temp_Read &rArr; __aeabi_ddiv
 </UL>
-<BR>[Calls]<UL><LI><a href="#[ba]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;I2C_Write_Reg
-<LI><a href="#[bb]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;I2C_Read_Reg
+<BR>[Calls]<UL><LI><a href="#[bb]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;I2C_Write_Reg
+<LI><a href="#[bc]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;I2C_Read_Reg
 <LI><a href="#[ab]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__aeabi_fmul
 <LI><a href="#[74]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__aeabi_i2f
-<LI><a href="#[be]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__aeabi_fdiv
-<LI><a href="#[bd]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__aeabi_fsub
-<LI><a href="#[bf]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__aeabi_fadd
+<LI><a href="#[bf]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__aeabi_fdiv
+<LI><a href="#[be]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__aeabi_fsub
+<LI><a href="#[c0]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__aeabi_fadd
 <LI><a href="#[b6]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__aeabi_f2d
-<LI><a href="#[c2]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__aeabi_dmul
-<LI><a href="#[bc]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__aeabi_ddiv
-<LI><a href="#[c3]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__aeabi_dadd
+<LI><a href="#[c3]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__aeabi_dmul
+<LI><a href="#[bd]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__aeabi_ddiv
+<LI><a href="#[c4]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__aeabi_dadd
 <LI><a href="#[aa]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__aeabi_d2f
 </UL>
 <BR>[Called By]<UL><LI><a href="#[e6]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;ISK01A1_Get_Temperature
@@ -1281,10 +1288,10 @@ Global Symbols
 <P><STRONG><a name="[ce]"></a>I2C_Init</STRONG> (Thumb, 96 bytes, Stack size 8 bytes, i2c.o(i.I2C_Init))
 <BR><BR>[Stack]<UL><LI>Max Depth = 8<LI>Call Chain = I2C_Init
 </UL>
-<BR>[Called By]<UL><LI><a href="#[c4]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;IO_Init
+<BR>[Called By]<UL><LI><a href="#[c5]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;IO_Init
 </UL>
 
-<P><STRONG><a name="[bb]"></a>I2C_Read_Reg</STRONG> (Thumb, 182 bytes, Stack size 8 bytes, i2c.o(i.I2C_Read_Reg))
+<P><STRONG><a name="[bc]"></a>I2C_Read_Reg</STRONG> (Thumb, 182 bytes, Stack size 8 bytes, i2c.o(i.I2C_Read_Reg))
 <BR><BR>[Stack]<UL><LI>Max Depth = 8<LI>Call Chain = I2C_Read_Reg
 </UL>
 <BR>[Called By]<UL><LI><a href="#[d6]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;LSM6DS0_Z_Acceleration_Read
@@ -1300,12 +1307,12 @@ Global Symbols
 <LI><a href="#[ea]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;LIS3MDL_Init
 <LI><a href="#[d8]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;LPS25HB_Pressure_Read
 <LI><a href="#[e9]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;LPS25HB_Init
-<LI><a href="#[c1]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HTS221_Temp_Read
-<LI><a href="#[c0]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HTS221_Init
-<LI><a href="#[b9]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HTS221_Humidity_Read
+<LI><a href="#[c2]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HTS221_Temp_Read
+<LI><a href="#[c1]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HTS221_Init
+<LI><a href="#[ba]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HTS221_Humidity_Read
 </UL>
 
-<P><STRONG><a name="[ba]"></a>I2C_Write_Reg</STRONG> (Thumb, 156 bytes, Stack size 12 bytes, i2c.o(i.I2C_Write_Reg))
+<P><STRONG><a name="[bb]"></a>I2C_Write_Reg</STRONG> (Thumb, 156 bytes, Stack size 12 bytes, i2c.o(i.I2C_Write_Reg))
 <BR><BR>[Stack]<UL><LI>Max Depth = 12<LI>Call Chain = I2C_Write_Reg
 </UL>
 <BR>[Called By]<UL><LI><a href="#[eb]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;LSM6DS0_Init
@@ -1315,29 +1322,29 @@ Global Symbols
 <LI><a href="#[ea]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;LIS3MDL_Init
 <LI><a href="#[d8]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;LPS25HB_Pressure_Read
 <LI><a href="#[e9]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;LPS25HB_Init
-<LI><a href="#[c1]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HTS221_Temp_Read
-<LI><a href="#[c0]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HTS221_Init
-<LI><a href="#[b9]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HTS221_Humidity_Read
+<LI><a href="#[c2]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HTS221_Temp_Read
+<LI><a href="#[c1]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HTS221_Init
+<LI><a href="#[ba]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HTS221_Humidity_Read
 </UL>
 
-<P><STRONG><a name="[c4]"></a>IO_Init</STRONG> (Thumb, 102 bytes, Stack size 8 bytes, intern_project.o(i.IO_Init))
+<P><STRONG><a name="[c5]"></a>IO_Init</STRONG> (Thumb, 124 bytes, Stack size 8 bytes, intern_project.o(i.IO_Init))
 <BR><BR>[Stack]<UL><LI>Max Depth = 304 + Unknown Stack Size
 <LI>Call Chain = IO_Init &rArr; ISK01A1_Init &rArr; ISK01A1_Get_Altitude &rArr; pow &rArr; __kernel_poly &rArr; __aeabi_dmul
 </UL>
 <BR>[Calls]<UL><LI><a href="#[d0]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;XBee_Init
 <LI><a href="#[cb]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;USART1_Init
-<LI><a href="#[c6]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;SystemCoreClockUpdate
-<LI><a href="#[c5]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;SystemCoreClockInit
+<LI><a href="#[c7]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;SystemCoreClockUpdate
+<LI><a href="#[c6]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;SystemCoreClockInit
 <LI><a href="#[ca]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;SER_Initialize
 <LI><a href="#[cc]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;LPUART_Init
-<LI><a href="#[c9]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;LED_Init
 <LI><a href="#[cf]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;ISK01A1_Init
 <LI><a href="#[ce]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;I2C_Init
+<LI><a href="#[b9]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;GPIO_Output_Init
 <LI><a href="#[b1]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;FGPMMOPA6H_Init
 <LI><a href="#[a5]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Button_Initialize
 <LI><a href="#[cd]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;ADC_Init
-<LI><a href="#[c8]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;NVIC_SetPriority
-<LI><a href="#[c7]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__aeabi_uidivmod
+<LI><a href="#[c9]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;NVIC_SetPriority
+<LI><a href="#[c8]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__aeabi_uidivmod
 </UL>
 <BR>[Called By]<UL><LI><a href="#[4d]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;main
 </UL>
@@ -1371,9 +1378,9 @@ Global Symbols
 </UL>
 <BR>[Calls]<UL><LI><a href="#[d8]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;LPS25HB_Pressure_Read
 <LI><a href="#[d9]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;pow
-<LI><a href="#[be]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__aeabi_fdiv
+<LI><a href="#[bf]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__aeabi_fdiv
 <LI><a href="#[b6]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__aeabi_f2d
-<LI><a href="#[c2]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__aeabi_dmul
+<LI><a href="#[c3]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__aeabi_dmul
 <LI><a href="#[da]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__aeabi_dsub
 <LI><a href="#[aa]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__aeabi_d2f
 </UL>
@@ -1384,7 +1391,7 @@ Global Symbols
 <P><STRONG><a name="[db]"></a>ISK01A1_Get_Humidity</STRONG> (Thumb, 16 bytes, Stack size 8 bytes, isk01a1.o(i.ISK01A1_Get_Humidity))
 <BR><BR>[Stack]<UL><LI>Max Depth = 160<LI>Call Chain = ISK01A1_Get_Humidity &rArr; HTS221_Humidity_Read &rArr; __aeabi_ddiv
 </UL>
-<BR>[Calls]<UL><LI><a href="#[b9]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HTS221_Humidity_Read
+<BR>[Calls]<UL><LI><a href="#[ba]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HTS221_Humidity_Read
 </UL>
 <BR>[Called By]<UL><LI><a href="#[ec]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;ISK01A1_Package_Data
 </UL>
@@ -1432,7 +1439,7 @@ Global Symbols
 <P><STRONG><a name="[e6]"></a>ISK01A1_Get_Temperature</STRONG> (Thumb, 16 bytes, Stack size 8 bytes, isk01a1.o(i.ISK01A1_Get_Temperature))
 <BR><BR>[Stack]<UL><LI>Max Depth = 168<LI>Call Chain = ISK01A1_Get_Temperature &rArr; HTS221_Temp_Read &rArr; __aeabi_ddiv
 </UL>
-<BR>[Calls]<UL><LI><a href="#[c1]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HTS221_Temp_Read
+<BR>[Calls]<UL><LI><a href="#[c2]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HTS221_Temp_Read
 </UL>
 <BR>[Called By]<UL><LI><a href="#[ec]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;ISK01A1_Package_Data
 </UL>
@@ -1453,13 +1460,13 @@ Global Symbols
 <LI><a href="#[eb]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;LSM6DS0_Init
 <LI><a href="#[ea]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;LIS3MDL_Init
 <LI><a href="#[e9]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;LPS25HB_Init
-<LI><a href="#[c0]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HTS221_Init
+<LI><a href="#[c1]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HTS221_Init
 <LI><a href="#[53]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__2printf
 </UL>
-<BR>[Called By]<UL><LI><a href="#[c4]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;IO_Init
+<BR>[Called By]<UL><LI><a href="#[c5]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;IO_Init
 </UL>
 
-<P><STRONG><a name="[ec]"></a>ISK01A1_Package_Data</STRONG> (Thumb, 234 bytes, Stack size 144 bytes, isk01a1.o(i.ISK01A1_Package_Data))
+<P><STRONG><a name="[ec]"></a>ISK01A1_Package_Data</STRONG> (Thumb, 238 bytes, Stack size 144 bytes, isk01a1.o(i.ISK01A1_Package_Data))
 <BR><BR>[Stack]<UL><LI>Max Depth = 416 + Unknown Stack Size
 <LI>Call Chain = ISK01A1_Package_Data &rArr; ISK01A1_Get_Altitude &rArr; pow &rArr; __kernel_poly &rArr; __aeabi_dmul
 </UL>
@@ -1481,19 +1488,11 @@ Global Symbols
 <BR>[Called By]<UL><LI><a href="#[4d]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;main
 </UL>
 
-<P><STRONG><a name="[c9]"></a>LED_Init</STRONG> (Thumb, 46 bytes, Stack size 32 bytes, gpio.o(i.LED_Init))
-<BR><BR>[Stack]<UL><LI>Max Depth = 48<LI>Call Chain = LED_Init &rArr; GPIO_Init
-</UL>
-<BR>[Calls]<UL><LI><a href="#[a6]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;GPIO_Init
-</UL>
-<BR>[Called By]<UL><LI><a href="#[c4]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;IO_Init
-</UL>
-
 <P><STRONG><a name="[ea]"></a>LIS3MDL_Init</STRONG> (Thumb, 74 bytes, Stack size 8 bytes, lis3mdl.o(i.LIS3MDL_Init))
 <BR><BR>[Stack]<UL><LI>Max Depth = 20<LI>Call Chain = LIS3MDL_Init &rArr; I2C_Write_Reg
 </UL>
-<BR>[Calls]<UL><LI><a href="#[ba]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;I2C_Write_Reg
-<LI><a href="#[bb]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;I2C_Read_Reg
+<BR>[Calls]<UL><LI><a href="#[bb]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;I2C_Write_Reg
+<LI><a href="#[bc]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;I2C_Read_Reg
 </UL>
 <BR>[Called By]<UL><LI><a href="#[cf]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;ISK01A1_Init
 </UL>
@@ -1501,8 +1500,8 @@ Global Symbols
 <P><STRONG><a name="[dd]"></a>LIS3MDL_X_Read</STRONG> (Thumb, 104 bytes, Stack size 32 bytes, lis3mdl.o(i.LIS3MDL_X_Read))
 <BR><BR>[Stack]<UL><LI>Max Depth = 48<LI>Call Chain = LIS3MDL_X_Read &rArr; __aeabi_fmul
 </UL>
-<BR>[Calls]<UL><LI><a href="#[ba]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;I2C_Write_Reg
-<LI><a href="#[bb]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;I2C_Read_Reg
+<BR>[Calls]<UL><LI><a href="#[bb]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;I2C_Write_Reg
+<LI><a href="#[bc]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;I2C_Read_Reg
 <LI><a href="#[ab]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__aeabi_fmul
 <LI><a href="#[74]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__aeabi_i2f
 </UL>
@@ -1512,8 +1511,8 @@ Global Symbols
 <P><STRONG><a name="[df]"></a>LIS3MDL_Y_Read</STRONG> (Thumb, 104 bytes, Stack size 32 bytes, lis3mdl.o(i.LIS3MDL_Y_Read))
 <BR><BR>[Stack]<UL><LI>Max Depth = 48<LI>Call Chain = LIS3MDL_Y_Read &rArr; __aeabi_fmul
 </UL>
-<BR>[Calls]<UL><LI><a href="#[ba]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;I2C_Write_Reg
-<LI><a href="#[bb]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;I2C_Read_Reg
+<BR>[Calls]<UL><LI><a href="#[bb]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;I2C_Write_Reg
+<LI><a href="#[bc]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;I2C_Read_Reg
 <LI><a href="#[ab]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__aeabi_fmul
 <LI><a href="#[74]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__aeabi_i2f
 </UL>
@@ -1523,8 +1522,8 @@ Global Symbols
 <P><STRONG><a name="[e1]"></a>LIS3MDL_Z_Read</STRONG> (Thumb, 104 bytes, Stack size 32 bytes, lis3mdl.o(i.LIS3MDL_Z_Read))
 <BR><BR>[Stack]<UL><LI>Max Depth = 48<LI>Call Chain = LIS3MDL_Z_Read &rArr; __aeabi_fmul
 </UL>
-<BR>[Calls]<UL><LI><a href="#[ba]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;I2C_Write_Reg
-<LI><a href="#[bb]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;I2C_Read_Reg
+<BR>[Calls]<UL><LI><a href="#[bb]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;I2C_Write_Reg
+<LI><a href="#[bc]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;I2C_Read_Reg
 <LI><a href="#[ab]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__aeabi_fmul
 <LI><a href="#[74]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__aeabi_i2f
 </UL>
@@ -1534,8 +1533,8 @@ Global Symbols
 <P><STRONG><a name="[e9]"></a>LPS25HB_Init</STRONG> (Thumb, 54 bytes, Stack size 8 bytes, lps25hb.o(i.LPS25HB_Init))
 <BR><BR>[Stack]<UL><LI>Max Depth = 20<LI>Call Chain = LPS25HB_Init &rArr; I2C_Write_Reg
 </UL>
-<BR>[Calls]<UL><LI><a href="#[ba]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;I2C_Write_Reg
-<LI><a href="#[bb]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;I2C_Read_Reg
+<BR>[Calls]<UL><LI><a href="#[bb]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;I2C_Write_Reg
+<LI><a href="#[bc]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;I2C_Read_Reg
 </UL>
 <BR>[Called By]<UL><LI><a href="#[cf]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;ISK01A1_Init
 </UL>
@@ -1543,10 +1542,10 @@ Global Symbols
 <P><STRONG><a name="[d8]"></a>LPS25HB_Pressure_Read</STRONG> (Thumb, 144 bytes, Stack size 32 bytes, lps25hb.o(i.LPS25HB_Pressure_Read))
 <BR><BR>[Stack]<UL><LI>Max Depth = 52<LI>Call Chain = LPS25HB_Pressure_Read &rArr; __aeabi_fdiv
 </UL>
-<BR>[Calls]<UL><LI><a href="#[ba]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;I2C_Write_Reg
-<LI><a href="#[bb]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;I2C_Read_Reg
+<BR>[Calls]<UL><LI><a href="#[bb]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;I2C_Write_Reg
+<LI><a href="#[bc]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;I2C_Read_Reg
 <LI><a href="#[74]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__aeabi_i2f
-<LI><a href="#[be]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__aeabi_fdiv
+<LI><a href="#[bf]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__aeabi_fdiv
 </UL>
 <BR>[Called By]<UL><LI><a href="#[d7]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;ISK01A1_Get_Altitude
 </UL>
@@ -1570,13 +1569,13 @@ Global Symbols
 </UL>
 <BR>[Calls]<UL><LI><a href="#[f0]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;NVIC_SetPriority
 </UL>
-<BR>[Called By]<UL><LI><a href="#[c4]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;IO_Init
+<BR>[Called By]<UL><LI><a href="#[c5]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;IO_Init
 </UL>
 
 <P><STRONG><a name="[e3]"></a>LSM6DS0_Gyroscope_Pitch_Read</STRONG> (Thumb, 92 bytes, Stack size 32 bytes, lsm6ds0.o(i.LSM6DS0_Gyroscope_Pitch_Read))
 <BR><BR>[Stack]<UL><LI>Max Depth = 48<LI>Call Chain = LSM6DS0_Gyroscope_Pitch_Read &rArr; __aeabi_fmul
 </UL>
-<BR>[Calls]<UL><LI><a href="#[bb]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;I2C_Read_Reg
+<BR>[Calls]<UL><LI><a href="#[bc]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;I2C_Read_Reg
 <LI><a href="#[ab]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__aeabi_fmul
 <LI><a href="#[74]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__aeabi_i2f
 </UL>
@@ -1586,7 +1585,7 @@ Global Symbols
 <P><STRONG><a name="[e5]"></a>LSM6DS0_Gyroscope_Roll_Read</STRONG> (Thumb, 92 bytes, Stack size 32 bytes, lsm6ds0.o(i.LSM6DS0_Gyroscope_Roll_Read))
 <BR><BR>[Stack]<UL><LI>Max Depth = 48<LI>Call Chain = LSM6DS0_Gyroscope_Roll_Read &rArr; __aeabi_fmul
 </UL>
-<BR>[Calls]<UL><LI><a href="#[bb]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;I2C_Read_Reg
+<BR>[Calls]<UL><LI><a href="#[bc]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;I2C_Read_Reg
 <LI><a href="#[ab]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__aeabi_fmul
 <LI><a href="#[74]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__aeabi_i2f
 </UL>
@@ -1596,7 +1595,7 @@ Global Symbols
 <P><STRONG><a name="[e8]"></a>LSM6DS0_Gyroscope_Yaw_Read</STRONG> (Thumb, 92 bytes, Stack size 32 bytes, lsm6ds0.o(i.LSM6DS0_Gyroscope_Yaw_Read))
 <BR><BR>[Stack]<UL><LI>Max Depth = 48<LI>Call Chain = LSM6DS0_Gyroscope_Yaw_Read &rArr; __aeabi_fmul
 </UL>
-<BR>[Calls]<UL><LI><a href="#[bb]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;I2C_Read_Reg
+<BR>[Calls]<UL><LI><a href="#[bc]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;I2C_Read_Reg
 <LI><a href="#[ab]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__aeabi_fmul
 <LI><a href="#[74]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__aeabi_i2f
 </UL>
@@ -1606,8 +1605,8 @@ Global Symbols
 <P><STRONG><a name="[eb]"></a>LSM6DS0_Init</STRONG> (Thumb, 54 bytes, Stack size 8 bytes, lsm6ds0.o(i.LSM6DS0_Init))
 <BR><BR>[Stack]<UL><LI>Max Depth = 20<LI>Call Chain = LSM6DS0_Init &rArr; I2C_Write_Reg
 </UL>
-<BR>[Calls]<UL><LI><a href="#[ba]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;I2C_Write_Reg
-<LI><a href="#[bb]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;I2C_Read_Reg
+<BR>[Calls]<UL><LI><a href="#[bb]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;I2C_Write_Reg
+<LI><a href="#[bc]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;I2C_Read_Reg
 </UL>
 <BR>[Called By]<UL><LI><a href="#[cf]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;ISK01A1_Init
 </UL>
@@ -1615,7 +1614,7 @@ Global Symbols
 <P><STRONG><a name="[d2]"></a>LSM6DS0_X_Acceleration_Read</STRONG> (Thumb, 92 bytes, Stack size 32 bytes, lsm6ds0.o(i.LSM6DS0_X_Acceleration_Read))
 <BR><BR>[Stack]<UL><LI>Max Depth = 48<LI>Call Chain = LSM6DS0_X_Acceleration_Read &rArr; __aeabi_fmul
 </UL>
-<BR>[Calls]<UL><LI><a href="#[bb]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;I2C_Read_Reg
+<BR>[Calls]<UL><LI><a href="#[bc]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;I2C_Read_Reg
 <LI><a href="#[ab]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__aeabi_fmul
 <LI><a href="#[74]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__aeabi_i2f
 </UL>
@@ -1625,7 +1624,7 @@ Global Symbols
 <P><STRONG><a name="[d4]"></a>LSM6DS0_Y_Acceleration_Read</STRONG> (Thumb, 92 bytes, Stack size 32 bytes, lsm6ds0.o(i.LSM6DS0_Y_Acceleration_Read))
 <BR><BR>[Stack]<UL><LI>Max Depth = 48<LI>Call Chain = LSM6DS0_Y_Acceleration_Read &rArr; __aeabi_fmul
 </UL>
-<BR>[Calls]<UL><LI><a href="#[bb]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;I2C_Read_Reg
+<BR>[Calls]<UL><LI><a href="#[bc]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;I2C_Read_Reg
 <LI><a href="#[ab]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__aeabi_fmul
 <LI><a href="#[74]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__aeabi_i2f
 </UL>
@@ -1635,7 +1634,7 @@ Global Symbols
 <P><STRONG><a name="[d6]"></a>LSM6DS0_Z_Acceleration_Read</STRONG> (Thumb, 92 bytes, Stack size 32 bytes, lsm6ds0.o(i.LSM6DS0_Z_Acceleration_Read))
 <BR><BR>[Stack]<UL><LI>Max Depth = 48<LI>Call Chain = LSM6DS0_Z_Acceleration_Read &rArr; __aeabi_fmul
 </UL>
-<BR>[Calls]<UL><LI><a href="#[bb]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;I2C_Read_Reg
+<BR>[Calls]<UL><LI><a href="#[bc]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;I2C_Read_Reg
 <LI><a href="#[ab]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__aeabi_fmul
 <LI><a href="#[74]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__aeabi_i2f
 </UL>
@@ -1654,7 +1653,7 @@ Global Symbols
 <P><STRONG><a name="[ca]"></a>SER_Initialize</STRONG> (Thumb, 158 bytes, Stack size 8 bytes, serial.o(i.SER_Initialize))
 <BR><BR>[Stack]<UL><LI>Max Depth = 8<LI>Call Chain = SER_Initialize
 </UL>
-<BR>[Called By]<UL><LI><a href="#[c4]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;IO_Init
+<BR>[Called By]<UL><LI><a href="#[c5]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;IO_Init
 </UL>
 
 <P><STRONG><a name="[102]"></a>SER_PutChar</STRONG> (Thumb, 22 bytes, Stack size 0 bytes, serial.o(i.SER_PutChar))
@@ -1664,16 +1663,16 @@ Global Symbols
 <P><STRONG><a name="[c]"></a>SysTick_Handler</STRONG> (Thumb, 12 bytes, Stack size 0 bytes, timing.o(i.SysTick_Handler))
 <BR>[Address Reference Count : 1]<UL><LI> startup_stm32l053xx.o(RESET)
 </UL>
-<P><STRONG><a name="[c5]"></a>SystemCoreClockInit</STRONG> (Thumb, 234 bytes, Stack size 0 bytes, timing.o(i.SystemCoreClockInit))
-<BR><BR>[Called By]<UL><LI><a href="#[c4]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;IO_Init
+<P><STRONG><a name="[c6]"></a>SystemCoreClockInit</STRONG> (Thumb, 232 bytes, Stack size 0 bytes, timing.o(i.SystemCoreClockInit))
+<BR><BR>[Called By]<UL><LI><a href="#[c5]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;IO_Init
 </UL>
 
-<P><STRONG><a name="[c6]"></a>SystemCoreClockUpdate</STRONG> (Thumb, 230 bytes, Stack size 24 bytes, system_stm32l0xx.o(i.SystemCoreClockUpdate))
+<P><STRONG><a name="[c7]"></a>SystemCoreClockUpdate</STRONG> (Thumb, 230 bytes, Stack size 24 bytes, system_stm32l0xx.o(i.SystemCoreClockUpdate))
 <BR><BR>[Stack]<UL><LI>Max Depth = 24<LI>Call Chain = SystemCoreClockUpdate
 </UL>
-<BR>[Calls]<UL><LI><a href="#[c7]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__aeabi_uidivmod
+<BR>[Calls]<UL><LI><a href="#[c8]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__aeabi_uidivmod
 </UL>
-<BR>[Called By]<UL><LI><a href="#[c4]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;IO_Init
+<BR>[Called By]<UL><LI><a href="#[c5]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;IO_Init
 </UL>
 
 <P><STRONG><a name="[28]"></a>SystemInit</STRONG> (Thumb, 88 bytes, Stack size 0 bytes, system_stm32l0xx.o(i.SystemInit))
@@ -1693,7 +1692,7 @@ Global Symbols
 </UL>
 <BR>[Calls]<UL><LI><a href="#[f2]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;NVIC_SetPriority
 </UL>
-<BR>[Called By]<UL><LI><a href="#[c4]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;IO_Init
+<BR>[Called By]<UL><LI><a href="#[c5]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;IO_Init
 </UL>
 
 <P><STRONG><a name="[f3]"></a>USART1_PutChar</STRONG> (Thumb, 22 bytes, Stack size 0 bytes, fgpmmopa6h.o(i.USART1_PutChar))
@@ -1717,12 +1716,12 @@ Global Symbols
 <BR><BR>[Stack]<UL><LI>Max Depth = 136 + Unknown Stack Size
 <LI>Call Chain = XBee_Init &rArr; __2printf &rArr; _printf_char_file &rArr; _printf_char_common &rArr; __printf
 </UL>
-<BR>[Calls]<UL><LI><a href="#[ed]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;LPUART1_Send
-<LI><a href="#[f4]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Delay
+<BR>[Calls]<UL><LI><a href="#[f4]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Delay
+<LI><a href="#[ed]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;LPUART1_Send
 <LI><a href="#[53]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__2printf
 <LI><a href="#[f5]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Wait_For_OK
 </UL>
-<BR>[Called By]<UL><LI><a href="#[c4]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;IO_Init
+<BR>[Called By]<UL><LI><a href="#[c5]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;IO_Init
 </UL>
 
 <P><STRONG><a name="[91]"></a>__ARM_common_ll_muluu</STRONG> (Thumb, 48 bytes, Stack size 24 bytes, btod.o(i.__ARM_common_ll_muluu))
@@ -1739,8 +1738,8 @@ Global Symbols
 <P><STRONG><a name="[f6]"></a>__kernel_poly</STRONG> (Thumb, 172 bytes, Stack size 24 bytes, poly.o(i.__kernel_poly))
 <BR><BR>[Stack]<UL><LI>Max Depth = 80<LI>Call Chain = __kernel_poly &rArr; __aeabi_dmul
 </UL>
-<BR>[Calls]<UL><LI><a href="#[c2]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__aeabi_dmul
-<LI><a href="#[c3]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__aeabi_dadd
+<BR>[Calls]<UL><LI><a href="#[c3]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__aeabi_dmul
+<LI><a href="#[c4]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__aeabi_dadd
 </UL>
 <BR>[Called By]<UL><LI><a href="#[d9]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;pow
 </UL>
@@ -1748,7 +1747,7 @@ Global Symbols
 <P><STRONG><a name="[f7]"></a>__mathlib_dbl_divzero</STRONG> (Thumb, 16 bytes, Stack size 8 bytes, dunder.o(i.__mathlib_dbl_divzero))
 <BR><BR>[Stack]<UL><LI>Max Depth = 72<LI>Call Chain = __mathlib_dbl_divzero &rArr; __aeabi_ddiv
 </UL>
-<BR>[Calls]<UL><LI><a href="#[bc]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__aeabi_ddiv
+<BR>[Calls]<UL><LI><a href="#[bd]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__aeabi_ddiv
 </UL>
 <BR>[Called By]<UL><LI><a href="#[d9]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;pow
 </UL>
@@ -1756,7 +1755,7 @@ Global Symbols
 <P><STRONG><a name="[f8]"></a>__mathlib_dbl_infnan2</STRONG> (Thumb, 8 bytes, Stack size 8 bytes, dunder.o(i.__mathlib_dbl_infnan2))
 <BR><BR>[Stack]<UL><LI>Max Depth = 16<LI>Call Chain = __mathlib_dbl_infnan2 &rArr; __aeabi_dadd
 </UL>
-<BR>[Calls]<UL><LI><a href="#[c3]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__aeabi_dadd
+<BR>[Calls]<UL><LI><a href="#[c4]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__aeabi_dadd
 </UL>
 <BR>[Called By]<UL><LI><a href="#[d9]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;pow
 </UL>
@@ -1764,7 +1763,7 @@ Global Symbols
 <P><STRONG><a name="[f9]"></a>__mathlib_dbl_invalid</STRONG> (Thumb, 16 bytes, Stack size 8 bytes, dunder.o(i.__mathlib_dbl_invalid))
 <BR><BR>[Stack]<UL><LI>Max Depth = 72<LI>Call Chain = __mathlib_dbl_invalid &rArr; __aeabi_ddiv
 </UL>
-<BR>[Calls]<UL><LI><a href="#[bc]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__aeabi_ddiv
+<BR>[Calls]<UL><LI><a href="#[bd]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__aeabi_ddiv
 </UL>
 <BR>[Called By]<UL><LI><a href="#[d9]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;pow
 </UL>
@@ -1861,15 +1860,14 @@ Global Symbols
 <BR>[Called By]<UL><LI><a href="#[a4]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__support_ldexp
 </UL>
 
-<P><STRONG><a name="[4d]"></a>main</STRONG> (Thumb, 46 bytes, Stack size 200 bytes, intern_project.o(i.main))
+<P><STRONG><a name="[4d]"></a>main</STRONG> (Thumb, 44 bytes, Stack size 200 bytes, intern_project.o(i.main))
 <BR><BR>[Stack]<UL><LI>Max Depth = 636 + Unknown Stack Size
 <LI>Call Chain = main &rArr; FGPMMOPA6H_Package_Data &rArr; FGPMMOPA6H_Parse_GGA &rArr; strtok &rArr; __strtok_internal &rArr; strspn
 </UL>
 <BR>[Calls]<UL><LI><a href="#[ed]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;LPUART1_Send
 <LI><a href="#[ec]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;ISK01A1_Package_Data
 <LI><a href="#[b3]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;FGPMMOPA6H_Package_Data
-<LI><a href="#[f4]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Delay
-<LI><a href="#[c4]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;IO_Init
+<LI><a href="#[c5]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;IO_Init
 <LI><a href="#[55]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__2sprintf
 </UL>
 <BR>[Called By]<UL><LI><a href="#[4c]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__rt_entry_main
@@ -1890,11 +1888,11 @@ Global Symbols
 <LI><a href="#[100]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__aeabi_cdrcmple
 <LI><a href="#[8b]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__aeabi_i2d
 <LI><a href="#[78]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__set_errno
-<LI><a href="#[c2]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__aeabi_dmul
-<LI><a href="#[bc]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__aeabi_ddiv
+<LI><a href="#[c3]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__aeabi_dmul
+<LI><a href="#[bd]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__aeabi_ddiv
 <LI><a href="#[104]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__aeabi_drsub
 <LI><a href="#[da]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__aeabi_dsub
-<LI><a href="#[c3]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__aeabi_dadd
+<LI><a href="#[c4]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__aeabi_dadd
 </UL>
 <BR>[Called By]<UL><LI><a href="#[d7]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;ISK01A1_Get_Altitude
 </UL>
@@ -1947,11 +1945,11 @@ Global Symbols
 <BR><BR>[Calls]<UL><LI><a href="#[95]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__fpl_dcmp_InfNaN
 </UL>
 
-<P><STRONG><a name="[bf]"></a>__aeabi_fadd</STRONG> (Thumb, 0 bytes, Stack size 16 bytes, faddsub.o(x$fpl$fadd))
+<P><STRONG><a name="[c0]"></a>__aeabi_fadd</STRONG> (Thumb, 0 bytes, Stack size 16 bytes, faddsub.o(x$fpl$fadd))
 <BR><BR>[Stack]<UL><LI>Max Depth = 16<LI>Call Chain = __aeabi_fadd
 </UL>
-<BR>[Called By]<UL><LI><a href="#[c1]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HTS221_Temp_Read
-<LI><a href="#[b9]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HTS221_Humidity_Read
+<BR>[Called By]<UL><LI><a href="#[c2]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HTS221_Temp_Read
+<LI><a href="#[ba]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HTS221_Humidity_Read
 </UL>
 
 <P><STRONG><a name="[108]"></a>_fadd</STRONG> (Thumb, 134 bytes, Stack size 16 bytes, faddsub.o(x$fpl$fadd), UNUSED)
@@ -1970,18 +1968,18 @@ Global Symbols
 <LI><a href="#[e1]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;LIS3MDL_Z_Read
 <LI><a href="#[df]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;LIS3MDL_Y_Read
 <LI><a href="#[dd]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;LIS3MDL_X_Read
-<LI><a href="#[c1]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HTS221_Temp_Read
-<LI><a href="#[b9]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HTS221_Humidity_Read
+<LI><a href="#[c2]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HTS221_Temp_Read
+<LI><a href="#[ba]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HTS221_Humidity_Read
 <LI><a href="#[a8]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;FGPMMOPA6H_Get_RMC_Ground_Speed
 </UL>
 
 <P><STRONG><a name="[144]"></a>_fmul</STRONG> (Thumb, 172 bytes, Stack size 16 bytes, fmul.o(x$fpl$fmul), UNUSED)
 
-<P><STRONG><a name="[bd]"></a>__aeabi_fsub</STRONG> (Thumb, 0 bytes, Stack size 16 bytes, faddsub.o(x$fpl$fsub))
+<P><STRONG><a name="[be]"></a>__aeabi_fsub</STRONG> (Thumb, 0 bytes, Stack size 16 bytes, faddsub.o(x$fpl$fsub))
 <BR><BR>[Stack]<UL><LI>Max Depth = 16<LI>Call Chain = __aeabi_fsub
 </UL>
-<BR>[Called By]<UL><LI><a href="#[c1]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HTS221_Temp_Read
-<LI><a href="#[b9]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HTS221_Humidity_Read
+<BR>[Called By]<UL><LI><a href="#[c2]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HTS221_Temp_Read
+<LI><a href="#[ba]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HTS221_Humidity_Read
 </UL>
 
 <P><STRONG><a name="[10a]"></a>_fsub</STRONG> (Thumb, 204 bytes, Stack size 16 bytes, faddsub.o(x$fpl$fsub), UNUSED)
@@ -2015,10 +2013,10 @@ Global Symbols
 <H3>
 Local Symbols
 </H3>
-<P><STRONG><a name="[c8]"></a>NVIC_SetPriority</STRONG> (Thumb, 110 bytes, Stack size 8 bytes, intern_project.o(i.NVIC_SetPriority))
+<P><STRONG><a name="[c9]"></a>NVIC_SetPriority</STRONG> (Thumb, 110 bytes, Stack size 8 bytes, intern_project.o(i.NVIC_SetPriority))
 <BR><BR>[Stack]<UL><LI>Max Depth = 8<LI>Call Chain = NVIC_SetPriority
 </UL>
-<BR>[Called By]<UL><LI><a href="#[c4]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;IO_Init
+<BR>[Called By]<UL><LI><a href="#[c5]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;IO_Init
 </UL>
 
 <P><STRONG><a name="[f2]"></a>NVIC_SetPriority</STRONG> (Thumb, 110 bytes, Stack size 8 bytes, fgpmmopa6h.o(i.NVIC_SetPriority))

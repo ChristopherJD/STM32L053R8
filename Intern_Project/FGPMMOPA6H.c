@@ -191,12 +191,26 @@ void USART1_Init(void){
 								*	Outputs both GGA and RMC message
 */
 
-void FGPMMOPA6H_Init(void){
+void FGPMMOPA6H_Init(int Refresh_Rate){
 	
 	/* Initialize Structures */
 	//Init_Structs();
-	USART1_Send(PMTK_API_SET_FIX_CTL_200_MILLIHERTZ);		/* 5s Position echo time   */
-	USART1_Send(PMTK_SET_NMEA_UPDATE_200_MILLIHERTZ);		/* 5s update time 			   */
+	if(Refresh_Rate == 1){
+		USART1_Send(PMTK_API_SET_FIX_CTL_100_MILLIHERTZ);		/* 10s Position echo time   */
+		USART1_Send(PMTK_SET_NMEA_UPDATE_100_MILLIHERTZ);		/* 10s update time 			   */
+	}
+	if(Refresh_Rate == 2){
+		USART1_Send(PMTK_API_SET_FIX_CTL_200_MILLIHERTZ);		/* 5s Position echo time   */
+		USART1_Send(PMTK_SET_NMEA_UPDATE_200_MILLIHERTZ);		/* 5s update time 			   */
+	}
+	if(Refresh_Rate == 3){
+		USART1_Send(PMTK_API_SET_FIX_CTL_1HZ);							/* 1s Position echo time   */
+		USART1_Send(PMTK_SET_NMEA_UPDATE_1HZ);							/* 1s update time 			   */
+	}
+	if(Refresh_Rate == 4){
+		USART1_Send(PMTK_API_SET_FIX_CTL_5HZ);							/* 5 times every second Position echo time   */
+		USART1_Send(PMTK_SET_NMEA_UPDATE_5HZ);							/* 5 times every second update time 			   */
+	}
 	
 	USART1_Send(PMTK_SET_NMEA_OUTPUT_RMCGGA);					  /* Output RMC Data and GGA */
 	printf("#####  GPS             Initialized  #####\r\n");
@@ -559,6 +573,11 @@ void FGPMMOPA6H_Get_GPS_Data(void){
 */
 
 char* FGPMMOPA6H_Package_Data(void){
+	
+	/* Wait for New data to come */
+	while(RMC.New_Data_Ready == 0){
+		//Nop
+	}
 	
 	/* Parse the RMC and GCC data */
 	FGPMMOPA6H_Parse_RMC_Data();

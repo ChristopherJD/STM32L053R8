@@ -44,24 +44,24 @@ void SystemCoreClockInit(void){
   while ((RCC->CFGR & RCC_CFGR_SWS) != RCC_CFGR_SWS_HSI){
 		// Nop
 	}
-
-  /* PLLCLK = (HSI * 4)/2 = 32 MHz */
-  RCC->CFGR &= ~(RCC_CFGR_PLLSRC | RCC_CFGR_PLLMUL | RCC_CFGR_PLLDIV);				/* Clear */
-  RCC->CFGR |=  (RCC_CFGR_PLLSRC_HSI | RCC_CFGR_PLLMUL4 | RCC_CFGR_PLLDIV2);	/* Set   */
-
-  FLASH->ACR |= FLASH_ACR_PRFTEN;                          // Enable Prefetch Buffer
+	
+	FLASH->ACR |= FLASH_ACR_PRFTEN;                          // Enable Prefetch Buffer
   FLASH->ACR |= FLASH_ACR_LATENCY;                         // Flash 1 wait state
 
   RCC->APB1ENR |= RCC_APB1ENR_PWREN;                       // Enable the PWR APB1 Clock
   PWR->CR = PWR_CR_VOS_0;                                  // Select the Voltage Range 1 (1.8V)
   while((PWR->CSR & PWR_CSR_VOSF) != 0);                   // Wait for Voltage Regulator Ready
 
+  /* PLLCLK = (HSI * 4)/2 = 32 MHz */
+  RCC->CFGR &= ~(RCC_CFGR_PLLSRC | RCC_CFGR_PLLMUL | RCC_CFGR_PLLDIV);				/* Clear */
+  RCC->CFGR |=  (RCC_CFGR_PLLSRC_HSI | RCC_CFGR_PLLMUL4 | RCC_CFGR_PLLDIV2);	/* Set   */
 	
+	/* Peripheral Clock divisors */
   RCC->CFGR |= RCC_CFGR_HPRE_DIV1;                         // HCLK = SYSCLK
   RCC->CFGR |= RCC_CFGR_PPRE1_DIV1;                        // PCLK1 = HCLK
   RCC->CFGR |= RCC_CFGR_PPRE2_DIV1;                        // PCLK2 = HCLK
 
-	/* Toggle PLL */
+	/* Enable PLL */
   RCC->CR &= ~RCC_CR_PLLON;		/* Disable PLL */
   RCC->CR |= RCC_CR_PLLON;		/* Enable PLL	 */
 	
