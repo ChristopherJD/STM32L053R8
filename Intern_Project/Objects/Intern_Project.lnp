@@ -13,6 +13,7 @@
 ".\objects\isk01a1.o"
 ".\objects\fgpmmopa6h.o"
 ".\objects\xbeepro24.o"
+".\objects\pwm.o"
 ".\objects\startup_stm32l053xx.o"
 ".\objects\system_stm32l0xx.o"
 --strict --scatter ".\Objects\Intern_Project.sct"

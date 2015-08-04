@@ -19,11 +19,13 @@
 #include "I2C.h"												// I2C Drivers
 #include "ISK01A1.h"										// ISK01A1 expansion board Drivers (gryo,temp,accel etc...)
 #include "XBeePro24.h"									// XBee drivers
+#include "PWM.h"
 #include "string.h"											// Various useful string manipulation functions
 
 #define GPIOC_0				0
 #define GPIOC_1				1
 #define Green_LED  		5										//LD2 on nucleo board
+/*-----------------------Structure Stuff--------------------------------------------------------------*/
 RMC_Data GPS_Ready;
 /*-----------------------Functions--------------------------------------------------------------------*/
 void IO_Init(void);
@@ -36,26 +38,25 @@ void IO_Init(void);
 int main (void){
 	
 	/* Local Variables */
-	char Data[200];
+	char Data[256];
 	
 	/* Initialize I2C,XBEE,ADC,USART1,USART2,LPUART1,CLOCK,ISK01A1,GPIO */
 	IO_Init();
 	
+//		Position_180();
+		Position_0();
+//		Position_90();
 	/* Grab data from sensors and send */
-  while (1) {
-		
-		while(GPS_Ready.Status == 0){
-			//Nop
-		}
-		
-		/* Congregate Data */
-		sprintf(Data,"%s%s",FGPMMOPA6H_Package_Data(),ISK01A1_Package_Data());
-		
-		/* Send data over the XBEE */
-		LPUART1_Send(Data);
-		
-		/* Wait for GPS data, which is set to update every 5 seconds */
-		//Delay(100);
+  while (1) {	
+//		while(GPS_Ready.Status == 0){
+//			//Nop
+//		}
+//		
+//		/* Congregate Data */
+//		sprintf(Data,"%s%s",FGPMMOPA6H_Package_Data(),ISK01A1_Package_Data());
+//		
+//		/* Send data over the XBEE */
+//		LPUART1_Send(Data);
   }
 	
 }
@@ -97,17 +98,17 @@ void IO_Init(void){
 	ADC_Init();
 	
 	/* I2C Initialization */
-	I2C_Init();
-	
-	/* Mems board Initialization */
-	ISK01A1_Init();
-	
-	/* GPS Initialization with 1 second refresh rate */
-	FGPMMOPA6H_Init(3);
+//	I2C_Init();
+//	
+//	/* Mems board Initialization */
+//	ISK01A1_Init();
+//	
+//	/* GPS Initialization with 1 second refresh rate */
+//	FGPMMOPA6H_Init(3);
 	
 	/* XBee Initialization */
 	/* Note that setup takes 2 seconds due to 1 second delays required
 	 * By the XBee AT command Sequence
 	 */
-	XBee_Init();
+//	XBee_Init();
 }

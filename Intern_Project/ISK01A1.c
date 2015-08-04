@@ -311,7 +311,7 @@ float ISK01A1_Get_Altitude(void){
 	
 	/* Calculation should be good up to 11km */
 	/* Local Variables */
-	const float T0 = 288.15;							/* Temperatuer at zero altitude, ISA */
+	const float T0 = 288.15;							/* Temperature at zero altitude, ISA */
 	float P = 0.0;												/* Measured Pressure                 */
 	const float P0 = 101325.0;						/* Pressure at zero altitude, ISA    */
 	const float g = 9.80655;							/* Acceleration due to gravity       */
@@ -319,7 +319,7 @@ float ISK01A1_Get_Altitude(void){
 	const float R = 287.053;							/* Gas constant for air              */
 	
 	/* Read Pressure */
-	P = LPS25HB_Pressure_Read()*100.0;			/* Convert mbar to Pa */
+	P = (LPS25HB_Pressure_Read()*100.0);			/* Convert mbar to Pa */
 	
 	/* Calculate Altitude in meters */
 	ISK01A1.Altitude = (T0/L)*(pow((P/P0),((-L*R)/g))-1);
@@ -361,6 +361,7 @@ char* ISK01A1_Package_Data(void){
 	ISK01A1_Get_Pitch();
 	ISK01A1_Get_Yaw();
 	ISK01A1_Get_Altitude();
+	ISK01A1_Get_Pressure();
 	
 	/* Combine the data into a string */
 	sprintf(
