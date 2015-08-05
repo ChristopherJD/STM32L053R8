@@ -12,9 +12,9 @@
 #ifndef PWM_H
 #define PWM_H
 
-extern void Position_180(void);
-extern void Position_90(void);
-extern void Position_0(void);
+extern void PWM(TIM_TypeDef* TIMx, int Pulse_Duration,GPIO_TypeDef* GPIOx, int Pin);
+extern int Servo_Position(int Degrees);
+extern void Release_Servo(TIM_TypeDef* TIMx, GPIO_TypeDef* GPIOx, int Pin);
 
 #endif
 

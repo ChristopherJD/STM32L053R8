@@ -11,13 +11,14 @@
  #include "GPIO.h"
  /*------------------------------------------------------Functions------------------------------------*/
  
-void PWM_Init(TIM_TypeDef* TIMx, int Pulse_Duration,GPIO_TypeDef* GPIOx, int Pin){
+void PWM(TIM_TypeDef* TIMx, int Pulse_Duration,GPIO_TypeDef* GPIOx, int Pin){
  
  /*Initialize GPIO*/
  struct GPIO_Parameters GPIO;
- GPIO.Pin = Pin;
- GPIO.Mode = Alternate_Function;
+ GPIO.Pin 	= Pin;
+ GPIO.Mode 	= Alternate_Function;
  GPIO.Speed = High_Speed;
+ GPIO.PuPd 	= Pull_Down;
  GPIO_Init(GPIOx,GPIO);
  
  /*Enable TIM clock*/
@@ -28,11 +29,11 @@ void PWM_Init(TIM_TypeDef* TIMx, int Pulse_Duration,GPIO_TypeDef* GPIOx, int Pin
 	 RCC->APB2ENR |= RCC_APB2ENR_TIM21EN;
  }
  
- TIMx->PSC = 0x1F;						//CK_CNT=Fck_psc/(PSC[15:0]+1), so 32MHz clock becomes 1MHz
- TIMx->ARR = 0xFA0;						//Clock is 1MHz so period becomes 4ms
+ TIMx->PSC = 31;							//CK_CNT=Fck_psc/(PSC[15:0]+1), so 32MHz clock becomes 1MHz
+ TIMx->ARR = 20000;						//Clock is 1MHz so period becomes 20ms
  
  /*Pulse Width Calculation*/
- TIMx->CCR1 = (TIMx->ARR+1)-Pulse_Duration;
+ TIMx->CCR1 = (TIMx->ARR)-Pulse_Duration;
  
  /*Select PWM 2 on OC1 and enable preload register*/
  TIMx->CCMR1 |= TIM_CCMR1_OC1M_2|TIM_CCMR1_OC1M_1|TIM_CCMR1_OC1M_0
@@ -43,24 +44,36 @@ void PWM_Init(TIM_TypeDef* TIMx, int Pulse_Duration,GPIO_TypeDef* GPIOx, int Pin
  ;
  
  /*Select active high polarity on OC1*/
- TIMx->CCER = TIM_CCER_CC1E;
+ TIMx->CCER |= TIM_CCER_CC1E;
  
- /*Auto reload preload enable and One pulse mode stops counting at next update event*/
- TIMx->CR1 = TIM_CR1_OPM | TIM_CR1_ARPE;
- TIMx->EGR = 0;
- 
- TIMx->CR1 |= TIM_CR1_CEN;
-}
- 
-void Position_180(void){
- PWM_Init(TIM22,1000,GPIOC,6);
+ /*Enable PWM*/
+ TIMx->CR1 = TIM_CR1_CEN;
+ TIMx->EGR = TIM_EGR_UG;
 }
 
-void Position_90(void){
- PWM_Init(TIM22,1500,GPIOC,6);
+int Servo_Position(int Degrees){
+	
+	/*Local Variables*/
+	int Position = 0;
+	
+	/*Degrees to PWM Pulse duration*/
+	Position = (Degrees * 10) + 500;
+	PWM(TIM22,Position,GPIOC,6);
+	
+	return(Degrees);
 }
 
-void Position_0(void){
- PWM_Init(TIM22,2000,GPIOC,6);
+void Release_Servo(TIM_TypeDef* TIMx, GPIO_TypeDef* GPIOx, int Pin){
+	
+	/*Initialize GPIO*/
+	struct GPIO_Parameters GPIO;
+	GPIO.Pin 	= Pin;
+	GPIO.Mode 	= Output;
+	GPIO.Speed = High_Speed;
+	GPIO.PuPd 	= Pull_Down;
+	GPIO_Init(GPIOx,GPIO);
+	
+	TIMx->CR1 &= ~TIM_CR1_CEN;
+	
+	 GPIO_Off(GPIOx,6);
 }
-

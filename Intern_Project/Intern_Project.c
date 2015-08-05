@@ -43,11 +43,20 @@ int main (void){
 	/* Initialize I2C,XBEE,ADC,USART1,USART2,LPUART1,CLOCK,ISK01A1,GPIO */
 	IO_Init();
 	
-//		Position_180();
-		Position_0();
-//		Position_90();
+	Servo_Position(0);
+	Delay(1000);
+	Servo_Position(180);
+	Delay(1000);
+//	Release_Servo(TIM22,GPIOC,6);
+	
 	/* Grab data from sensors and send */
   while (1) {	
+//		PWM(TIM22,1000,GPIOC,6);
+//		Delay(1000);
+//		PWM(TIM22,1500,GPIOC,6);
+//		Delay(1000);
+//		PWM(TIM22,2000,GPIOC,6);
+//		Delay(1000);
 //		while(GPS_Ready.Status == 0){
 //			//Nop
 //		}
