@@ -43,14 +43,15 @@ int main (void){
 	/* Initialize I2C,XBEE,ADC,USART1,USART2,LPUART1,CLOCK,ISK01A1,GPIO */
 	IO_Init();
 	
-	Servo_Position(0);
-	Delay(1000);
-	Servo_Position(180);
-	Delay(1000);
+//	Servo_Position(0);
+//	Delay(1000);
+//	Servo_Position(180);
+//	Delay(1000);
 //	Release_Servo(TIM22,GPIOC,6);
 	
 	/* Grab data from sensors and send */
   while (1) {	
+		GPIO_On(GPIOA,Green_LED);
 //		PWM(TIM22,1000,GPIOC,6);
 //		Delay(1000);
 //		PWM(TIM22,1500,GPIOC,6);

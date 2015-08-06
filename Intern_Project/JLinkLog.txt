@@ -1,0 +1,25 @@
+
+T049C 022:594 SEGGER J-Link V4.96d Log File (0001ms, 0022ms total)
+T049C 022:594 DLL Compiled: Jan 29 2015 11:45:37 (0001ms, 0022ms total)
+T049C 022:594 Logging started @ 2015-08-06 15:12 (0001ms, 0022ms total)
+T049C 022:595 JLINK_SetWarnOutHandler(...) (0000ms, 0022ms total)
+T049C 022:595 JLINK_OpenEx(...)
+  ***** Error: Can not connect to J-Link via USB.  returns "Can not connect to J-Link via USB." (0000ms, 0022ms total)
+
+  ***** API Error: API JLINK_GetHardwareVersion function called before JLINKARM_Open()
+T049C 022:595 
+  ***** Error: Can not connect to J-Link via USB.
+  ***** API Error: API JLINK_GetFirmwareString function called before JLINKARM_Open()
+T049C 042:646 
+  ***** Error: Can not connect to J-Link via USB.
+  ***** API Error: API JLINK_GetFeatureString function called before JLINKARM_Open()
+T049C 042:646 
+  ***** Error: Can not connect to J-Link via USB.
+  ***** API Error: API JLINK_GetEmuCaps function called before JLINKARM_Open()
+T049C 042:647 
+  ***** Error: Can not connect to J-Link via USB.
+  ***** API Error: API JLINK_TIF_GetAvailable function called before JLINKARM_Open()
+T049C 042:647 
+  ***** Error: Can not connect to J-Link via USB.JLINK_Close() (0000ms, 0024ms total)
+T049C 046:032  (0000ms, 0024ms total)
+T049C 046:032 Closed (0000ms, 0024ms total)
