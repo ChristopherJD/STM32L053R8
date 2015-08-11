@@ -17,6 +17,7 @@
 #include "string.h"						//String functions
 #include "Serial.h"						//Printf function
 #include "Timing.h"						//Delay function
+#include "PWM.h"							//To control the Servo for parachute deployment
 #include "XBeePro24.h"
 /*---------------------------------XBee Commands----------------------------------------------------------------------*/
 /* Prefix(AT) + ASCII Command + Space(Optional) + Parameter(Optional,HEX) + Carridge Return */
@@ -35,6 +36,10 @@
 #define READ_ATDH											"ATDH\r"			//Read DH register
 #define READ_ATDL											"ATDL\r"			//Read DL register
 #define READ_ATCH											"ADCH\r"			//Read CH register
+/*---------------------------------XBee 900HP Commands----------------------------------------------------------------*/
+#define SET_DESTINATION_H							"ATDH 13A200\r"	//Specific Serial Address of Matt's XBee
+#define SET_DESTINATION_L							"ATDL 40E35DC2\r"	//Specific Serial Address of Matt's Xbee
+#define SET_ATHP											"ATHP 5\r"				//The preamble ID, must be the same for XBee's to communicate
 /*---------------------------------More defines-----------------------------------------------------------------------*/
 #define TRUE	1;
 #define FALSE 0;
@@ -61,6 +66,11 @@ void RNG_LPUART1_IRQHandler(void){
 		
 		/* Read RX Data */
 		RX_Data[ChIndex] = LPUART1->RDR;
+		
+		/* Check for parachute deployment signal */
+		if(RX_Data[ChIndex] == '!'){
+			Servo_Position(180);
+		}
 		
 		/* Check for end of recieved data */
 		if(RX_Data[ChIndex] == '\r'){
@@ -150,11 +160,48 @@ void LPUART1_Send(char c[]){
 }
 
 /**
+	\fn				void XBee_900HP_Init(void)
+	\brief		Initializes the XBEE
+*/
+void XBee_900HP_Init(void){
+	/* Enter AT command mode */
+	Delay(1000);
+	LPUART1_Send(ENTER_AT_COMMAND_MODE);
+	Wait_For_OK();
+	
+	/* Serial Address of matt's xbee */
+	LPUART1_Send(SET_DESTINATION_H);
+	Wait_For_OK();
+	
+	LPUART1_Send(SET_DESTINATION_L);
+	Wait_For_OK();
+	
+	/* PAN = 3001 */
+	LPUART1_Send(SET_ATID);
+	Wait_For_OK();
+	
+	/* HP = 5 */
+	LPUART1_Send(SET_ATHP);
+	Wait_For_OK();
+	
+	/* Save the settings */
+	LPUART1_Send(SAVE_SETTINGS);
+	Wait_For_OK();
+	
+	/* End AT command mode */
+	LPUART1_Send(EXIT_AT_COMMAND_MODE);
+	Wait_For_OK();
+	
+	printf("#####  XBee 	       Initialized  #####\r\n");
+}
+
+
+/**
 	\fn				void XBee_Init(void)
 	\brief		Initializes the XBEE
 */
 
-void XBee_Init(void){
+void XBee_ProS1_Init(void){
 	
 	/* Enter AT command mode */
 	Delay(1000);
@@ -181,6 +228,10 @@ void XBee_Init(void){
 	LPUART1_Send(SET_ATCH);
 	Wait_For_OK();
 	
+	/* Save the settings */
+	LPUART1_Send(SAVE_SETTINGS);
+	Wait_For_OK();
+	
 	/* End AT command mode */
 	LPUART1_Send(EXIT_AT_COMMAND_MODE);
 	Wait_For_OK();
@@ -193,7 +244,7 @@ void XBee_Init(void){
 	\brief		Reads what the XBEE was initialized to
 */
 
-void Read_Xbee_Init(void){
+void Read_Xbee_ProS1_Init(void){
 	
 	/* Enter AT command mode */
 	Delay(1000);

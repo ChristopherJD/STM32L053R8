@@ -9,4 +9,5 @@
 .\objects\xbeepro24.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\string.h
 .\objects\xbeepro24.o: Serial.h
 .\objects\xbeepro24.o: Timing.h
+.\objects\xbeepro24.o: PWM.h
 .\objects\xbeepro24.o: XBeePro24.h

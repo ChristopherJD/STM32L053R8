@@ -173,7 +173,7 @@ void USART1_Init(void){
   }
 
   USART1->CR3    = 0x0000;								/* no flow control */
-  USART1->CR2    |= USART_CR2_SWAP;				/* Swap Tx and Rx */
+  //USART1->CR2    |= USART_CR2_SWAP;				/* Swap Tx and Rx */
 	
 	/* 1 stop bit, 8 data bits */
   USART1->CR1    = ((USART_CR1_RE) |												/* enable RX  */
@@ -394,19 +394,21 @@ char* FGPMMOPA6H_Get_RMC_UTC_Time(void){
 	char hh[3] = "";
 	char mm[3] = "";
 	char ss[3] = "";
+	char sss[5] = "";
 	int Hours = 0;
 	
 	/* Parse original UTC time */
 	strncpy(hh,RMC.UTC_Time,2);
 	strncpy(mm,(RMC.UTC_Time+2),2);
 	strncpy(ss,(RMC.UTC_Time+4),2);
+	strncpy(sss,(RMC.UTC_Time+7),3);		//We want to skip the decimal point
 	
 	/* Convert to integer and calculate TRF time */
 	Hours = atoi(hh);
 	Hours -= 5;
 	
 	/* Put into time format */
-	sprintf(GPS.TRF_Time,"%i:%s:%s",Hours,mm,ss);
+	sprintf(GPS.TRF_Time,"%i:%s:%s.%s",Hours,mm,ss,sss);
 	
 	return(GPS.TRF_Time);
 }
@@ -587,9 +589,8 @@ char* FGPMMOPA6H_Package_Data(void){
 		
 		/* Package the data */
 		sprintf(
-			GPS.Packaged,"%i,%s,%s,%s,%s,%f,%s;\r\n",		/* GPS.Packaged is destination */
+			GPS.Packaged,"$%i,%s,%s,%s,%f,%s\r\n",					/* GPS.Packaged is destination */
 			FGPMMOPA6H_Get_RMC_Status(),								/* Valid data									 */
-			FGPMMOPA6H_Get_RMC_Date(),									/* Date												 */
 			FGPMMOPA6H_Get_RMC_UTC_Time(),							/* TRF Time										 */
 			FGPMMOPA6H_Get_RMC_Latitude(),							/* Latitude										 */
 			FGPMMOPA6H_Get_RMC_Longitude(),							/* Longitude									 */
@@ -598,7 +599,7 @@ char* FGPMMOPA6H_Package_Data(void){
 		);
 	}
 	else{
-		sprintf(GPS.Packaged,"No GPS Fix;\r\n");
+		sprintf(GPS.Packaged,"");
 	}
 	
 	/* Data has been read, set new data ready to 0 */

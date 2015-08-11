@@ -366,7 +366,7 @@ char* ISK01A1_Package_Data(void){
 	/* Combine the data into a string */
 	sprintf(
 	ISK01A1.Packaged_Data,								/* Destination  */
-	"%f,%f,%f,%f,%f,%f,%f,%f,%f;\r\n",		/* Foramat      */
+	"*%f,%f,%f,%f,%f,%f,%f,%f,%f\r\n",		/* Foramat      */
 	HTS221.Temperature,										/* Temperature  */
 	HTS221.Humidity,											/* Humidity     */
 	LSM6DS0.X_Acceleration,								/* Acceleration */

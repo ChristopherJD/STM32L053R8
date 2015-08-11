@@ -23,9 +23,10 @@
  } AT_Data;
  
  extern void LPUART_Init(void);
- extern void XBee_Init(void);
+ extern void XBee_ProS1_Init(void);
+ extern void XBee_900HP_Init(void);
  extern void LPUART1_Send(char c[]);
- extern void Read_Xbee_Init(void);
+ extern void Read_Xbee_ProS1_Init(void);
  
 void Wait_For_OK(void);
 void Wait_For_Data(void);

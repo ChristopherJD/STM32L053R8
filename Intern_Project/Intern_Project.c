@@ -22,8 +22,6 @@
 #include "PWM.h"
 #include "string.h"											// Various useful string manipulation functions
 
-#define GPIOC_0				0
-#define GPIOC_1				1
 #define Green_LED  		5										//LD2 on nucleo board
 /*-----------------------Structure Stuff--------------------------------------------------------------*/
 RMC_Data GPS_Ready;
@@ -51,22 +49,20 @@ int main (void){
 	
 	/* Grab data from sensors and send */
   while (1) {	
-		GPIO_On(GPIOA,Green_LED);
-//		PWM(TIM22,1000,GPIOC,6);
-//		Delay(1000);
-//		PWM(TIM22,1500,GPIOC,6);
-//		Delay(1000);
-//		PWM(TIM22,2000,GPIOC,6);
-//		Delay(1000);
-//		while(GPS_Ready.Status == 0){
-//			//Nop
-//		}
-//		
-//		/* Congregate Data */
-//		sprintf(Data,"%s%s",FGPMMOPA6H_Package_Data(),ISK01A1_Package_Data());
-//		
-//		/* Send data over the XBEE */
-//		LPUART1_Send(Data);
+		
+		if(ISK01A1_Get_Altitude() <= 493.4712){
+			Servo_Position(180);
+		}
+		
+		while(GPS_Ready.Status == 0){
+			//Nop
+		}
+		
+		/* Congregate Data */
+		sprintf(Data,"%s%s",FGPMMOPA6H_Package_Data(),ISK01A1_Package_Data());
+		
+		/* Send data over the XBEE */
+		LPUART1_Send(Data);
   }
 	
 }
@@ -95,8 +91,6 @@ void IO_Init(void){
 	
   /* Port initializations */
 	GPIO_Output_Init(GPIOA,Green_LED);										//LD2 Initialization
-	GPIO_Output_Init(GPIOC,GPIOC_0);
-	GPIO_Output_Init(GPIOC,GPIOC_1);
 	Button_Initialize();					//User button init
 	
 	/* Serial Communications Initializations */
@@ -108,17 +102,25 @@ void IO_Init(void){
 	ADC_Init();
 	
 	/* I2C Initialization */
-//	I2C_Init();
-//	
-//	/* Mems board Initialization */
-//	ISK01A1_Init();
-//	
-//	/* GPS Initialization with 1 second refresh rate */
-//	FGPMMOPA6H_Init(3);
+	I2C_Init();
+	
+	/* Mems board Initialization */
+	ISK01A1_Init();
+	
+	/* GPS Initialization with 1 second refresh rate */
+	FGPMMOPA6H_Init(4);
 	
 	/* XBee Initialization */
 	/* Note that setup takes 2 seconds due to 1 second delays required
 	 * By the XBee AT command Sequence
 	 */
-//	XBee_Init();
+//	XBee_900HP_Init();			//Used with long distance 900 MHz XBee
+	XBee_ProS1_Init();			//Used with 2.4 GHz Xbee
+	
+	/*Position the servo*/
+	Servo_Position(0);
+	Delay(1000);
+	Servo_Position(180);
+	Delay(1000);
+	Servo_Position(0);
 }
