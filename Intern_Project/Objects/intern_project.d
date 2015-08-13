@@ -15,4 +15,5 @@
 .\objects\intern_project.o: ISK01A1.h
 .\objects\intern_project.o: XBeePro24.h
 .\objects\intern_project.o: PWM.h
+.\objects\intern_project.o: Timer2.h
 .\objects\intern_project.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\string.h

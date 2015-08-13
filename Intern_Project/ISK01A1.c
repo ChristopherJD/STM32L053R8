@@ -347,6 +347,11 @@ float QuadCopter_Altitude(void){
 }
 
 char* ISK01A1_Package_Data(void){
+	
+	/* Local Variables */
+	int Checksum = 0;
+	char Temp[128] = "";
+	int i = 0;
 
 	/* Get all the data */
 	ISK01A1_Get_Temperature();
@@ -365,8 +370,8 @@ char* ISK01A1_Package_Data(void){
 	
 	/* Combine the data into a string */
 	sprintf(
-	ISK01A1.Packaged_Data,								/* Destination  */
-	"*%f,%f,%f,%f,%f,%f,%f,%f,%f\r\n",		/* Foramat      */
+	Temp,																	/* Destination  */
+	"%f,%f,%f,%f,%f,%f,%f,%f,%f",					/* Foramat      */
 	HTS221.Temperature,										/* Temperature  */
 	HTS221.Humidity,											/* Humidity     */
 	LSM6DS0.X_Acceleration,								/* Acceleration */
@@ -375,8 +380,15 @@ char* ISK01A1_Package_Data(void){
 	LSM6DS0.Pitch,												/* Pitch        */
 	LSM6DS0.Roll,													/* roll         */
 	LSM6DS0.Yaw,													/* Yaw          */
-	ISK01A1.Altitude											/* Altitude     */
+	LPS25HB.Pressure											/* Pressure     */
 	);
+	
+	/* Create Checksum */
+	for(i = 0;i < sizeof(Temp);i++){
+		Checksum += Temp[i];
+	}
+	
+	sprintf(ISK01A1.Packaged_Data,"%%%s*%i\r\n",Temp,Checksum);
 	
 	return(ISK01A1.Packaged_Data);
 }

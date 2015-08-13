@@ -488,6 +488,11 @@
               <FileType>1</FileType>
               <FilePath>.\PWM.c</FilePath>
             </File>
+            <File>
+              <FileName>Timer2.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\Timer2.c</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>

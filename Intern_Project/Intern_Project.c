@@ -19,7 +19,8 @@
 #include "I2C.h"												// I2C Drivers
 #include "ISK01A1.h"										// ISK01A1 expansion board Drivers (gryo,temp,accel etc...)
 #include "XBeePro24.h"									// XBee drivers
-#include "PWM.h"
+#include "PWM.h"												// Servo Motor Control
+#include "Timer2.h"											// Time for parachute
 #include "string.h"											// Various useful string manipulation functions
 
 #define Green_LED  		5										//LD2 on nucleo board
@@ -41,18 +42,23 @@ int main (void){
 	/* Initialize I2C,XBEE,ADC,USART1,USART2,LPUART1,CLOCK,ISK01A1,GPIO */
 	IO_Init();
 	
-//	Servo_Position(0);
-//	Delay(1000);
-//	Servo_Position(180);
-//	Delay(1000);
-//	Release_Servo(TIM22,GPIOC,6);
+	/* Wait for Button press */
+	while(Button_Get_State() == 0){
+		//Nop
+	}
+	
+	/* Turn on Green LED */
+	GPIO_On(GPIOA,Green_LED);
+	
+	/* Enable Timer */
+	Start_15s_Timer();
 	
 	/* Grab data from sensors and send */
-  while (1) {	
+  while (1) {		
 		
-		if(ISK01A1_Get_Altitude() <= 493.4712){
-			Servo_Position(180);
-		}
+//		if(ISK01A1_Get_Altitude() <= 493.4712){
+//			Servo_Position(180);
+//		}
 		
 		while(GPS_Ready.Status == 0){
 			//Nop
@@ -91,7 +97,7 @@ void IO_Init(void){
 	
   /* Port initializations */
 	GPIO_Output_Init(GPIOA,Green_LED);										//LD2 Initialization
-	Button_Initialize();					//User button init
+	Button_Initialize();																	//User button init
 	
 	/* Serial Communications Initializations */
   SER_Initialize();
@@ -114,13 +120,9 @@ void IO_Init(void){
 	/* Note that setup takes 2 seconds due to 1 second delays required
 	 * By the XBee AT command Sequence
 	 */
-//	XBee_900HP_Init();			//Used with long distance 900 MHz XBee
-	XBee_ProS1_Init();			//Used with 2.4 GHz Xbee
+	XBee_900HP_Init();			//Used with long distance 900 MHz XBee
+//	XBee_ProS1_Init();			//Used with 2.4 GHz Xbee
 	
 	/*Position the servo*/
-	Servo_Position(0);
-	Delay(1000);
-	Servo_Position(180);
-	Delay(1000);
 	Servo_Position(0);
 }

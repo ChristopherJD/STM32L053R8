@@ -10,8 +10,12 @@
 /*---------------------------------------Include Statements-------------------------------------------*/
 #include "stm32l0xx.h"                  // Device header
 #include "Timing.h"
+#include "PWM.h"
 /*---------------------------------------Global Variables---------------------------------------------*/
 volatile unsigned int msTicks;															// counts 1ms timeTicks
+unsigned int Start_Timer = 0;														// Start Timer is false
+unsigned int Current_Ticks = 0;															// Current Tick
+unsigned int Ticks = 0;																			// Just another msTick
 /*---------------------------------------Functions----------------------------------------------------*/
 
 /**
@@ -21,6 +25,15 @@ volatile unsigned int msTicks;															// counts 1ms timeTicks
 
 void SysTick_Handler(void){
   msTicks++;
+	
+	if(Start_Timer == 1){
+		Ticks++;
+		if(Ticks > 15000){
+			Servo_Position(170);
+			Ticks = 0;
+			Start_Timer = 0;
+		}
+	}
 }
 
 /**
@@ -90,4 +103,10 @@ void Delay (unsigned int dlyTicks){
 
   curTicks = msTicks;
   while ((msTicks - curTicks) < dlyTicks) { __NOP(); }
+}
+
+void Start_15s_Timer(void){
+
+	Start_Timer = 1;
+	
 }

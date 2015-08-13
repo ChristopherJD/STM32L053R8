@@ -394,21 +394,21 @@ char* FGPMMOPA6H_Get_RMC_UTC_Time(void){
 	char hh[3] = "";
 	char mm[3] = "";
 	char ss[3] = "";
-	char sss[5] = "";
+//	char sss[5] = "";
 	int Hours = 0;
 	
 	/* Parse original UTC time */
 	strncpy(hh,RMC.UTC_Time,2);
 	strncpy(mm,(RMC.UTC_Time+2),2);
 	strncpy(ss,(RMC.UTC_Time+4),2);
-	strncpy(sss,(RMC.UTC_Time+7),3);		//We want to skip the decimal point
+//	strncpy(sss,(RMC.UTC_Time+7),3);		//We want to skip the decimal point
 	
 	/* Convert to integer and calculate TRF time */
 	Hours = atoi(hh);
 	Hours -= 5;
 	
 	/* Put into time format */
-	sprintf(GPS.TRF_Time,"%i:%s:%s.%s",Hours,mm,ss,sss);
+	sprintf(GPS.TRF_Time,"%i:%s:%s",Hours,mm,ss);
 	
 	return(GPS.TRF_Time);
 }
@@ -576,6 +576,11 @@ void FGPMMOPA6H_Get_GPS_Data(void){
 
 char* FGPMMOPA6H_Package_Data(void){
 	
+	/* Local Variables */
+	int i;
+	char Temp[128] = "";
+	int Checksum = 0;
+	
 	/* Wait for New data to come */
 	while(RMC.New_Data_Ready == 0){
 		//Nop
@@ -589,15 +594,22 @@ char* FGPMMOPA6H_Package_Data(void){
 		
 		/* Package the data */
 		sprintf(
-			GPS.Packaged,"$%i,%s,%s,%s,%f,%s\r\n",					/* GPS.Packaged is destination */
-			FGPMMOPA6H_Get_RMC_Status(),								/* Valid data									 */
+			Temp,"%s,%s,%s,%f,%s\r\n",									/* GPS.Packaged is destination */
 			FGPMMOPA6H_Get_RMC_UTC_Time(),							/* TRF Time										 */
 			FGPMMOPA6H_Get_RMC_Latitude(),							/* Latitude										 */
 			FGPMMOPA6H_Get_RMC_Longitude(),							/* Longitude									 */
 			FGPMMOPA6H_Get_RMC_Ground_Speed(),					/* Speed											 */
 			GGA.MSL_Altitude														/* Altitude										 */
 		);
+		
+			/* Create Checksum */
+	for(i = 0;i < sizeof(Temp);i++){
+		Checksum += Temp[i];
 	}
+	
+	sprintf(GPS.Packaged,"$%s*%i\r\n",Temp,Checksum);
+	}
+	
 	else{
 		sprintf(GPS.Packaged,"");
 	}
