@@ -94,6 +94,9 @@ extern int FGPMMOPA6H_Get_RMC_Status(void);
 extern char* FGPMMOPA6H_Get_RMC_Date(void);
 extern void Print_RMC_Data(void);
 
+/* GGA Data */
+extern char* FGPMMOPA6H_Get_GGA_Altitude(void);
+
 /*GPS Data*/
 extern void FGPMMOPA6H_Get_GPS_Data(void);
 extern char* FGPMMOPA6H_Package_Data(void);

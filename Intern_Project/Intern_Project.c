@@ -10,6 +10,7 @@
  
  /*-----------------------Include Statements----------------------------------------------------------*/
 #include <stdio.h>											// Standard Input Output
+#include <stdlib.h>											//Various useful conversion functions
 #include "stm32l053xx.h"								// Specific Device Header
 #include "Serial.h"											// Usart2 Communication
 #include "FGPMMOPA6H.h"									// GPS Drivers
@@ -23,7 +24,8 @@
 #include "Timer2.h"											// Time for parachute
 #include "string.h"											// Various useful string manipulation functions
 
-#define Green_LED  		5										//LD2 on nucleo board
+#define Green_LED  					5						// Green LED on board
+#define CHUTE_DEPLOY_ALT		1619.0			// Chute deployment altitude,TRF altitude(1119) + 500 ft
 /*-----------------------Structure Stuff--------------------------------------------------------------*/
 RMC_Data GPS_Ready;
 /*-----------------------Functions--------------------------------------------------------------------*/
@@ -38,6 +40,7 @@ int main (void){
 	
 	/* Local Variables */
 	char Data[256];
+//	float GPS_Altitude = 0;
 	
 	/* Initialize I2C,XBEE,ADC,USART1,USART2,LPUART1,CLOCK,ISK01A1,GPIO */
 	IO_Init();
@@ -54,9 +57,11 @@ int main (void){
 	Start_15s_Timer();
 	
 	/* Grab data from sensors and send */
-  while (1) {		
-		
-//		if(ISK01A1_Get_Altitude() <= 493.4712){
+  while (1) {	
+
+//		GPS_Altitude = atof(FGPMMOPA6H_Get_GGA_Altitude());
+//		
+//		if((FGPMMOPA6H_Get_RMC_Status() == 1) && (GPS_Altitude <= CHUTE_DEPLOY_ALT)){
 //			Servo_Position(180);
 //		}
 		

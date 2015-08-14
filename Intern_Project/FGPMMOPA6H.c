@@ -594,10 +594,12 @@ char* FGPMMOPA6H_Package_Data(void){
 		
 		/* Package the data */
 		sprintf(
-			Temp,"%s,%s,%s,%f,%s\r\n",									/* GPS.Packaged is destination */
+			Temp,"%s,%s,%s,%s,%s,%f,%s",										/* GPS.Packaged is destination */
 			FGPMMOPA6H_Get_RMC_UTC_Time(),							/* TRF Time										 */
-			FGPMMOPA6H_Get_RMC_Latitude(),							/* Latitude										 */
-			FGPMMOPA6H_Get_RMC_Longitude(),							/* Longitude									 */
+			RMC.Latitude,																/* Latitude										 */
+			RMC.N_S_Indicator,													/* North or South							 */
+			RMC.Longitude,															/* Longitude									 */
+			RMC.E_W_Indicator,													/* East or West								 */
 			FGPMMOPA6H_Get_RMC_Ground_Speed(),					/* Speed											 */
 			GGA.MSL_Altitude														/* Altitude										 */
 		);
